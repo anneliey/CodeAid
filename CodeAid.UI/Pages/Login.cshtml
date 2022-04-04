@@ -1,0 +1,18 @@
+﻿@page
+@model CodeAid.UI.Pages.LoginModel
+@{
+}
+
+<h2 class="display-2 mb-4">Sign in</h2>
+
+<form method="post">
+    <div class="mb-2">
+        <label for="username" class="form-label">Username:</label>
+        @*<input asp-for="@@Model.Username" id="username" class="form-control mb-2" type="text" placeholder="Username" />*@
+
+        <label for="password" class="form-label">Password:</label>
+        @*<input asp-for="@Model.Password" id="password" class="form-control mb-4" type="password" placeholder="Password" />*@
+
+        <input type="submit" class="btn btn-outline-dark" value="Sign in!" />
+    </div>
+</form>
