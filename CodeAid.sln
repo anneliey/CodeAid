@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeAid.UI", "CodeAid.UI\CodeAid.UI.csproj", "{F1912D03-3865-4E78-BDBC-69440DD4D1DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeAid.UI", "CodeAid.UI\CodeAid.UI.csproj", "{F1912D03-3865-4E78-BDBC-69440DD4D1DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeAid.API", "CodeAid.API\CodeAid.API.csproj", "{10C24B64-2442-455A-B68A-B4E1AB7A0510}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeAid.API", "CodeAid.API\CodeAid.API.csproj", "{10C24B64-2442-455A-B68A-B4E1AB7A0510}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeAid.Shared", "CodeAid.Shared\CodeAid.Shared.csproj", "{B4F24829-8785-4D8A-9FA1-73585F369C24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodeAid.Shared", "CodeAid.Shared\CodeAid.Shared.csproj", "{B4F24829-8785-4D8A-9FA1-73585F369C24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
