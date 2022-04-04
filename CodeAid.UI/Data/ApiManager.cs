@@ -11,21 +11,9 @@ namespace CodeAid.UI.Data
             using (var httpClient = new HttpClient())
             {
                 string url = String.Concat(baseUrl, "api/user");
-
-                using (var response = await httpClient.PostAsJsonAsync<IdentityUserDto>(url, userToRegister))
-                {
-                    //string ApiResponse = await response.Content.ReadAsStringAsync();
-                    //userToRegister = JsonConvert.DeserializeObject<IdentityUserDto>(ApiResponse);
-                    //return userToRegister;
-
-                    if (response.IsSuccessStatusCode)
-                    {
-
-                    }
-                }
+                await httpClient.PostAsJsonAsync<IdentityUserDto>(url, userToRegister);
             }
             return null;
-
         }
     }
 }

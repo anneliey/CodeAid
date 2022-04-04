@@ -24,6 +24,7 @@ namespace CodeAid.API.Controllers
             // Add prop to identity user
             newUser.UserName = userToSignUp.Username;
             newUser.Email = userToSignUp.Email;
+            newUser.PasswordHash = userToSignUp.Password;
 
 
             // Create user

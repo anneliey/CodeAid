@@ -6,17 +6,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CodeAid.UI.Pages
 {
+    [BindProperties]
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-
-        public RegisterModel(SignInManager<IdentityUser> signInManager)
-        {
-            _signInManager = signInManager;
-        }
         [Required(ErrorMessage = "Username is required!")]
         [MaxLength(20, ErrorMessage = "Username is too long!")]
         [MinLength(3, ErrorMessage = "Username is too short!")]
+
         public string Username { get; set; }
 
         [Required(ErrorMessage = "Email is required!")]
