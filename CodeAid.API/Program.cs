@@ -1,6 +1,7 @@
 global using CodeAid.Shared;
 global using Microsoft.EntityFrameworkCore;
 using CodeAid.API.Data;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,8 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(defa
 
 var authConnectionString = builder.Configuration.GetConnectionString("AuthConnection");
 builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(authConnectionString));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AuthDbContext>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

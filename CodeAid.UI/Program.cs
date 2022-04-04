@@ -1,5 +1,6 @@
 
 global using CodeAid.Shared;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,8 @@ builder.Services.AddRazorPages();
 
 var connectionString = builder.Configuration.GetConnectionString("AuthConnection");
 builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AuthDbContext>();
 
 var app = builder.Build();
 
