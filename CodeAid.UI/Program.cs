@@ -12,6 +12,13 @@ var connectionString = builder.Configuration.GetConnectionString("AuthConnection
 builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(connectionString));
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AuthDbContext>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Index";
+    options.AccessDeniedPath = "/AccessDenied";
+});
+
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Password settings
