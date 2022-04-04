@@ -11,9 +11,7 @@ builder.Services.AddRazorPages();
 var connectionString = builder.Configuration.GetConnectionString("AuthConnection");
 builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(connectionString));
 
-<<<<<<< Updated upstream
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AuthDbContext>();
-=======
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Password settings
@@ -28,7 +26,6 @@ builder.Services.Configure<IdentityOptions>(options =>
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = false;
 });
->>>>>>> Stashed changes
 
 var app = builder.Build();
 
