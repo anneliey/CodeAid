@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CodeAid.API.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,12 @@ namespace CodeAid.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly AppDbContext _context;
 
-        public UserController(SignInManager<IdentityUser> signInManager)
+        public UserController(SignInManager<IdentityUser> signInManager, AppDbContext context)
         {
             _signInManager = signInManager;
+            _context = context;
         }
 
         [HttpPost]
@@ -30,6 +33,12 @@ namespace CodeAid.API.Controllers
 
             if (createUserResult.Succeeded)
             {
+                UserModel user = new();
+                user.Username = newUser.UserName;
+                // Add the 5 chosen interests
+                //user.Interests =
+                _context.Users.Add(user);
+                _context.SaveChanges();
                 return Ok();
             }
             return BadRequest();
