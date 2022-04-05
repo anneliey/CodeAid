@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CodeAid.Shared\CodeAid.Shared.csproj" />
+    <ProjectReference Include="..\CodeAid.UI\CodeAid.UI.csproj" />
   </ItemGroup>
 
 </Project>

@@ -33,12 +33,11 @@ namespace CodeAid.UI.Pages.Member
         public void OnGet()
         {
         }
-
         public async Task<IActionResult> OnPost()
         {
             if (ModelState.IsValid)
             {
-                var user = await _signInManager.UserManager.GetUserAsync(User);
+                var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
 
                 if (user != null)
                 {
@@ -46,11 +45,11 @@ namespace CodeAid.UI.Pages.Member
 
                     if (result.Succeeded)
                     {
-                        return RedirectToPage("ChangePasswordConfirmation");
+                        return RedirectToPage("ChangePasswordConfirm");
                     }
                     if (!result.Succeeded)
                     {
-                        foreach(var error in result.Errors)
+                        foreach (var error in result.Errors)
                         {
                             ModelState.AddModelError(string.Empty, error.Description);
                         }
@@ -58,9 +57,9 @@ namespace CodeAid.UI.Pages.Member
                     }
 
                     //await _signInManager.RefreshSignInAsync(user);
-                    
+
                 }
-                
+
             }
             return Page();
         }
