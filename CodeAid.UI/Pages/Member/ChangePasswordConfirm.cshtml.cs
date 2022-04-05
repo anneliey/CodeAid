@@ -3,12 +3,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CodeAid.UI.Pages.Member
 {
-    public class SettingsModel : PageModel
+    public class ChangePasswordConfirmModel : PageModel
     {
-
         public void OnGet()
         {
         }
-
     }
 }
