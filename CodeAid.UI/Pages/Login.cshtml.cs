@@ -19,6 +19,9 @@ namespace CodeAid.UI.Pages
 
         public bool RememberMe { get; set; }
 
+        public string ErrorMessage { get; set; }
+
+
         public LoginModel(SignInManager<IdentityUser> signInManager)
         {
             this.signInManager = signInManager;
@@ -26,6 +29,8 @@ namespace CodeAid.UI.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
+            ModelState.Remove("ErrorMessage");
+
             if (ModelState.IsValid)
             {
                 var identityResult = await signInManager.PasswordSignInAsync(Username, Password, false, false);
@@ -33,12 +38,14 @@ namespace CodeAid.UI.Pages
                 {
 
                     return RedirectToPage("/Index");
-
-
                 }
-                ModelState.AddModelError("", "Username or Password incorrect");
+                else
+                {
 
+                    ErrorMessage = "Invalid username or password";
+                }
             }
+
             return Page();
         }
     }
