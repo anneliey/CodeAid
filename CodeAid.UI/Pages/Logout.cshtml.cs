@@ -6,9 +6,9 @@ namespace CodeAid.UI.Pages
 {
     public class LogoutModel : PageModel
     {
-        private readonly SignInManager<IdentityUserDto> signInManager;
+        private readonly SignInManager<IdentityUser> signInManager;
 
-        public LogoutModel(SignInManager<IdentityUserDto>signInManager)
+        public LogoutModel(SignInManager<IdentityUser>signInManager)
         {
             this.signInManager = signInManager;
         }
@@ -16,16 +16,16 @@ namespace CodeAid.UI.Pages
         {
         }
 
-        public async Task<IActionResult> OnPostLogoutAsync()
+        public async Task<IActionResult> OnPost()
         {
             await signInManager.SignOutAsync();
-            return RedirectToPage("/Login");
+            return RedirectToPage("Login");
         }
 
-        public IActionResult OnPostDontLogoutAsync()
-        {
-            return RedirectToPage("/Index");
-        }
+        //public IActionResult OnPostDontLogoutAsync()
+        //{
+        //    return RedirectToPage("/Index");
+        //}
 
     }
 }
