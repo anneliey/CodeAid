@@ -24,7 +24,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     // Password settings
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequireUppercase = false;
-    options.Password.RequiredLength = 3;
+    options.Password.RequiredLength = 5;
     options.Password.RequireDigit = false;
     options.Password.RequireLowercase = false;
 

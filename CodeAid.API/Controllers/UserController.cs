@@ -24,8 +24,6 @@ namespace CodeAid.API.Controllers
             // Add prop to identity user
             newUser.UserName = userToSignUp.Username;
             newUser.Email = userToSignUp.Email;
-            newUser.PasswordHash = userToSignUp.Password;
-
 
             // Create user
             var createUserResult = await _signInManager.UserManager.CreateAsync(newUser, userToSignUp.Password);
@@ -33,9 +31,7 @@ namespace CodeAid.API.Controllers
             if (createUserResult.Succeeded)
             {
                 return Ok();
-
             }
-
             return BadRequest();
         }
     }

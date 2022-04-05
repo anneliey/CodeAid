@@ -12,13 +12,13 @@ namespace CodeAid.UI.Pages
         [Required(ErrorMessage = "Username is required!")]
         [MaxLength(20, ErrorMessage = "Username is too long!")]
         [MinLength(3, ErrorMessage = "Username is too short!")]
-
         public string Username { get; set; }
 
         [Required(ErrorMessage = "Email is required!")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "Password is required!")]
+        [MinLength(5, ErrorMessage = "Password too short. 5 characters is required.")]
         public string Password { get; set; }
 
         [Required(ErrorMessage = "Verify password is required!")]
@@ -39,9 +39,10 @@ namespace CodeAid.UI.Pages
 
                 // Call the constructor with the identity user dto 
                 var result = await apiManager.RegisterUser(identityUserDto);
-                if (result != null)
+
+                if (result)
                 {
-                    return RedirectToAction("/Index");
+                    return RedirectToPage("/Index");
                 }
             }
             return Page();
