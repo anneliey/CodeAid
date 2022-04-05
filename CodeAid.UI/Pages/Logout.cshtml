@@ -1,0 +1,18 @@
+﻿@page
+@model CodeAid.UI.Pages.LogoutModel
+@{
+}
+
+<form methid="post">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-sm-12 col-md-12 col-lg-4">
+                <P>Are you sure you want to logout?</P>
+                <P>
+                    <button class="btn btn-primary" asp-page-handler="Logout">Yes</button>
+                    <button class="btnbtn-light ml-5 border-dark" asp-page-handler="Dont Logout">No</button>
+                </P>
+            </div>
+        </div>
+    </div>
+</form>

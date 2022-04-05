@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUserDto> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -30,6 +33,11 @@
                             </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Register">Sign up</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav d-flex justify-content-end">
+                          <li class="nav-item">
+                            <a class="btn btn-primary" asp-area="" asp-page="/Logout">Logout</a>
                         </li>
                     </ul>
                 </div>
