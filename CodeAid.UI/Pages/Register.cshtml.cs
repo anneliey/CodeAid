@@ -35,13 +35,13 @@ namespace CodeAid.UI.Pages
                     Username = Username,
                     Email = Email,
                     Password = Password
-                };
 
-                // Call the constructor with the identity user dto 
+                };
                 var result = await apiManager.RegisterUser(identityUserDto);
 
                 if (result)
                 {
+
                     return RedirectToPage("/Index");
                 }
             }
