@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CodeAid.UI.Pages.Member
 {
+    [BindProperties]
     public class ChangePasswordModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -16,12 +17,12 @@ namespace CodeAid.UI.Pages.Member
         [Required]
         [DataType(DataType.Password)]
         [Display(Name ="Current password")]
-        public string currentPassword { get; set; }
+        public string CurrentPassword { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "New password")]
-        public string newPassword { get; set; }
+        public string NewPassword { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -37,14 +38,15 @@ namespace CodeAid.UI.Pages.Member
         {
             if (ModelState.IsValid)
             {
-                var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+                var user = await _signInManager.UserManager.GetUserAsync(User);
 
                 if (user != null)
                 {
-                    var result = await _signInManager.UserManager.ChangePasswordAsync(user, currentPassword, newPassword);
+                    var result = await _signInManager.UserManager.ChangePasswordAsync(user, CurrentPassword, NewPassword);
+
                     if (result.Succeeded)
                     {
-                        return RedirectToPage("/Login");
+                        return RedirectToPage("ChangePasswordConfirmation");
                     }
                     if (!result.Succeeded)
                     {
@@ -55,8 +57,8 @@ namespace CodeAid.UI.Pages.Member
                         return Page();
                     }
 
-                    await _signInManager.RefreshSignInAsync(user);
-                    return RedirectToPage("ChangePasswordConfirmation");
+                    //await _signInManager.RefreshSignInAsync(user);
+                    
                 }
                 
             }
