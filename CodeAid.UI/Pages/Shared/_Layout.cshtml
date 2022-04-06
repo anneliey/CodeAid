@@ -13,9 +13,9 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">CodeAid.UI</a>
+                <a class="navbar-brand" style="font-weight:800; font-size:24px; color: #FF9B00;" asp-area="" asp-page="/Index">CodeAid</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -23,22 +23,24 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     @if (SignInManager.IsSignedIn(User))
                     {
-                        <ul class="navbar-nav flex-grow-1">
+                        <ul class="navbar-nav flex-grow-1 justify-content-end">
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                                <a class="nav-link" style="color:#1C1259" asp-area="" asp-page="/Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" style="color:#1C1259" asp-area="" asp-page=""></a>
                             </li>
                         </ul>
 
                         <div class="dropdown">
-                            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
+                            <button class="btn dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown">
                                 <strong>@User.Identity.Name</strong>
                             </button>
                             <div class="dropdown-menu p-0 m-0">
-                                <p class="px-3 pt-2">Signed in as @User.Identity.Name</p>
                                 <a class="dropdown-item" href="/member/interests">Your threads</a>
                                 <a class="dropdown-item" href="/member">Your account</a>
                                 <a class="dropdown-item" href="/member/settings">Settings</a>
-                                <a class="dropdown-item py-2 mt-2" style="background-color: #3A3845; color: #fff;" href="/logout">Sign out</a>
+                                <a class="sign-out dropdown-item" href="/logout">Sign out</a>
                             </div>
                         </div>
                     }
