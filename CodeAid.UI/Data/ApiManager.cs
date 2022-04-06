@@ -21,5 +21,25 @@ namespace CodeAid.UI.Data
             }
             return false;
         }
+        public async Task<List<InterestModel>> GetAllInterest()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/interest");
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<List<InterestModel>>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
+        public void CreateInterest()
+        {
+
+        }
     }
 }

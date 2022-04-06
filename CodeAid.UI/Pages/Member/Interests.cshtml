@@ -4,9 +4,40 @@
 }
 
 <h2 class="display-2">Your interest</h2>
+<form method="post">
+    <table class="table table-light">
+        <thead>
+            <tr class="fw-bolder">
+                <th>
+                    <h5>Interests</h5>
+                </th>
 
-<div class="button-box col-lg-12">
-             <input class="btn btn-outline-dark" type="submit" value="Add Interests" />  
-             <input class="btn btn-outline-dark" type="submit" value="Edit interest" /> 
-             <input class="btn btn-outline-dark" type="submit" value="Delete interest" />   
-   </div>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var interest in Model.AllInterests)
+            {
+                <tr>
+                    <td>
+                        @interest.Name
+                    </td>
+                    <td>
+                        <div class="btn-group btn-outline-light">
+                            <button type="button" class="btn">
+                                <a class="editBtn" asp-page="/Edit" asp-route-id="@interest.Id">Edit</a>
+                            </button>
+                            <form method="post">
+                                <button class="btn" type="submit" asp-page="/Index" asp-route-id="@interest.Id">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @* <div class="button-box col-lg-12">
+        <input class="btn btn-outline-dark" type="submit" value="Add Interests" />
+        <input class="btn btn-outline-dark" type="submit" value="Edit interest" />
+        <input class="btn btn-outline-dark" type="submit" value="Delete interest" />
+        </div>*@
+</form>
