@@ -1,4 +1,5 @@
 ﻿using CodeAid.API.Data;
+﻿using CodeAid.UI.Pages.Member;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ namespace CodeAid.API.Controllers
         }
 
         [HttpPost]
+        
         public async Task<IActionResult> RegisterUser([FromBody] IdentityUserDto userToSignUp)
         {
             // Create an empty identity user
