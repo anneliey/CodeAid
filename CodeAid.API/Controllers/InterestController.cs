@@ -1,5 +1,6 @@
 ﻿using CodeAid.API.Data;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CodeAid.API.Controllers
@@ -8,10 +9,12 @@ namespace CodeAid.API.Controllers
     [ApiController]
     public class InterestController : ControllerBase
     {
+        private readonly SignInManager<IdentityUser> _signInManager;
         private readonly AppDbContext _context;
 
-        public InterestController(AppDbContext context)
+        public InterestController(SignInManager<IdentityUser> signInManager, AppDbContext context)
         {
+            _signInManager = signInManager;
             _context = context;
         }
         [HttpGet]
@@ -27,13 +30,42 @@ namespace CodeAid.API.Controllers
 
             return BadRequest();
         }
-        //[HttpPost]
-        //public async InterestModel CreateInterest([FromBody]InterestModel interestToAdd)
-        //{
-        //    InterestModel model = new InterestModel();
-        //    model.Add
-        //    var result = 
-        //    return 
-        //}
+        [HttpGet]
+        [Route("my-interests/{accessToken}")]
+        public ActionResult<List<string>> GetCurrentUserInterests(string accessToken)
+        {
+            var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
+
+            if (identityUser != null)
+            {
+                var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
+                var list = _context.Interests
+                    .Where(u => u.UserId.Equals(userDb.Id))
+                    .Select(list => list.Name).ToList();
+                return list;
+            }
+            return BadRequest();
+        }
+
+        // NOT FINISHED!
+        [HttpPost]
+        public async Task<ActionResult<InterestModel>> CreateInterest([FromBody] InterestModel interestToAdd)
+        {
+            if (interestToAdd != null)
+            {
+                InterestModel model = new()
+                {
+                    Name = interestToAdd.Name,
+                    UserInterests = interestToAdd.UserInterests,
+                };
+                _context.Interests.Add(model);
+                _context.SaveChanges();
+                //if (result.)
+                return Ok(model);
+            }
+            return BadRequest();
+        }
+
+
     }
 }

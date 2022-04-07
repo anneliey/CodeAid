@@ -35,7 +35,6 @@ namespace CodeAid.UI.Pages
                     Username = Username,
                     Email = Email,
                     Password = Password
-
                 };
                 var result = await apiManager.RegisterUser(identityUserDto);
 

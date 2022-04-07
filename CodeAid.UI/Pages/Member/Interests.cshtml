@@ -19,15 +19,15 @@
             {
                 <tr>
                     <td>
-                        @interest.Name
+                        @interest
                     </td>
                     <td>
                         <div class="btn-group btn-outline-light">
                             <button type="button" class="btn">
-                                <a class="editBtn" asp-page="/Edit" asp-route-id="@interest.Id">Edit</a>
+                                <a class="editBtn" asp-page="/Edit" asp-route-id="@Model.User">Edit</a>
                             </button>
                             <form method="post">
-                                <button class="btn" type="submit" asp-page="/Index" asp-route-id="@interest.Id">Delete</button>
+                                <button class="btn" type="submit" asp-page="/Index" asp-route-id="@Model.User">Delete</button>
                             </form>
                         </div>
                     </td>
