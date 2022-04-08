@@ -11,7 +11,7 @@ namespace CodeAid.Shared
         public List<ThreadModel>? Threads { get; set; }
 
         // Relations
-        public List<UserInterestModel> UserInterests { get; set; }
+        public List<UserInterestModel>? UserInterests { get; set; }
 
         [ForeignKey(nameof(User))]
         public int? UserId { get; set; }
