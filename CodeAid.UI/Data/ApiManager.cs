@@ -7,6 +7,23 @@ namespace CodeAid.UI.Data
     public class ApiManager
     {
         string baseUrl = "https://localhost:7238/";
+
+        public async Task<UserModel> GetUser(string user)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/interest");
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<UserModel>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
         public async Task<bool> RegisterUser(IdentityUserDto userToRegister)
         {
             // Call the constructor with the identity user dto 
