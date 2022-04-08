@@ -14,6 +14,7 @@ namespace CodeAid.API.Controllers
         {
             _context = context;
         }
+
         [HttpGet]
         public ActionResult<List<InterestModel>> GetAllInterests()
         {
@@ -27,13 +28,22 @@ namespace CodeAid.API.Controllers
 
             return BadRequest();
         }
-        //[HttpPost]
-        //public async InterestModel CreateInterest([FromBody]InterestModel interestToAdd)
-        //{
-        //    InterestModel model = new InterestModel();
-        //    model.Add
-        //    var result = 
-        //    return 
-        //}
+
+        [HttpPost]
+        [Route("{id}")]
+        public async Task<IActionResult> CreateInterest([FromBody] InterestModel interestToAdd, string id)
+        {
+            interestToAdd = _context.Interests.Where(x => x.Name == interestToAdd.Name).FirstOrDefault();
+            if (interestToAdd != null)
+            {
+                _context.Interests.Add(interestToAdd);
+                _context.SaveChanges();
+                return Ok();
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

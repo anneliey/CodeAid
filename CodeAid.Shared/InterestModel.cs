@@ -8,7 +8,7 @@ namespace CodeAid.Shared
         [Key]
         public int Id { get; set; }
         public string Name { get; set; } = String.Empty;
-        public List<ThreadModel> Threads { get; set; }
+        public List<ThreadModel>? Threads { get; set; }
 
         // Relations
         public List<UserInterestModel> UserInterests { get; set; }

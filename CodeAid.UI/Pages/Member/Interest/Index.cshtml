@@ -1,9 +1,15 @@
 ﻿@page
-@model CodeAid.UI.Pages.Member.InterestsModel
+@model CodeAid.UI.Pages.Member.Interest.IndexModel
 @{
 }
-
 <h2 class="display-2">Your interest</h2>
+<form method="post" asp-page-handler="CreateInterest">
+    <input class="form-control" type="text" asp-for="@Model.Interest" />
+    <span class="text-warning" asp-validation-for="@Model.Interest"></span>
+    <button type="submit" class="btn btn-outline-dark">Create interest</button>
+</form>
+
+
 <form method="post">
     <table class="table table-light">
         <thead>
