@@ -13,81 +13,55 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">CodeAid.UI</a>
+                <a class="navbar-brand" style="font-weight:800; font-size:24px; color: #FF9B00;" asp-area="" asp-page="/Index">CodeAid</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     @if (SignInManager.IsSignedIn(User))
-					{
-						<ul class="navbar-nav flex-grow-1">
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-							</li>
+                    {
+                        <ul class="navbar-nav flex-grow-1 justify-content-end">
                             <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Member/Settings">Account settings</a>
-                        </li>
+                                <a class="nav-link" style="color:#1C1259" asp-area="" asp-page="/Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" style="color:#1C1259" asp-area="" asp-page=""></a>
+                            </li>
                         </ul>
 
-                        <ul class="navbar-nav d-flex justify-content-end ">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
-                            </li>
-                            <li class="nav-item">
-					            <a class="btn btn-primary" asp-area="" asp-page="/Logout">Logout</a>
-							</li>
-						</ul>
-
-
-
-
+                        <div class="dropdown">
+                            <button class="btn dropdown-toggle" id="dropdownMenuButton" data-bs-toggle="dropdown">
+                                <strong>@User.Identity.Name</strong>
+                            </button>
+                            <div class="dropdown-menu p-0 m-0">
+                                <a class="dropdown-item" href="/member/interests">Your threads</a>
+                                <a class="dropdown-item" href="/member">Your account</a>
+                                <a class="dropdown-item" href="/member/settings">Settings</a>
+                                <a class="sign-out dropdown-item" href="/logout">Sign out</a>
+                            </div>
+                        </div>
                     }
-                    @if(!SignInManager.IsSignedIn(User))
+                    @if (!SignInManager.IsSignedIn(User))
                     {
                         <ul class="navbar-nav flex-grow-1">
-							<li class="nav-item">
-								<a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-							</li>
-                            </ul>
-                            
-						<ul class="navbar-nav d-flex justify-content-end flex-grow-1">
-							<li class="nav-item">
-								<a asp-page="/Login" class="btn btn-primary">Login</a>
-							</li>
-							<li class="nav-item">
-								<a asp-page="/Register" class="btn btn-primary">Register</a>
-							</li>
-						</ul>
-                        
-                    }
-@*
-                    <ul class="navbar-nav flex-grow-1">
-
-
-                       <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                       <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Login">Log in</a>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
                             </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Register">Sign up</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Member/Settings">Account settings</a>
-                        </li>
-                    </ul>
-                    <ul class="navbar-nav d-flex justify-content-end">
-                          <li class="nav-item">
-                            <a class="btn btn-primary" asp-area="" asp-page="/Logout">Logout</a>
-                        </li>
-                    </ul>*@
+                        </ul>
+
+                        <ul class="navbar-nav d-flex justify-content-end flex-grow-1">
+                            <li class="nav-item mx-1">
+                                <a asp-page="/Login" class="btn btn-primary">Login</a>
+                            </li>
+                            <li class="nav-item mx-1">
+                                <a asp-page="/Register" class="btn btn-primary">Register</a>
+                            </li>
+                        </ul>
+
+                    }
                 </div>
             </div>
         </nav>
