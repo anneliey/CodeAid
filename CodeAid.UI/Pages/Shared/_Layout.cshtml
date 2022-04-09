@@ -27,9 +27,9 @@
                                 <li class="nav-item">
                                     <a class="nav-link" style="color:#1C1259" asp-area="" asp-page="/Index">Home</a>
                                 </li>
-                                <li class="nav-item">
+                                @*<li class="nav-item">
                                     <a class="nav-link" style="color:#1C1259" asp-area="" asp-page=""></a>
-                                </li>
+                                </li>*@
                             </ul>
 
                             <div class="dropdown">
@@ -47,9 +47,9 @@
                     }
                     @if (!SignInManager.IsSignedIn(User))
                     {
-                            <ul class="navbar-nav flex-grow-1">
+                            <ul class="navbar-nav flex-grow-1 justify-content-end">
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                                    <a class="nav-link" style="color:#1C1259" asp-area="" asp-page="/Index">Home</a>
                                 </li>
                             </ul>
 
