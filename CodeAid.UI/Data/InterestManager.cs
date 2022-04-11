@@ -10,16 +10,16 @@ namespace CodeAid.UI.Data
             var interests = await apiManager.GetAllInterest();
             return interests;
         }
-        public async Task<List<string>> GetUserInterests(IdentityUser user)
+        public async Task<bool> CreateInterest(InterestDto interest, string id)
         {
-            if (user != null)
+            ApiManager apiManager = new ApiManager();
+            var result = await apiManager.CreateInterest(interest, id);
+            if (result)
             {
-                var id = user.Id;
-                ApiManager apiManager = new ApiManager();
-                var interests = await apiManager.GetUserInterests(id);
-                return interests;
+                return true;
             }
-            return null;
+            return false;
+
         }
     }
 }

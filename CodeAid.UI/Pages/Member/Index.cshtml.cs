@@ -1,3 +1,4 @@
+using CodeAid.UI.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,13 +14,17 @@ namespace CodeAid.UI.Pages.Member
         {
             _signInManager = signInManager;
         }
+        public string DateRegistered { get; set; }
         public UserModel CurrentUser { get; set; } = new();
         public async Task OnGet()
         {
-            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
-            if (user != null)
+            var identityUser = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            if (identityUser != null)
             {
-                CurrentUser.Username = user.UserName;
+                CurrentUser.Username = identityUser.UserName;
+
+                ApiManager apiManager = new ApiManager();
+                var userDb = apiManager.GetUser(identityUser.UserName);
             }
 
         }

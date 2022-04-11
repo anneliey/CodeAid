@@ -17,6 +17,7 @@ namespace CodeAid.API.Controllers
             _signInManager = signInManager;
             _context = context;
         }
+
         [HttpGet]
         public ActionResult<List<InterestModel>> GetAllInterests()
         {
@@ -30,42 +31,61 @@ namespace CodeAid.API.Controllers
 
             return BadRequest();
         }
-        [HttpGet]
-        [Route("my-interests/{accessToken}")]
-        public ActionResult<List<string>> GetCurrentUserInterests(string accessToken)
-        {
-            var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
 
-            if (identityUser != null)
-            {
-                var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                var list = _context.Interests
-                    .Where(u => u.UserId.Equals(userDb.Id))
-                    .Select(list => list.Name).ToList();
-                return list;
-            }
-            return BadRequest();
-        }
-
-        // NOT FINISHED!
         [HttpPost]
-        public async Task<ActionResult<InterestModel>> CreateInterest([FromBody] InterestModel interestToAdd)
+        [Route("{accessToken}")]
+        public async Task<IActionResult> CreateInterest([FromBody] InterestDto interestToAdd, string accessToken)
         {
-            if (interestToAdd != null)
+            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+            if (isValid)
             {
-                InterestModel model = new()
+                var exists = _context.Interests.Where(x => x.Name == interestToAdd.Name).FirstOrDefault();
+                if (exists == null)
                 {
-                    Name = interestToAdd.Name,
-                    UserInterests = interestToAdd.UserInterests,
-                };
-                _context.Interests.Add(model);
-                _context.SaveChanges();
-                //if (result.)
-                return Ok(model);
+                    var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
+                    //var dbUser = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
+
+                    var dbUser = _context.Users
+                        .Include(u => u.UserInterests)
+                        .Include(u => u.Interests)
+                        .FirstOrDefault(x => x.Username == identityUser.UserName);
+
+
+                    InterestModel interest = new InterestModel
+                    {
+                        //UserId = dbUser.Id,
+                        Name = interestToAdd.Name,
+                        User = dbUser,
+
+                    };
+                    dbUser.UserInterests.Add(new UserInterestModel
+                    {
+                        Interest = interest,
+                        User = dbUser
+                    });
+                    //UserInterestModel UserInterests = new UserInterestModel
+                    //{
+
+                    //    InterestId = interest.Id,
+                    //    Interest = interest,
+                    //    User = dbUser
+
+                    //};
+                    //interest.UserInterests.Add(UserInterests);
+                    //dbUser.Interests.Add(interest);
+                    //dbUser.UserInterests.Add(UserInterests);
+
+                    _context.Users.Update(dbUser);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+                else
+                {
+                    return BadRequest();
+                }
             }
-            return BadRequest();
+            return null;
         }
-
-
     }
 }
