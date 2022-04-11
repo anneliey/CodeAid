@@ -85,5 +85,21 @@ namespace CodeAid.UI.Data
                 return false;
             }
         }
+        public async Task<List<string>> GetUserInterests(string id)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/interest/my-interests/", id);
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<List<string>>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
     }
 }
