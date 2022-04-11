@@ -1,0 +1,60 @@
+﻿@page
+@model CodeAid.UI.Pages.Member.Interest.AddModel
+@{
+}
+<h1>Add interests</h1>
+<form method="post" asp-page-handler="CreateInterest">
+    <div class="input-group mb-3">
+        <input class="form-control" type="text" asp-for="@Model.Interest.Name" />
+        <span class="text-warning" asp-validation-for="@Model.Interest.Name">@Model.ErrorMessage</span>
+    </div>
+    <button type="submit" class="btn btn-outline-dark">Create interest</button>
+</form>
+
+<form method="post">
+    @if (Model.AllInterests != null)
+    {
+        <table class="table table-light">
+            <thead>
+                <tr class="fw-bolder">
+                    <th>
+                        <h5>Interests</h5>
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var interest in Model.AllInterests)
+                {
+
+                    <tr>
+                        <td>
+                            @interest.Name
+                        </td>
+                        <td>
+                            <div class="btn-group btn-outline-light">
+                                <button type="button" class="btn">
+                                    <a class="editBtn" asp-page="/Edit" asp-route-id="@interest.Id">Edit</a>
+                                </button>
+                                <form method="post">
+                                    <button class="btn" type="submit" asp-page="/Index" asp-route-id="@interest.Id">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="text-center mt-5">
+            <h1>Oops!</h1>
+            <h2>No data found</h2>
+        </div>
+        <div class="text-center">
+            <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
+        </div>
+    }
+</form>

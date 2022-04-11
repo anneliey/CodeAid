@@ -34,15 +34,14 @@ namespace CodeAid.UI.Pages
                 {
                     Username = Username,
                     Email = Email,
-                    Password = Password
+                    Password = Password,
 
                 };
                 var result = await apiManager.RegisterUser(identityUserDto);
 
                 if (result)
                 {
-
-                    return RedirectToPage("/Index");
+                    return RedirectToPage("/Login");
                 }
             }
             return Page();

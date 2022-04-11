@@ -1,5 +1,5 @@
 ﻿using CodeAid.API.Data;
-﻿using CodeAid.UI.Pages.Member;
+using CodeAid.UI.Pages.Member;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,9 +18,21 @@ namespace CodeAid.API.Controllers
             _signInManager = signInManager;
             _context = context;
         }
+        [HttpGet]
+        //[Route("{accessToken}")]
+        public ActionResult<UserModel> GetUser(int id)
+        {
 
+            var user = _context.Users.Include(u => u.UserInterests).Include(u => u.Messages).ThenInclude(m => m.Thread).FirstOrDefault(x => x.Id == id);
+
+            if (user != null)
+            {
+                //var interests = user.Interests;
+                return user;
+            }
+            return NotFound();
+        }
         [HttpPost]
-        
         public async Task<IActionResult> RegisterUser([FromBody] IdentityUserDto userToSignUp)
         {
             // Create an empty identity user
@@ -37,6 +49,7 @@ namespace CodeAid.API.Controllers
             {
                 UserModel user = new();
                 user.Username = newUser.UserName;
+                user.DateRegistered = DateTime.Now;
                 // Add the 5 chosen interests
                 //user.Interests =
                 _context.Users.Add(user);

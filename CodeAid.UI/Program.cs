@@ -6,7 +6,10 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options =>
+{
+    options.Conventions.AuthorizeFolder("/Member");
+});
 
 var connectionString = builder.Configuration.GetConnectionString("AuthConnection");
 builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(connectionString));
@@ -15,7 +18,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkSto
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.LoginPath = "/Index";
+    options.LoginPath = "/Login";
     options.AccessDeniedPath = "/AccessDenied";
 });
 

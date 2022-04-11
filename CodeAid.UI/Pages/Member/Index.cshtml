@@ -1,0 +1,25 @@
+﻿@page
+@model CodeAid.UI.Pages.Member.IndexModel
+@{
+}
+<div class="container-fluid p-5 bg-dark text-white">
+    <div class="row">
+        <div class="text-center">
+            <img class="" src="/images/icons8-cat-profile-100.png" alt="profile image" />
+            <h1>@Model.CurrentUser.Username</h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="button-box col-lg-12">
+        <a class="btn btn-outline-dark" asp-page="/member/interests">My threads</a>
+        <a class="btn btn-outline-dark" asp-page="/member/settings">Account settings</a>
+
+        @*<button class="btn btn-outline-dark">
+            <a class="nav-link text-dark" asp-page="/Privacy">Privacy</a>
+            </button>
+            <button class="btn btn-outline-dark">
+            <a class="nav-link text-dark" asp-page="/Privacy">Privacy</a>
+            </button>*@
+    </div>
+</div>
