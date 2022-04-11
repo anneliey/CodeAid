@@ -14,6 +14,7 @@ namespace CodeAid.API.Data
         public DbSet<ThreadModel> Threads { get; set; }
         public DbSet<MessageModel> Messages { get; set; }
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<UserInterestModel> UserInterests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

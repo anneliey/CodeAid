@@ -4,6 +4,7 @@ using CodeAid.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodeAid.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220407132056_AddedPropToUserModel")]
+    partial class AddedPropToUserModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,7 +43,7 @@ namespace CodeAid.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Interests", (string)null);
+                    b.ToTable("Interests");
                 });
 
             modelBuilder.Entity("CodeAid.Shared.MessageModel", b =>
@@ -56,9 +58,6 @@ namespace CodeAid.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("PostDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("ThreadId")
                         .HasColumnType("int");
 
@@ -71,7 +70,7 @@ namespace CodeAid.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("CodeAid.Shared.ThreadModel", b =>
@@ -85,16 +84,9 @@ namespace CodeAid.API.Migrations
                     b.Property<int>("InterestId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Question")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QuestionTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ThreadDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
@@ -105,7 +97,7 @@ namespace CodeAid.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Threads", (string)null);
+                    b.ToTable("Threads");
                 });
 
             modelBuilder.Entity("CodeAid.Shared.UserInterestModel", b =>
@@ -120,7 +112,7 @@ namespace CodeAid.API.Migrations
 
                     b.HasIndex("InterestId");
 
-                    b.ToTable("UserInterests");
+                    b.ToTable("UserInterestModel");
                 });
 
             modelBuilder.Entity("CodeAid.Shared.UserModel", b =>
@@ -146,7 +138,7 @@ namespace CodeAid.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CodeAid.Shared.InterestModel", b =>
