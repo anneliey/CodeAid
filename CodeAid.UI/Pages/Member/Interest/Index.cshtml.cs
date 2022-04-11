@@ -14,30 +14,16 @@ namespace CodeAid.UI.Pages.Member.Interest
         {
             _signInManager = signInManager;
         }
-        public string Name { get; set; } = string.Empty;
         public List<InterestModel> AllInterests { get; set; }
-        public InterestModel Interest { get; set; }
-        public string ErrorMessage { get; set; } = string.Empty;
-        public async Task OnGet()
+
+        public async Task<IActionResult> OnGet()
         {
             InterestManager manager = new();
             AllInterests = await manager.GetInterests();
-        }
-        public async Task<IActionResult> OnPostCreateInterest()
-        {
-            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
-            if (user != null)
-            {
-                InterestManager interestManager = new();
-                var result = await interestManager.CreateInterest(Interest, user.Id);
-                if (!result)
-                {
-                    ErrorMessage = "Interest already exists!";
-                }
-            }
-            return null;
+            return Page();
 
         }
+
         //public void OnPost()
         //{
         //    InterestModel interest = new()

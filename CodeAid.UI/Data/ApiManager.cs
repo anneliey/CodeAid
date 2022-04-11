@@ -8,11 +8,11 @@ namespace CodeAid.UI.Data
     {
         string baseUrl = "https://localhost:7238/";
 
-        public async Task<UserModel> GetUser(string user)
+        public async Task<UserModel> GetUser(string id)
         {
             using (var httpClient = new HttpClient())
             {
-                string url = string.Concat(baseUrl, "api/interest");
+                string url = string.Concat(baseUrl, "api/interest/", id);
                 var response = await httpClient.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)
@@ -71,12 +71,12 @@ namespace CodeAid.UI.Data
             }
             return null;
         }
-        public async Task<bool> CreateInterest(InterestModel interest, string id)
+        public async Task<bool> CreateInterest(InterestDto interest, string id)
         {
             using (var httpClient = new HttpClient())
             {
-                string url = string.Concat(baseUrl, "api/interest/", id);
-                var response = await httpClient.PostAsJsonAsync<InterestModel>(url, interest);
+                string url = string.Concat(baseUrl, "api/Interest/", id);
+                var response = await httpClient.PostAsJsonAsync<InterestDto>(url, interest);
 
                 if (response.IsSuccessStatusCode)
                 {
