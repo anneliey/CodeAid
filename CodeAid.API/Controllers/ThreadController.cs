@@ -9,6 +9,11 @@ namespace CodeAid.API.Controllers
     [ApiController]
     public class ThreadController : ControllerBase
     {
+        public IEnumerable<ThreadModel> threadSearch { get; set; } = new List<ThreadModel>();
+
+        [BindProperty]
+        public string SearchTerm { get; set; }
+
         private readonly AppDbContext _context;
         private readonly SignInManager<IdentityUser> _signInManager;
 
@@ -50,6 +55,16 @@ namespace CodeAid.API.Controllers
             }
             return BadRequest();
         }
+
+        //[HttpGet]
+        //public ActionResult<List<ThreadModel>> SearchThread()
+        //{
+        //    var threadSearch = _context.Threads;
+        //    if (threadSearch.Any())
+        //    {
+        //        var searchResult = 
+        //    }
+        //}
 
 
         [HttpPost]
