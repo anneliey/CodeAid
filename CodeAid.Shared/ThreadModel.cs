@@ -9,7 +9,9 @@ namespace CodeAid.Shared
         public int Id { get; set; }
         public string QuestionTitle { get; set; } = String.Empty;
         public string Question { get; set; } = String.Empty;
-        public List<MessageModel> Messages { get; set; }
+
+        public  DateTime ThreadDate{ get; set; }
+        public List<MessageModel>? Messages { get; set; }
 
         // Relations
         [ForeignKey(nameof(Interest))]
