@@ -9,22 +9,37 @@ namespace CodeAid.API.Controllers
     [ApiController]
     public class ThreadController : ControllerBase
     {
-        public IEnumerable<ThreadModel> threadSearch { get; set; } = new List<ThreadModel>();
+        //public IEnumerable<ThreadModel> threadSearch { get; set; } = new List<ThreadModel>();
 
-        [BindProperty]
-        public string SearchTerm { get; set; }
+        //[BindProperty]
+        //public string SearchTerm { get; set; }
 
-        private readonly AppDbContext _context;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly AppDbContext _context;
 
-        public ThreadController(AppDbContext context, SignInManager<IdentityUser> signInManager)
+        public ThreadController(SignInManager<IdentityUser> signInManager, AppDbContext context)
         {
-            _context = context;
             _signInManager = signInManager;
+            _context = context;
         }
 
         [HttpGet]
         public ActionResult<List<ThreadModel>> GetAllThreads()
+        {
+            var result = _context.Threads;
+            if (result.Any())
+            {
+                var resultList = result.ToList();
+
+                return Ok(resultList);
+            }
+
+            return BadRequest();
+        }
+
+        [HttpGet]
+        [Route("{accessToken}")]
+        public ActionResult<List<ThreadModel>> GetAllQuestions()
         {
             var result = _context.Threads;
             if (result.Any())
@@ -67,38 +82,41 @@ namespace CodeAid.API.Controllers
         //}
 
 
-        [HttpPost]
-        public async Task<ActionResult<List<ThreadModel>>> PostThread(ThreadModel thread, string id)
+        [HttpPost("[action]/{accessToken}")]
+        public async Task<IActionResult> CreateThread([FromBody] ThreadDto thread, [FromRoute] string accessToken)
         {
+            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+
             var exists = _context.Threads.Where(x => x.QuestionTitle == thread.QuestionTitle).FirstOrDefault();
             if (exists == null)
             {
-                var identityUser = _signInManager.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
+                var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
                 var dbUser = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
-                ThreadModel interest = new ThreadModel()
+
+                var threadInterest = await _context.Interests.FirstOrDefaultAsync(i => i.Id == 2);
+
+                if (threadInterest != null)
                 {
-                    User = dbUser,
-                    Question = thread.Question,
-                    QuestionTitle = thread.QuestionTitle,
-                    ThreadDate = thread.ThreadDate,
-                    Messages = thread.Messages,
-                    Interest = thread.Interest
+                    ThreadModel threadQuestion = new ThreadModel()
+                    {
+                        User = dbUser,
+                        Question = thread.Question,
+                        QuestionTitle = thread.QuestionTitle,
+                        ThreadDate = DateTime.Now,
+                        Interest = threadInterest
+                    };
 
-                };
+                    _context.Threads.Add(threadQuestion);
+                    await _context.SaveChangesAsync();
 
-                _context.Threads.Add(thread);
-                await _context.SaveChangesAsync();
-
-                return Ok();
-            }
-            else
-            {
-                return null;
+                    return Ok();
+                }
             }
 
+            return BadRequest();
 
         }
-
 
         //[HttpPut]
         //public async Task<ActionResult<List<ThreadModel>>> UpdateThread(ThreadModel threadToUpdate, string id)

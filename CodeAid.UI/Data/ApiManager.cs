@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
 
 namespace CodeAid.UI.Data
 {
@@ -96,6 +97,56 @@ namespace CodeAid.UI.Data
                 {
                     var strResponse = await response.Content.ReadAsStringAsync();
                     var data = JsonConvert.DeserializeObject<List<string>>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
+
+        public async Task<bool> CreateThread(ThreadDto thread, string id)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, $"api/thread/CreateThread/{id}");
+
+                var response = await httpClient.PostAsJsonAsync(url, thread);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public async Task<List<ThreadModel>> GetAllThreads()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/thread/");
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<List<ThreadModel>>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
+
+        public async Task<List<ThreadModel>> GetAllQuestions()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/thread/");
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<List<ThreadModel>>(strResponse);
                     return data;
                 }
             }
