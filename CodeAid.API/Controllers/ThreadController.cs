@@ -118,68 +118,49 @@ namespace CodeAid.API.Controllers
 
         }
 
-        //[HttpPut]
-        //public async Task<ActionResult<List<ThreadModel>>> UpdateThread(ThreadModel threadToUpdate, string id)
-        //{
-        //    var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(id)).FirstOrDefault();
+        [HttpPut]
+        public async Task<ActionResult<List<ThreadModel>>> UpdateThread(ThreadModel threadToUpdate, string id)
+        {
+            var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(id)).FirstOrDefault();
 
-        //    if (identityUser != null)
-        //    {
-        //        var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
-        //        // change for your method
-        //       var dbThread = await _
+            if (identityUser != null)
+            {
+                var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
+                // change for your method
+                var dbThread = await _context.Threads.FindAsync(threadToUpdate.Id);
+                if (dbThread == null)
+                {
+                    return BadRequest("Thread not found");
+                }
 
-        //        return list;
-        //    }
-        //    return BadRequest();
-        //var dbThread = await _context.Threads.FindAsync(threadToUpdate.Id);
-        //if (dbThread == null)
-        //{
-        //    return BadRequest("Thread not found");
-        //}
+                dbThread.QuestionTitle = threadToUpdate.QuestionTitle;
+                dbThread.Question = threadToUpdate.Question;
 
-        //dbThread.QuestionTitle = threadToUpdate.QuestionTitle;
-        //dbThread.Question = threadToUpdate.Question;  
+                await _context.SaveChangesAsync();
+                return Ok(await _context.Threads.ToListAsync());
+            }
 
-        //await _context.SaveChangesAsync();
-        //return Ok(await _context.Threads.ToListAsync());
+            return BadRequest();
+            }
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<List<ThreadModel>>> DeleteThread(string accessToken, int id)
+        {
 
+            var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
 
+            if (identityUser != null)
+            {
+                var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
+                var dbTread = await _context.Threads.FindAsync(id);
 
+                _context.Threads.Remove(dbTread);
+                await _context.SaveChangesAsync();
 
-        //}
+                return Ok(await _context.Threads.ToListAsync());
+            }
+            return BadRequest();
 
-
-
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult<List<ThreadModel>>> DeleteThread(string accessToken, int id)
-        //{
-
-        //    var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
-
-        //    if (identityUser != null)
-        //    {
-        //        var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
-        //        var dbTread = await _context.Threads.FindAsync(id);
-
-        //           _context.Threads.Remove(dbTread);
-        //           await _context.SaveChangesAsync();
-
-        //        return Ok(await _context.Threads.ToListAsync());
-        //    }
-        //    return BadRequest();
-
-        //}
-
-
-
-
-
-
-
-
-
-
+        }
     }
 }

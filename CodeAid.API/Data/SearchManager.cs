@@ -1,10 +1,10 @@
 ﻿namespace CodeAid.API.Data
 {
-    public class ThreadManager
+    public class SearchManager
     {
         private readonly AppDbContext _context;
 
-        public ThreadManager(AppDbContext context)
+        public SearchManager(AppDbContext context)
         {
             _context = context;
         }

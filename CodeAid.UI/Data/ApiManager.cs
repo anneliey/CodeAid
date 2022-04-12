@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
+using System.Text;
 
 namespace CodeAid.UI.Data
 {
@@ -117,6 +118,37 @@ namespace CodeAid.UI.Data
                 }
                 return false;
             }
+        }
+
+        public async Task<ThreadModel> DeleteThread(string id)
+        {
+
+            string url = String.Concat(baseUrl, "api/thread/", id);
+
+            HttpClient httpClient = new();
+
+            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Delete, url)
+            {
+                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
+            };
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
+
+            return null;
+        }
+
+        public async Task<IdentityUser> UpdateThread(string id)
+        {
+            string url = String.Concat(baseUrl, "api/thread/updateThread/", id);
+
+            HttpClient httpClient = new();
+
+            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Put, url)
+            {
+                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
+            };
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
+
+            return null;
         }
 
         public async Task<List<ThreadModel>> GetAllThreads()
