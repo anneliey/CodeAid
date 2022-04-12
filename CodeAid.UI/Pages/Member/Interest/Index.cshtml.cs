@@ -14,22 +14,30 @@ namespace CodeAid.UI.Pages.Member.Interest
         {
             _signInManager = signInManager;
         }
-        public List<InterestModel> AllInterests { get; set; }
+        public List<InterestModel> UserInterests { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
-            InterestManager manager = new();
-            AllInterests = await manager.GetInterests();
+            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            if (user != null)
+            {
+                InterestManager manager = new();
+                UserInterests = await manager.GetUserInterests(user.Id);
+            }
             return Page();
 
         }
 
-        //public void OnPost()
-        //{
-        //    InterestModel interest = new()
-        //    {
-        //        Name = Interest.Name
-        //    }.ToList();
-        //}
+        public async Task<IActionResult> OnPost(InterestModel interest)
+        {
+            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            if (user != null)
+            {
+                ApiManager apiManager = new();
+
+                await apiManager.DeleteInterest(interest.Id, user.Id);
+            }
+            return RedirectToPage("/Member/Interest/Index");
+        }
     }
 }

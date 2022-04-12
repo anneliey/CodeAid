@@ -8,10 +8,10 @@
         <input class="form-control" type="text" asp-for="@Model.Interest.Name" />
         <span class="text-warning" asp-validation-for="@Model.Interest.Name">@Model.ErrorMessage</span>
     </div>
-    <button type="submit" class="btn btn-outline-dark">Create interest</button>
+    <button type="submit" class="btn btn-outline-dark">Create a new interest</button>
 </form>
 
-<form method="post">
+
     @if (Model.AllInterests != null)
     {
         <table class="table table-light">
@@ -33,14 +33,11 @@
                             @interest.Name
                         </td>
                         <td>
+                            <form method="post" asp-page-handler="AddInterest">
                             <div class="btn-group btn-outline-light">
-                                <button type="button" class="btn">
-                                    <a class="editBtn" asp-page="/Edit" asp-route-id="@interest.Id">Edit</a>
-                                </button>
-                                <form method="post">
-                                    <button class="btn" type="submit" asp-page="/Index" asp-route-id="@interest.Id">Delete</button>
-                                </form>
+                                <button class="btn" type="submit" asp-route-id="@interest.Id">Add</button>
                             </div>
+                            </form>
                         </td>
                     </tr>
                 }
@@ -57,4 +54,4 @@
             <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
         </div>
     }
-</form>
+

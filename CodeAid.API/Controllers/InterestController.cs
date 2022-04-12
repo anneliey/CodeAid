@@ -17,23 +17,46 @@ namespace CodeAid.API.Controllers
             _signInManager = signInManager;
             _context = context;
         }
-
         [HttpGet]
-        public ActionResult<List<InterestModel>> GetAllInterests()
+        [Route("{id}/{accessToken}")]
+        public ActionResult<InterestModel> GetInterest(string accessToken, int id)
         {
-            var result = _context.Interests;
-            if (result.Any())
+            AccessTokenManager accessTokenManager = new(_signInManager);
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+            if (isValid)
             {
-                var resultList = result.ToList();
-
-                return Ok(resultList);
+                var interest = _context.Interests.Where(x => x.Id.Equals(id)).FirstOrDefault();
+                if (interest != null)
+                {
+                    return interest;
+                }
+                return NotFound();
             }
-
             return BadRequest();
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("{accessToken}")]
+        public ActionResult<List<InterestModel>> GetAllInterests(string accessToken)
+        {
+            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+            if (isValid)
+            {
+                var result = _context.Interests;
+                if (result.Any())
+                {
+                    var resultList = result.ToList();
+
+                    return Ok(resultList);
+                }
+                return BadRequest();
+            }
+            return null;
+        }
+
+        [HttpPost]
+        [Route("Create/{accessToken}")]
         public async Task<IActionResult> CreateInterest([FromBody] InterestDto interestToAdd, string accessToken)
         {
             AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
@@ -44,37 +67,21 @@ namespace CodeAid.API.Controllers
                 if (exists == null)
                 {
                     var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
-                    //var dbUser = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
-
                     var dbUser = _context.Users
                         .Include(u => u.UserInterests)
                         .Include(u => u.Interests)
                         .FirstOrDefault(x => x.Username == identityUser.UserName);
 
-
                     InterestModel interest = new InterestModel
                     {
-                        //UserId = dbUser.Id,
                         Name = interestToAdd.Name,
                         User = dbUser,
-
                     };
                     dbUser.UserInterests.Add(new UserInterestModel
                     {
                         Interest = interest,
                         User = dbUser
                     });
-                    //UserInterestModel UserInterests = new UserInterestModel
-                    //{
-
-                    //    InterestId = interest.Id,
-                    //    Interest = interest,
-                    //    User = dbUser
-
-                    //};
-                    //interest.UserInterests.Add(UserInterests);
-                    //dbUser.Interests.Add(interest);
-                    //dbUser.UserInterests.Add(UserInterests);
 
                     _context.Users.Update(dbUser);
                     await _context.SaveChangesAsync();
@@ -83,6 +90,32 @@ namespace CodeAid.API.Controllers
                 else
                 {
                     return BadRequest();
+                }
+            }
+            return null;
+        }
+
+        [HttpDelete]
+        [Route("{id}/{accessToken}")]
+        public async Task<ActionResult> DeleteInterest(string accessToken, [FromRoute] int id)
+        {
+            AccessTokenManager accessTokenManager = new(_signInManager);
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+            if (isValid)
+            {
+                var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
+                var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
+                var result = _context.Interests.Any(x => x.UserId == dbUser.Id);
+                if (result)
+                {
+                    var interest = _context.Interests.Where(x => x.Id == id).FirstOrDefault();
+                    if (interest != null)
+                    {
+                        _context.Interests.Remove(interest);
+                        await _context.SaveChangesAsync();
+                        return Ok();
+                    }
+                    return NotFound();
                 }
             }
             return null;
