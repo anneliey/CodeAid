@@ -12,7 +12,6 @@
                 return true;
             }
             return false;
-
         }
         public async Task<List<ThreadModel>> GetThreads()
         {

@@ -94,10 +94,10 @@ namespace CodeAid.API.Controllers
                 var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
                 var dbUser = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
 
-                var threadInterest = await _context.Interests.FirstOrDefaultAsync(i => i.Id == 2);
+                //var threadInterest = await _context.Interests.FirstOrDefaultAsync(i => i.Id == );
 
-                if (threadInterest != null)
-                {
+                //if (threadInterest != null)
+                //{
                     ThreadModel threadQuestion = new ThreadModel()
                     {
                         User = dbUser,
@@ -106,12 +106,13 @@ namespace CodeAid.API.Controllers
                         ThreadDate = DateTime.Now,
                         Interest = threadInterest
                     };
+                    
 
                     _context.Threads.Add(threadQuestion);
                     await _context.SaveChangesAsync();
 
                     return Ok();
-                }
+                //}
             }
 
             return BadRequest();
