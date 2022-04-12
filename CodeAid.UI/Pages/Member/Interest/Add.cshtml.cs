@@ -15,23 +15,32 @@ namespace CodeAid.UI.Pages.Member.Interest
             _signInManager = signInManager;
         }
         public List<InterestModel> AllInterests { get; set; }
+        public List<InterestModel> VisibleInterests { get; set; } = new();
         public InterestDto Interest { get; set; }
         public string ErrorMessage { get; set; } = string.Empty;
         public async Task<IActionResult> OnGet()
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
             InterestManager manager = new();
-            AllInterests = await manager.GetInterests(user.Id);
+            AllInterests = await manager.GetInterests(user);
+            var userInterests = await manager.GetUserInterests(user.Id);
+
+            foreach (var interest in AllInterests)
+            {
+                if (!userInterests.Any(ui => ui.Name == interest.Name))
+                {
+                    VisibleInterests.Add(interest);
+                }
+            }
             return Page();
         }
-        public async Task<IActionResult> OnPostAddInterest(InterestModel interest)
+        public async Task<IActionResult> OnPost(InterestModel interest)
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
                 AccountManager accountManager = new();
-                var result = await accountManager.AddInterestToUser(interest, user.Id);
-
+                await accountManager.AddInterestToUser(interest, user.Id);
             }
             return RedirectToPage("/Member/Interest/Add");
         }
@@ -45,6 +54,7 @@ namespace CodeAid.UI.Pages.Member.Interest
                 if (!result)
                 {
                     ErrorMessage = "Interest already exists!";
+                    return Page();
                 }
                 else
                 {

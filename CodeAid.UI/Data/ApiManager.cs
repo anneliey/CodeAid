@@ -101,7 +101,7 @@ namespace CodeAid.UI.Data
         {
             using (var httpClient = new HttpClient())
             {
-                string url = string.Concat($"{baseUrl}api/user/{interest.Id}/{accessToken}");
+                string url = string.Concat($"{baseUrl}api/user/interest/add/{interest.Id}/{accessToken}");
                 var response = await httpClient.PostAsJsonAsync<InterestModel>(url, interest);
 
                 if (response.IsSuccessStatusCode)

@@ -63,8 +63,9 @@ namespace CodeAid.API.Controllers
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
             if (isValid)
             {
-                var exists = _context.Interests.Where(x => x.Name == interestToAdd.Name).FirstOrDefault();
-                if (exists == null)
+                var interestToUpper = interestToAdd.Name.ToUpper();
+                var result = _context.Interests.Where(x => x.Name == interestToUpper).FirstOrDefault();
+                if (result == null)
                 {
                     var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
                     var dbUser = _context.Users
@@ -74,7 +75,7 @@ namespace CodeAid.API.Controllers
 
                     InterestModel interest = new InterestModel
                     {
-                        Name = interestToAdd.Name,
+                        Name = interestToUpper,
                         User = dbUser,
                     };
                     dbUser.UserInterests.Add(new UserInterestModel
@@ -87,12 +88,8 @@ namespace CodeAid.API.Controllers
                     await _context.SaveChangesAsync();
                     return Ok();
                 }
-                else
-                {
-                    return BadRequest();
-                }
             }
-            return null;
+            return BadRequest();
         }
 
         [HttpDelete]

@@ -12,46 +12,46 @@
 </form>
 
 
-    @if (Model.AllInterests != null)
-    {
-        <table class="table table-light">
-            <thead>
-                <tr class="fw-bolder">
-                    <th>
-                        <h5>Interests</h5>
-                    </th>
+@if (Model.VisibleInterests != null)
+{
+    <table class="table table-light">
+        <thead>
+            <tr class="fw-bolder">
+                <th>
+                    <h5>Interests</h5>
+                </th>
 
-                </tr>
-            </thead>
-            <tbody>
+            </tr>
+        </thead>
+        <tbody>
 
-                @foreach (var interest in Model.AllInterests)
-                {
+            @foreach (var interest in Model.VisibleInterests)
+            {
 
-                    <tr>
-                        <td>
-                            @interest.Name
-                        </td>
-                        <td>
-                            <form method="post" asp-page-handler="AddInterest">
-                            <div class="btn-group btn-outline-light">
+                <tr>
+                    <td>
+                        @interest.Name
+                    </td>
+                    <td>
+                        <div class="btn-group btn-outline-light">
+                            <form method="post">
                                 <button class="btn" type="submit" asp-route-id="@interest.Id">Add</button>
-                            </div>
                             </form>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <div class="text-center mt-5">
-            <h1>Oops!</h1>
-            <h2>No data found</h2>
-        </div>
-        <div class="text-center">
-            <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
-        </div>
-    }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (Model.VisibleInterests.Count == 0)
+{
+    <div class="text-center mt-5">
+        <h1>Oops!</h1>
+        <h2>No data found</h2>
+    </div>
+    <div class="text-center">
+        <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
+    </div>
+}
 
