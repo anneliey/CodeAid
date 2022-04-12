@@ -4,11 +4,23 @@ namespace CodeAid.UI.Data
 {
     public class InterestManager
     {
-        public async Task<List<InterestModel>> GetInterests()
+        //public async Task<InterestModel> GetInterest(int id)
+        //{
+        //    ApiManager apiManager = new ApiManager();
+        //    var interests = await apiManager.GetInterest(id);
+        //    return interests;
+        //}
+        public async Task<List<InterestModel>> GetInterests(string id)
         {
             ApiManager apiManager = new ApiManager();
-            var interests = await apiManager.GetAllInterest();
+            var interests = await apiManager.GetAllInterest(id);
             return interests;
+        }
+        public async Task<List<InterestModel>> GetUserInterests(string id)
+        {
+            ApiManager apiManager = new ApiManager();
+            var userInterests = await apiManager.GetUserInterests(id);
+            return userInterests;
         }
         public async Task<bool> CreateInterest(InterestDto interest, string id)
         {
@@ -19,7 +31,6 @@ namespace CodeAid.UI.Data
                 return true;
             }
             return false;
-
         }
     }
 }

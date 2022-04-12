@@ -3,51 +3,49 @@
 @{
 }
 <h2 class="display-2">Your interest</h2>
+<a class="btn btn-dark" href="/member/interest/add">Add interest</a>
 
-<form method="post">
-    @if (Model.AllInterests != null)
-    {
-        <table class="table table-light">
-            <thead>
-                <tr class="fw-bolder">
-                    <th>
-                        <h5>Interests</h5>
-                    </th>
+@if (Model.UserInterests != null)
+{
+    <table class="table table-light">
+        <thead>
+            <tr class="fw-bolder">
+                <th>
+                    <h5>Interests</h5>
+                </th>
 
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.UserInterests)
+            {
+                <tr>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        <div class="btn-group btn-outline-light">
+                            <button type="button" class="btn">
+                                <a class="editBtn" asp-page="/Edit" asp-route-id="@item.Id">Edit</a>
+                            </button>
+                            <form method="post">
+                                <button class="btn" type="submit" asp-route-id="@item.Id">Delete</button>
+                            </form>
+                        </div>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-
-                @foreach (var interest in Model.AllInterests)
-                {
-
-                    <tr>
-                        <td>
-                            @interest.Name
-                        </td>
-                        <td>
-                            <div class="btn-group btn-outline-light">
-                                <button type="button" class="btn">
-                                    <a class="editBtn" asp-page="/Edit" asp-route-id="@interest.Id">Edit</a>
-                                </button>
-                                <form method="post">
-                                    <button class="btn" type="submit" asp-page="/Index" asp-route-id="@interest.Id">Delete</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <div class="text-center mt-5">
-            <h1>Oops!</h1>
-            <h2>No data found</h2>
-        </div>
-        <div class="text-center">
-            <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
-        </div>
-    }
-</form>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="text-center mt-5">
+        <h1>Oops!</h1>
+        <h2>No data found</h2>
+    </div>
+    <div class="text-center">
+        <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
+    </div>
+}

@@ -18,21 +18,100 @@ namespace CodeAid.API.Controllers
             _signInManager = signInManager;
             _context = context;
         }
-        [HttpGet]
+        //[HttpGet]
         //[Route("{accessToken}")]
-        public ActionResult<UserModel> GetUser(int id)
+        //public async Task<ActionResult<UserModel>> GetUser(string accessToken)
+        //{
+        //    AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
+        //    var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+        //    if (isValid)
+        //    {
+        //        var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
+
+
+        //    var dbUser = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
+
+        //    //var dbUser = _context.Users.Include(u => u.UserInterests).ThenInclude(u => u.Interest).Include(u => u.Messages).ThenInclude(m => m.Thread).Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
+        //    if (dbUser != null)
+        //    {
+        //        return dbUser;
+        //    }
+        //    return NotFound();
+
+        //    }
+        //    return BadRequest();
+
+        //}
+        [HttpGet]
+        [Route("Interests/{accessToken}")]
+        public ActionResult<List<InterestModel>> GetUserInterests(string accessToken)
         {
+            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
 
-            var user = _context.Users.Include(u => u.UserInterests).Include(u => u.Messages).ThenInclude(m => m.Thread).FirstOrDefault(x => x.Id == id);
-
-            if (user != null)
+            if (isValid)
             {
-                //var interests = user.Interests;
-                return user;
+                var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
+                var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
+                //var userInterests = _context.UserInterests
+                //    .Where(u => u.UserId == dbUser.Id).Select(i => i.Interest).ToList();
+
+                //var userInterests = _context.UserInterests.Where(x => x.UserId == dbUser.Id).ToList();
+
+                var userInterests = _context.Interests.Where(i => i.UserInterests.Any(ui => ui.UserId == dbUser.Id)).ToList();
+
+                //.ThenInclude(ui => ui.Interest)
+                //.FirstOrDefaultAsync(u => u.Username.Equals(identityUser.UserName));
+                if (userInterests != null)
+                {
+                    foreach (var userInterest in userInterests)
+                    {
+                        userInterest.User = null;
+                    }
+
+                    return Ok(userInterests);
+                }
+
+                return BadRequest();
             }
-            return NotFound();
+            return null;
         }
+
         [HttpPost]
+        [Route("add/{id}/{accessToken}")]
+        public async Task<IActionResult> AddInterestToUser([FromBody] InterestModel interestToAdd, string accessToken)
+        {
+            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+
+            if (isValid)
+            {
+                var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
+                var dbUser = _context.Users
+                    .Include(u => u.UserInterests)
+                    .Include(u => u.Interests)
+                    .FirstOrDefault(x => x.Username == identityUser.UserName);
+
+                InterestModel interest = new InterestModel
+                {
+                    Name = interestToAdd.Name,
+                    User = dbUser,
+                };
+                dbUser.UserInterests.Add(new UserInterestModel
+                {
+                    Interest = interest,
+                    User = dbUser
+                });
+
+                _context.Users.Update(dbUser);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [Route("SignUp")]
         public async Task<IActionResult> RegisterUser([FromBody] IdentityUserDto userToSignUp)
         {
             // Create an empty identity user

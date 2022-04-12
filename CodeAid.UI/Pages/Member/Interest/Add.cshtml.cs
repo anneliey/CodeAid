@@ -19,9 +19,21 @@ namespace CodeAid.UI.Pages.Member.Interest
         public string ErrorMessage { get; set; } = string.Empty;
         public async Task<IActionResult> OnGet()
         {
+            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
             InterestManager manager = new();
-            AllInterests = await manager.GetInterests();
+            AllInterests = await manager.GetInterests(user.Id);
             return Page();
+        }
+        public async Task<IActionResult> OnPostAddInterest(InterestModel interest)
+        {
+            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            if (user != null)
+            {
+                AccountManager accountManager = new();
+                var result = await accountManager.AddInterestToUser(interest, user.Id);
+
+            }
+            return RedirectToPage("/Member/Interest/Add");
         }
         public async Task<IActionResult> OnPostCreateInterest()
         {
@@ -39,7 +51,7 @@ namespace CodeAid.UI.Pages.Member.Interest
                     return RedirectToPage("/Member/Interest/Index");
                 }
             }
-            return Page();
+            return RedirectToPage("/Member/Interest/Add");
         }
     }
 }
