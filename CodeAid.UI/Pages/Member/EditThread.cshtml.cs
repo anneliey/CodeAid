@@ -16,23 +16,17 @@ namespace CodeAid.UI.Pages.Member
             _signInManager = signInManager;
         }
 
-        //[Required(ErrorMessage = "Title is required!")]
-        //public string QuestionTitle { get; set; }
-
-        //[Required(ErrorMessage = "Question can't be empty!")]
-        //public string Question { get; set; }
-        //public List<ThreadModel> AllThreads { get; set; }
         public ThreadDto Thread { get; set; }
         public List<InterestModel> AllInterests { get; set; }
         public string ErrorMessage { get; set; } = string.Empty;
 
-        public async Task<IActionResult> OnGet()
-        {
-            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
-            InterestManager manager = new();
-            AllInterests = await manager.GetInterests(user.Id);
-            return Page();
-        }
+        //public async Task<IActionResult> OnGet()
+        //{
+        //    var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+        //    InterestManager manager = new();
+        //    AllInterests = await manager.GetInterests(user);
+        //    return Page();
+        //}
         public async Task<IActionResult> OnPost()
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);

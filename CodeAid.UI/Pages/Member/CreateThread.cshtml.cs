@@ -26,31 +26,23 @@ namespace CodeAid.UI.Pages
         public ThreadDto Thread { get; set; }
         public List<InterestModel> AllInterests { get; set; }
         public string ErrorMessage { get; set; } = string.Empty;
+        public int CurrentInterestId { get; set; }
 
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGet(int id) // id is interest id
         {
-            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
-            InterestManager manager = new();
-            AllInterests = await manager.GetInterests(user.Id);
+            CurrentInterestId = id;
+
             return Page();
         }
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(int id)
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+
             if (user != null)
             {
                 ThreadManager threadManager = new();
-                //ThreadDto threadDto = new ThreadDto()
-                //{
-                //    QuestionTitle = Thread.QuestionTitle,
-                //    Question = Thread.Question,
-                //};
 
-                
-                InterestManager interestManager = new InterestManager();
-                //var interest = interestManager.GetInterest(Thread.InterestId, user);
-
-                Thread.InterestId = 2;//interest.Threads; // Hard coded elden ring interest - Hämtas sen från razor page property CurrentInterestId
+                Thread.InterestId = CurrentInterestId; // Hard coded elden ring interest - Hämtas sen från razor page property CurrentInterestId
 
                 var result = await threadManager.CreateThread(Thread, user.Id);
 

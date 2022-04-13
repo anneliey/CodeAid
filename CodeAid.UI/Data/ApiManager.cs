@@ -59,6 +59,23 @@ namespace CodeAid.UI.Data
             return null;
         }
 
+        public async Task<List<InterestModel>> GetRegisterInterest()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/interest/list");
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<List<InterestModel>>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
+
         public async Task<List<InterestModel>> GetUserInterests(string accessToken)
         {
             using (var httpClient = new HttpClient())

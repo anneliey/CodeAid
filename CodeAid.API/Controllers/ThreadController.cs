@@ -96,7 +96,7 @@ namespace CodeAid.API.Controllers
 
 
         [HttpPost("[action]/{accessToken}")]
-        public async Task<IActionResult> CreateThread([FromBody] ThreadDto thread, [FromRoute] string accessToken)
+        public async Task<IActionResult> CreateThread([FromBody] ThreadDto thread, [FromRoute] string accessToken, int interestId)
         {
             AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
