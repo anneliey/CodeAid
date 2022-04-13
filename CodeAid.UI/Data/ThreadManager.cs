@@ -20,12 +20,13 @@
             return threads;
         }
 
-        public async Task<List<ThreadModel>> GetThread(int id)
+        public async Task<ThreadModel> GetThread(int id)
         {
             ApiManager apiManager = new ApiManager();
             var allThreads = await apiManager.GetAllThreads();
-            var sortedThreads = allThreads.Where(x => x.Id == id).ToList();
-            return sortedThreads;
+            var pickedThread = allThreads.FirstOrDefault(x => x.Id == id);
+
+            return pickedThread;
         }
 
         public async Task<List<ThreadModel>> GetQuestions()

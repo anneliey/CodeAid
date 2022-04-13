@@ -1,20 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CodeAid.UI.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CodeAid.UI.Pages
 {
+    [BindProperties]
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
-        public IndexModel(ILogger<IndexModel> logger)
+        
+        public IndexModel(SignInManager<IdentityUser> signInManager)
         {
-            _logger = logger;
+            _signInManager = signInManager;
         }
 
-        public void OnGet()
-        {
+        public List<InterestModel> AllInterests { get; set; }
 
+        public async Task OnGet(string interest)
+        {
+            InterestManager interestManager = new();
+
+            AllInterests = await interestManager.GetInterests(interest);
         }
     }
 }

@@ -175,37 +175,22 @@ namespace CodeAid.UI.Data
                 return false;
             }
         }
+   
 
-        public async Task<ThreadModel> DeleteThread(string id)
-        {
+        //public async Task<IdentityUser> UpdateThread(string id)
+        //{
+        //    string url = String.Concat(baseUrl, "api/thread/updateThread/", id);
 
-            string url = String.Concat(baseUrl, "api/thread/", id);
+        //    HttpClient httpClient = new();
 
-            HttpClient httpClient = new();
+        //    HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Put, url)
+        //    {
+        //        Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
+        //    };
+        //    HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
 
-            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Delete, url)
-            {
-                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
-            };
-            HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
-
-            return null;
-        }
-
-        public async Task<IdentityUser> UpdateThread(string id)
-        {
-            string url = String.Concat(baseUrl, "api/thread/updateThread/", id);
-
-            HttpClient httpClient = new();
-
-            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Put, url)
-            {
-                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
-            };
-            HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
-
-            return null;
-        }
+        //    return null;
+        //}
 
         public async Task<List<ThreadModel>> GetAllThreads()
         {
@@ -239,6 +224,22 @@ namespace CodeAid.UI.Data
                 }
             }
             return null;
+        }
+
+        public async Task<bool> DeleteThread(int id, string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = String.Concat($"{baseUrl}api/Thread/{id}/{accessToken}");
+                var response = await httpClient.DeleteAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
+            }
+
         }
 
         //public async Task<List<ThreadModel>> GetThread()

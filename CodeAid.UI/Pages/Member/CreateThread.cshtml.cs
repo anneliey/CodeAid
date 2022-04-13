@@ -46,7 +46,11 @@ namespace CodeAid.UI.Pages
                 //    Question = Thread.Question,
                 //};
 
-                Thread.InterestId = 2; // Hard coded elden ring interest - Hämtas sen från razor page property CurrentInterestId
+                
+                InterestManager interestManager = new InterestManager();
+                //var interest = interestManager.GetInterest(Thread.InterestId, user);
+
+                Thread.InterestId = 2;//interest.Threads; // Hard coded elden ring interest - Hämtas sen från razor page property CurrentInterestId
 
                 var result = await threadManager.CreateThread(Thread, user.Id);
 
