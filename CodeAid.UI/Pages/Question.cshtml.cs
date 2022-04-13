@@ -14,10 +14,10 @@ namespace CodeAid.UI.Pages
             _signInManager = signInManager;
         }
         public List<ThreadModel> AllQuestions { get; set; }
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGet(int id)
         {
             ThreadManager manager = new();
-            AllQuestions = await manager.GetQuestions();
+            AllQuestions = await manager.GetThread(id);
             return Page();
         }
     }

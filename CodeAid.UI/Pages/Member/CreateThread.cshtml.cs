@@ -24,11 +24,15 @@ namespace CodeAid.UI.Pages
         //public string Question { get; set; }
         //public List<ThreadModel> AllThreads { get; set; }
         public ThreadDto Thread { get; set; }
+        public List<InterestModel> AllInterests { get; set; }
         public string ErrorMessage { get; set; } = string.Empty;
 
-        public void OnGet()
+        public async Task<IActionResult> OnGet()
         {
-            
+            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            InterestManager manager = new();
+            AllInterests = await manager.GetInterests(user.Id);
+            return Page();
         }
         public async Task<IActionResult> OnPost()
         {
@@ -41,6 +45,9 @@ namespace CodeAid.UI.Pages
                 //    QuestionTitle = Thread.QuestionTitle,
                 //    Question = Thread.Question,
                 //};
+
+                Thread.InterestId = 2; // Hard coded elden ring interest - Hämtas sen från razor page property CurrentInterestId
+
                 var result = await threadManager.CreateThread(Thread, user.Id);
 
                 if (!result)

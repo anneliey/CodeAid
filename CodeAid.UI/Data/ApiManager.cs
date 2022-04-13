@@ -240,5 +240,22 @@ namespace CodeAid.UI.Data
             }
             return null;
         }
+
+        //public async Task<List<ThreadModel>> GetThread()
+        //{
+        //    using (var httpClient = new HttpClient())
+        //    {
+        //        string url = string.Concat(baseUrl, "api/thread/");
+        //        var response = await httpClient.GetAsync(url);
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            var strResponse = await response.Content.ReadAsStringAsync();
+        //            var data = JsonConvert.DeserializeObject<List<ThreadModel>>(strResponse);
+        //            return data;
+        //        }
+        //    }
+        //    return null;
+        //}
     }
 }

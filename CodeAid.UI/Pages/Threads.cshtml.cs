@@ -18,8 +18,15 @@ namespace CodeAid.UI.Pages
         public async Task<IActionResult> OnGet()
         {
             ThreadManager threadManager = new();
-            AllThreads = await threadManager.GetThreads();
+            AllThreads = await threadManager.GetAllThreads();
             return Page();
+        }
+
+        public async Task<IActionResult> OnPost(ThreadModel thread)
+        {
+            ThreadManager threadManager = new();
+            AllThreads = await threadManager.GetThread(thread.Id);
+            return RedirectToPage("/question/");
         }
     }
 }

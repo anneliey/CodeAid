@@ -37,6 +37,20 @@ namespace CodeAid.API.Controllers
             return BadRequest();
         }
 
+        //[HttpGet]
+        //public ActionResult<List<ThreadModel>> GetThread()
+        //{
+        //    var result = _context.Threads;
+        //    if (result.Any())
+        //    {
+        //        var resultList = result.ToList();
+
+        //        return Ok(resultList);
+        //    }
+
+        //    return BadRequest();
+        //}
+
         [HttpGet]
         [Route("{accessToken}")]
         public ActionResult<List<ThreadModel>> GetAllQuestions()
@@ -89,15 +103,16 @@ namespace CodeAid.API.Controllers
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
 
             var exists = _context.Threads.Where(x => x.QuestionTitle == thread.QuestionTitle).FirstOrDefault();
+
             if (exists == null)
             {
                 var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
                 var dbUser = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
 
-                //var threadInterest = await _context.Interests.FirstOrDefaultAsync(i => i.Id == );
+                var threadInterest = await _context.Interests.FirstOrDefaultAsync(i => i.Id == thread.InterestId);
 
-                //if (threadInterest != null)
-                //{
+                if (threadInterest != null)
+                {
                     ThreadModel threadQuestion = new ThreadModel()
                     {
                         User = dbUser,
@@ -112,7 +127,7 @@ namespace CodeAid.API.Controllers
                     await _context.SaveChangesAsync();
 
                     return Ok();
-                //}
+                }
             }
 
             return BadRequest();

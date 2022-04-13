@@ -13,12 +13,21 @@
             }
             return false;
         }
-        public async Task<List<ThreadModel>> GetThreads()
+        public async Task<List<ThreadModel>> GetAllThreads()
         {
             ApiManager apiManager = new ApiManager();
             var threads = await apiManager.GetAllThreads();
             return threads;
         }
+
+        public async Task<List<ThreadModel>> GetThread(int id)
+        {
+            ApiManager apiManager = new ApiManager();
+            var allThreads = await apiManager.GetAllThreads();
+            var sortedThreads = allThreads.Where(x => x.Id == id).ToList();
+            return sortedThreads;
+        }
+
         public async Task<List<ThreadModel>> GetQuestions()
         {
             ApiManager apiManager = new ApiManager();
