@@ -19,7 +19,7 @@ namespace CodeAid.API.Controllers
         }
         [HttpGet]
         [Route("{id}/{accessToken}")]
-        public ActionResult<InterestModel> GetInterest(string accessToken, int id)
+        public ActionResult<InterestModel> GetInterest([FromRoute] int id, string accessToken)
         {
             AccessTokenManager accessTokenManager = new(_signInManager);
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
@@ -36,7 +36,7 @@ namespace CodeAid.API.Controllers
         }
 
         [HttpGet]
-        [Route("{accessToken}")]
+        [Route("List/{accessToken}")]
         public ActionResult<List<InterestModel>> GetAllInterests(string accessToken)
         {
             AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
@@ -63,8 +63,9 @@ namespace CodeAid.API.Controllers
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
             if (isValid)
             {
-                var exists = _context.Interests.Where(x => x.Name == interestToAdd.Name).FirstOrDefault();
-                if (exists == null)
+                var interestToLower = interestToAdd.Name.ToLower();
+                var result = _context.Interests.Where(x => x.Name == interestToLower).FirstOrDefault();
+                if (result == null)
                 {
                     var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
                     var dbUser = _context.Users
@@ -74,7 +75,7 @@ namespace CodeAid.API.Controllers
 
                     InterestModel interest = new InterestModel
                     {
-                        Name = interestToAdd.Name,
+                        Name = interestToLower,
                         User = dbUser,
                     };
                     dbUser.UserInterests.Add(new UserInterestModel
@@ -87,12 +88,8 @@ namespace CodeAid.API.Controllers
                     await _context.SaveChangesAsync();
                     return Ok();
                 }
-                else
-                {
-                    return BadRequest();
-                }
             }
-            return null;
+            return BadRequest();
         }
 
         [HttpDelete]
@@ -119,6 +116,35 @@ namespace CodeAid.API.Controllers
                 }
             }
             return null;
+        }
+
+        [HttpPut]
+        [Route("{accessToken}")]
+        public async Task<IActionResult> EditInterest([FromBody] InterestModel interestToUpdate, string accessToken)
+        {
+            AccessTokenManager accessTokenManager = new(_signInManager);
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+            if (isValid)
+            {
+                var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
+                var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
+                var exists = _context.Interests.Any(x => x.UserId == dbUser.Id);
+                //id = interestToUpdate.Id;
+
+                if (exists)
+                {
+                    var interest = _context.Interests.Where(x => x.Id == interestToUpdate.Id).FirstOrDefault();
+                    if (interest != null && interest.Threads == null)
+                    {
+                        interest.Name = interestToUpdate.Name;
+
+                        _context.Interests.Update(interest);
+                        await _context.SaveChangesAsync();
+                        return Ok();
+                    }
+                }
+            }
+            return BadRequest();
         }
     }
 }

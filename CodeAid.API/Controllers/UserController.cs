@@ -53,32 +53,23 @@ namespace CodeAid.API.Controllers
             {
                 var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
                 var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                //var userInterests = _context.UserInterests
-                //    .Where(u => u.UserId == dbUser.Id).Select(i => i.Interest).ToList();
-
-                //var userInterests = _context.UserInterests.Where(x => x.UserId == dbUser.Id).ToList();
-
                 var userInterests = _context.Interests.Where(i => i.UserInterests.Any(ui => ui.UserId == dbUser.Id)).ToList();
 
-                //.ThenInclude(ui => ui.Interest)
-                //.FirstOrDefaultAsync(u => u.Username.Equals(identityUser.UserName));
                 if (userInterests != null)
                 {
                     foreach (var userInterest in userInterests)
                     {
                         userInterest.User = null;
                     }
-
                     return Ok(userInterests);
                 }
-
                 return BadRequest();
             }
             return null;
         }
 
         [HttpPost]
-        [Route("add/{id}/{accessToken}")]
+        [Route("Interest/Add/{id}/{accessToken}")]
         public async Task<IActionResult> AddInterestToUser([FromBody] InterestModel interestToAdd, string accessToken)
         {
             AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
@@ -91,21 +82,29 @@ namespace CodeAid.API.Controllers
                     .Include(u => u.UserInterests)
                     .Include(u => u.Interests)
                     .FirstOrDefault(x => x.Username == identityUser.UserName);
+                var interestName = _context.Interests.Where(i => i.Id == interestToAdd.Id).Select(i => i.Name).FirstOrDefault();
+                var exists = dbUser.UserInterests.Any(ui => ui.Interest.Name == interestName);
 
-                InterestModel interest = new InterestModel
+                if (!exists)
                 {
-                    Name = interestToAdd.Name,
-                    User = dbUser,
-                };
-                dbUser.UserInterests.Add(new UserInterestModel
-                {
-                    Interest = interest,
-                    User = dbUser
-                });
+                    if (interestName != null && dbUser != null)
+                    {
+                        InterestModel interest = new InterestModel
+                        {
+                            Name = interestName,
+                            User = dbUser,
+                        };
+                        dbUser.UserInterests.Add(new UserInterestModel
+                        {
+                            Interest = interest,
+                            User = dbUser
+                        });
 
-                _context.Users.Update(dbUser);
-                await _context.SaveChangesAsync();
-                return Ok();
+                        _context.Users.Update(dbUser);
+                        await _context.SaveChangesAsync();
+                        return Ok();
+                    }
+                }
             }
             return BadRequest();
         }
