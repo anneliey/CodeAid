@@ -7,5 +7,6 @@ namespace CodeAid.API.Controllers
     [ApiController]
     public class MessageController : ControllerBase
     {
+
     }
 }

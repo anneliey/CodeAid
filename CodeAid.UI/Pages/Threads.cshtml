@@ -49,7 +49,7 @@
                         </div>
                         <div class="col-md-4 op-7">
                             <div class="row text-center op-7">
-                                <a class="btn btn-primary" asp-area="" asp-page="/Member/EditThread">Edit Thread</a>
+                                <input class="btn btn-danger" type="submit" value="Delete Thread" />
                                 <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> Replys</span> </div>
                             </div>
                         </div>
@@ -64,8 +64,25 @@
             {
                 @foreach(var thread in Model.Interest.Threads)
                 {
-                    @thread.QuestionTitle
-                    <a asp-page="/question" asp-route-id="@thread.Id"><h1>@thread.QuestionTitle</h1></a>
+                    <div class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0">
+                    <div class="row align-items-center">
+                        <div class="col-md-8 mb-3 mb-sm-0">
+                            <h5>
+                                <a asp-page="/question" asp-route-id="@thread.Id"><h1>@thread.QuestionTitle</h1></a>
+                            </h5>
+                            <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">@thread.ThreadDate</a> <span class="op-6">ago by</span> <a class="text-black">@*@thread.User.Username*@</a></p>
+                            <div class="text-sm op-5"> <a class="text-black mr-2" href="#">#@thread.Interest</a></div>
+                        </div>
+                        <div class="col-md-4 op-7">
+                            <div class="row text-center op-7">
+                                <input class="btn btn-danger" type="submit" value="Delete Thread" />
+                                <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> Replys</span> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    @*@thread.QuestionTitle*@
+                    @*<a asp-page="/question" asp-route-id="@thread.Id"><h1>@thread.QuestionTitle</h1></a>*@
                 }
             }
         }

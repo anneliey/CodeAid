@@ -9,6 +9,5 @@ namespace CodeAid.Shared
     public class InterestDto
     {
         public string Name { get; set; } = String.Empty;
-        public InterestModel Interest { get; set; }
     }
 }
