@@ -1,0 +1,13 @@
+﻿@page
+@model CodeAid.UI.Pages.Member.Interest.EditModel
+@{
+}
+
+<form method="post">
+    <div class="input-group mb-3">
+        <input class="form-control" type="text" asp-for="@Model.Interest.Name" asp-route-id="@Model.Interest.Id" />
+        <span class="text-warning" asp-validation-for="@Model.Interest.Name"></span>
+    </div>
+    <button type="submit" class="btn btn-outline-dark">Create interest</button>
+</form>
+

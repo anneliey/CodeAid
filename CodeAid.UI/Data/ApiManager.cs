@@ -28,7 +28,7 @@ namespace CodeAid.UI.Data
         {
             using (var httpClient = new HttpClient())
             {
-                string url = string.Concat(baseUrl, "api/interest/", id, accessToken);
+                string url = string.Concat($"{baseUrl}api/interest/{id}/{accessToken}");
                 var response = await httpClient.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)
@@ -44,7 +44,7 @@ namespace CodeAid.UI.Data
         {
             using (var httpClient = new HttpClient())
             {
-                string url = string.Concat(baseUrl, "api/interest/", accessToken);
+                string url = string.Concat(baseUrl, "api/interest/list/", accessToken);
                 var response = await httpClient.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)
@@ -56,22 +56,6 @@ namespace CodeAid.UI.Data
             }
             return null;
         }
-        //public async Task<List<UserModel>> GetUser(string id)
-        //{
-        //    using (var httpClient = new HttpClient())
-        //    {
-        //        string url = string.Concat(baseUrl, "api/interest");
-        //        var response = await httpClient.GetAsync(url);
-
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            var strResponse = await response.Content.ReadAsStringAsync();
-        //            var data = JsonConvert.DeserializeObject<List<UserModel>>(strResponse);
-        //            return data;
-        //        }
-        //    }
-        //    return null;
-        //}
 
         public async Task<List<InterestModel>> GetUserInterests(string accessToken)
         {
@@ -112,11 +96,11 @@ namespace CodeAid.UI.Data
             }
         }
 
-        public async Task<bool> CreateInterest(InterestDto interest, string id)
+        public async Task<bool> CreateInterest(InterestDto interest, string accessToken)
         {
             using (var httpClient = new HttpClient())
             {
-                string url = string.Concat(baseUrl, "api/Interest/create/", id);
+                string url = string.Concat(baseUrl, "api/Interest/create/", accessToken);
                 var response = await httpClient.PostAsJsonAsync<InterestDto>(url, interest);
 
                 if (response.IsSuccessStatusCode)
@@ -155,7 +139,21 @@ namespace CodeAid.UI.Data
                 }
                 return false;
             }
+        }
 
+        public async Task<bool> EditInterest(InterestModel interest, string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = String.Concat($"{baseUrl}api/Interest/{accessToken}");
+                var response = await httpClient.PutAsJsonAsync(url, interest);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
+            }
         }
     }
 }

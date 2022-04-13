@@ -24,12 +24,14 @@ namespace CodeAid.UI.Pages.Member.Interest
             InterestManager manager = new();
             AllInterests = await manager.GetInterests(user);
             var userInterests = await manager.GetUserInterests(user.Id);
-
-            foreach (var interest in AllInterests)
+            if (AllInterests != null)
             {
-                if (!userInterests.Any(ui => ui.Name == interest.Name))
+                foreach (var interest in AllInterests)
                 {
-                    VisibleInterests.Add(interest);
+                    if (!userInterests.Any(ui => ui.Name == interest.Name))
+                    {
+                        VisibleInterests.Add(interest);
+                    }
                 }
             }
             return Page();
@@ -56,12 +58,8 @@ namespace CodeAid.UI.Pages.Member.Interest
                     ErrorMessage = "Interest already exists!";
                     return Page();
                 }
-                else
-                {
-                    return RedirectToPage("/Member/Interest/Index");
-                }
             }
-            return RedirectToPage("/Member/Interest/Add");
+            return RedirectToPage("/Member/Interest/Index");
         }
     }
 }

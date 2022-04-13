@@ -6,35 +6,33 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CodeAid.UI.Pages.Member.Interest
 {
     [BindProperties]
-    public class IndexModel : PageModel
+    public class EditModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
+        public InterestModel Interest { get; set; }
 
-        public IndexModel(SignInManager<IdentityUser> signInManager)
+        public EditModel(SignInManager<IdentityUser> signInManager)
         {
             _signInManager = signInManager;
         }
-        public List<InterestModel> UserInterests { get; set; }
 
-        public async Task<IActionResult> OnGet()
+        public async Task<IActionResult> OnGet(int id)
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
-                InterestManager manager = new();
-                UserInterests = await manager.GetUserInterests(user.Id);
+                InterestManager interestManager = new();
+                Interest = await interestManager.GetInterest(id, user);
             }
             return Page();
         }
-
-        public async Task<IActionResult> OnPost(InterestModel interest)
+        public async Task<IActionResult> OnPost()
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
-                ApiManager apiManager = new();
-
-                await apiManager.DeleteInterest(interest.Id, user.Id);
+                InterestManager interestManager = new();
+                await interestManager.EditInterest(Interest, user);
             }
             return RedirectToPage("/Member/Interest/Index");
         }
