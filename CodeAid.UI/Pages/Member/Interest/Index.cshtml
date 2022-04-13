@@ -2,62 +2,115 @@
 @model CodeAid.UI.Pages.Member.Interest.IndexModel
 @{
 }
-<div class="container align-content-center">
+<div class="container">
     <h1>Your interest</h1>
-
-    @if (Model.UserInterests.Count >= 1)
+    <a class="btn btn-primary my-3" href="/member/interest/add">Add interest</a>
+    @if (Model.UserInterests != null)
     {
-        <a class="btn btn-dark" href="/member/interest/add">Add interest</a>
-        <table class="table table-light">
-            <thead>
-                <tr class="fw-bolder">
-                    <th>
-                        <h5>Interests</h5>
-                    </th>
-
-                </tr>
-            </thead>
-            <tbody>
-
-                @foreach (var item in Model.UserInterests)
-                {
-                    <tr>
-                        <td>
-                            @item.Name
-                        </td>
-                        <td>
+        <div class="row" style="gap: 32px">
+            @foreach (var interest in Model.UserInterests)
+            {
+                <div class="col-2">
+                    <div class="card text-center mt-3" style="width: 14rem;">
+                        <div class="card-body p-2" style="background-color: #CACAEA">
+                            <h2 class="card-title">@interest.Name</h2>
+                            @if (@interest.Threads?.Count >= 1)
+                            {
+                                <p class="card-text m-0">@interest.Threads.Count questions</p>
+                            }
+                            @if (@interest.Threads == null)
+                            {
+                                <p class="card-text my-2">0 questions</p>
+                            }
                             <div class="btn-group btn-outline-light">
-                                @if (item.Threads == null)
+                                @if (interest.Threads == null)
                                 {
-                                    <button type="button" class="btn">
-                                        <a class="editBtn" asp-page="/Member/Interest/Edit" asp-route-id="@item.Id">Edit</a>
+                                    <button class="btn editBtn">
+                                        <a asp-page="/Member/Interest/Edit" asp-route-id="@interest.Id">Edit</a>
                                     </button>
                                 }
                                 else
                                 {
-                                    <button type="button" class="btn" disabled>
-                                        <a class="editBtn">Edit</a>
+                                    <button class="btn editBtn" disabled>
+                                        <a class="">Edit</a>
                                     </button>
                                 }
                                 <form method="post">
-                                    <button class="btn" type="submit" asp-route-id="@item.Id">Delete</button>
+                                    <button class="btn editBtn" type="submit" asp-route-id="@interest.Id">Delete</button>
                                 </form>
                             </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     }
     @if (Model.UserInterests.Count == 0)
     {
         <div class="text-center mt-5">
             <h1>Oops!</h1>
             <h2>No data found</h2>
-            <a class="btn btn-dark" href="/member/interest/add">Add interest</a>
         </div>
         <div class="text-center">
             <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
         </div>
     }
 </div>
+
+@*    @if (Model.UserInterests.Count >= 1)
+    {
+    <h1>Your interest</h1>
+    <a class="btn btn-primary my-3" href="/member/interest/add">Add interest</a>
+    <table class="table table-light">
+    <thead>
+    <tr class="fw-bolder">
+    <th>
+    <h5>Interests</h5>
+    </th>
+
+    </tr>
+    </thead>
+    <tbody>
+
+    @foreach (var item in Model.UserInterests)
+    {
+    <tr>
+    <td>
+    @item.Name
+    </td>
+    <td>
+    <div class="btn-group btn-outline-light">
+    @if (item.Threads == null)
+    {
+    <button type="button" class="btn btn-primary">
+    <a class="editBtn" asp-page="/Member/Interest/Edit" asp-route-id="@item.Id">Edit</a>
+    </button>
+    }
+    else
+    {
+    <button type="button" class="btn btn-primary" disabled>
+    <a class="editBtn">Edit</a>
+    </button>
+    }
+    <form method="post">
+    <button class="btn" type="submit" asp-route-id="@item.Id">Delete</button>
+    </form>
+    </div>
+    </td>
+    </tr>
+    }
+    </tbody>
+    </table>
+    }
+    @if (Model.UserInterests.Count == 0)
+    {
+    <div class="text-center mt-5">
+    <h1>Oops!</h1>
+    <h2>No data found</h2>
+    <a class="btn btn-primary m-2" href="/member/interest/add">Add interest</a>
+    </div>
+    <div class="text-center">
+    <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
+    </div>
+    }
+    </div>*@

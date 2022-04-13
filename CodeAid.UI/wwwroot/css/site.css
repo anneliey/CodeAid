@@ -17,8 +17,46 @@ body {
     background-color: #fafafa;
     margin-bottom: 60px;
 }
+/*a {
+    text-decoration: none;
+    color: #1C1259;
+}
+    a:hover {
+        background-color: #1C1259;
+        text-decoration:none;
+    }*/
 
 .button-box {
     text-align: center;
     margin-top: 20px;
+}
+.btn-primary {
+    background-color: #1C1259;
+    border: solid 1px black;
+    transition: ease-in;
+    color: white;
+    text-decoration: none;
+}
+
+    .btn-primary:hover {
+        background-color: #1C1259;
+        border: solid 1px black;
+        transition: ease-in;
+        color: #FF9B00;
+    }
+.btn-add {
+    font-weight: 800;
+    padding: 0 8px
+}
+
+.btn-add:hover {
+    background-color: #1C1259;
+    border: solid 1px black;
+    transition: ease-in;
+    color: white;
+}
+.editBtn {
+    background-color: none;
+    font-weight: 400;
+    color: #1C1259;
 }
