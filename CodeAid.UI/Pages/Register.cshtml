@@ -35,7 +35,7 @@
         <input asp-for="@Model.VerifiedPassword" type="password" class="form-control" placeholder="Verify password">
         <span class="text-warning" asp-validation-for="@Model.VerifiedPassword"></span>
     </div>
-    @if (Model.AllInterests != null)
+   @* @if (Model.AllInterests != null)
 {
     <table class="table table-light">
         <thead>
@@ -76,6 +76,6 @@
     <div class="text-center">
         <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
     </div>
-}
+}*@
     <button type="submit" class="btn btn-dark" value="Sign up!">Sign up</button>
 </form>

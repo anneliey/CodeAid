@@ -49,5 +49,12 @@ namespace CodeAid.UI.Data
             return false;
         }
 
+        public async Task<ThreadModel> GetThread(int id, IdentityUser user)
+        {
+            ApiManager apiManager = new ApiManager();
+            var thread = await apiManager.GetThread(id, user.Id);
+            return thread;
+        }
+
     }
 }

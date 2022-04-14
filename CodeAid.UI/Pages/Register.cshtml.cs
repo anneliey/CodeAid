@@ -55,11 +55,11 @@ namespace CodeAid.UI.Pages
 
                 };
                 var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
-                if (user != null)
-                {
-                    AccountManager accountManager = new();
-                    await accountManager.AddInterestToUser(interest, user.Id);
-                }
+                //if (user != null)
+                //{
+                //    AccountManager accountManager = new();
+                //    await accountManager.AddInterestToUser(interest, user.Id);
+                //}
                 var result = await apiManager.RegisterUser(identityUserDto);
 
                 if (result)
