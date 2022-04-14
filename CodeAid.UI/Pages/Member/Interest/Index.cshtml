@@ -5,7 +5,7 @@
 <div class="container">
     <h1>Your interest</h1>
     <a class="btn btn-primary my-3" href="/member/interest/add">Add interest</a>
-    @if (Model.UserInterests != null)
+    @if (!Model.EmptyList)
     {
         <div class="row" style="gap: 32px">
             @foreach (var interest in Model.UserInterests)
@@ -45,7 +45,7 @@
             }
         </div>
     }
-    @if (Model.UserInterests.Count == 0)
+    @if (Model.EmptyList)
     {
         <div class="text-center mt-5">
             <h1>Oops!</h1>

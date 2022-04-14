@@ -57,7 +57,7 @@ namespace CodeAid.API.Controllers
                 var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
                 var userInterests = _context.Interests.Where(i => i.UserInterests.Any(ui => ui.UserId == dbUser.Id)).ToList();
 
-                if (userInterests != null)
+                if (userInterests != null && userInterests.Count > 0)
                 {
                     foreach (var userInterest in userInterests)
                     {
@@ -65,9 +65,9 @@ namespace CodeAid.API.Controllers
                     }
                     return Ok(userInterests);
                 }
-                return BadRequest();
+                return null;
             }
-            return null;
+            return BadRequest();
         }
 
         [HttpPost]
