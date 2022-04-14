@@ -35,5 +35,47 @@
         <input asp-for="@Model.VerifiedPassword" type="password" class="form-control" placeholder="Verify password">
         <span class="text-warning" asp-validation-for="@Model.VerifiedPassword"></span>
     </div>
+    @if (Model.AllInterests != null)
+{
+    <table class="table table-light">
+        <thead>
+            <tr class="fw-bolder">
+                <th>
+                    <h5>All interests</h5>
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var interest in Model.AllInterests)
+            {
+
+                <tr>
+                    <td>
+                        @interest.Name
+                    </td>
+                    <td>
+                        <div class="btn-group btn-outline-light">
+                            <form method="post">
+                                <button class="btn" type="submit" asp-route-id="@interest.Id">Add</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (Model.AllInterests == null)
+{
+    <div class="text-center mt-5">
+        <h1>Oops!</h1>
+        <h2>No data found</h2>
+    </div>
+    <div class="text-center">
+        <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
+    </div>
+}
     <button type="submit" class="btn btn-dark" value="Sign up!">Sign up</button>
 </form>

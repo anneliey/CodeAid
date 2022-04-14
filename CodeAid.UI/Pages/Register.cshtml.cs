@@ -9,6 +9,13 @@ namespace CodeAid.UI.Pages
     [BindProperties]
     public class RegisterModel : PageModel
     {
+        private readonly SignInManager<IdentityUser> _signInManager;
+
+        public RegisterModel(SignInManager<IdentityUser> signInManager)
+        {
+            _signInManager = signInManager;
+        }
+
         [Required(ErrorMessage = "Username is required!")]
         [MaxLength(20, ErrorMessage = "Username is too long!")]
         [MinLength(3, ErrorMessage = "Username is too short!")]
@@ -24,8 +31,18 @@ namespace CodeAid.UI.Pages
         [Required(ErrorMessage = "Verify password is required!")]
         [Compare(nameof(Password), ErrorMessage = "Passwords do not match!")]
         public string VerifiedPassword { get; set; }
+        public InterestDto Interest { get; set; }
+        public List<InterestModel> AllInterests { get; set; }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnGet()
+        {
+            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            InterestManager manager = new();
+            AllInterests = await manager.GetRegisterInterests(user);
+
+            return Page();
+        }
+        public async Task<IActionResult> OnPost(InterestModel interest)
         {
             if (ModelState.IsValid)
             {
@@ -37,6 +54,12 @@ namespace CodeAid.UI.Pages
                     Password = Password,
 
                 };
+                var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+                if (user != null)
+                {
+                    AccountManager accountManager = new();
+                    await accountManager.AddInterestToUser(interest, user.Id);
+                }
                 var result = await apiManager.RegisterUser(identityUserDto);
 
                 if (result)

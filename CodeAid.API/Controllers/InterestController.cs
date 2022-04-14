@@ -17,6 +17,7 @@ namespace CodeAid.API.Controllers
             _signInManager = signInManager;
             _context = context;
         }
+
         [HttpGet]
         [Route("{id}/{accessToken}")]
         public ActionResult<InterestModel> GetInterest([FromRoute] int id, string accessToken)
@@ -25,35 +26,63 @@ namespace CodeAid.API.Controllers
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
             if (isValid)
             {
-                var interest = _context.Interests.Where(x => x.Id.Equals(id)).FirstOrDefault();
-                if (interest != null)
+                var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
+                var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
+                var interest = _context.Interests.Where(i => i.UserInterests.Any(ui => ui.UserId == dbUser.Id)).ToList();
+                //var interest = _context.Interests.Include(i => i.Threads).Where(x => x.Id.Equals(id)).FirstOrDefault();
+
+                return _context.Interests.Include(i => i.Threads).Select(i => new InterestModel()
                 {
-                    return interest;
-                }
+                    Id = i.Id,
+                    Name = i.Name,
+                    Threads = i.Threads.Select(t => new ThreadModel()
+                    {
+                        Id = t.Id,
+                        Question = t.Question,
+                        QuestionTitle = t.QuestionTitle,
+                    }).ToList()
+                }).FirstOrDefault(x => x.Id == id);
+
                 return NotFound();
             }
             return BadRequest();
         }
 
         [HttpGet]
-        [Route("List/{accessToken}")]
-        public ActionResult<List<InterestModel>> GetAllInterests(string accessToken)
+        [Route("List")]
+        public ActionResult<List<InterestModel>> GetAllInterests()
         {
-            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
-            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
-            if (isValid)
-            {
-                var result = _context.Interests;
-                if (result.Any())
-                {
-                    var resultList = result.ToList();
+            var result = _context.Interests;
 
-                    return Ok(resultList);
-                }
-                return BadRequest();
+            if (result.Any())
+            {
+                var resultList = result.ToList();
+
+                return Ok(resultList);
             }
-            return null;
+
+            return BadRequest();
         }
+
+        //[HttpGet]
+        //[Route("List")]
+        //public ActionResult<List<InterestModel>> GetRegisterInterests(string accessToken)
+        //{
+        //    AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
+        //    var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+        //    if (isValid)
+        //    {
+        //        var result = _context.Interests;
+        //        if (result.Any())
+        //        {
+        //            var resultList = result.ToList();
+
+        //            return Ok(resultList);
+        //        }
+        //        return BadRequest();
+        //    }
+        //    return null;
+        //}
 
         [HttpPost]
         [Route("Create/{accessToken}")]

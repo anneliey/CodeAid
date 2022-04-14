@@ -11,10 +11,17 @@ namespace CodeAid.UI.Data
             return interests;
         }
 
-        public async Task<List<InterestModel>> GetInterests(IdentityUser user)
+        public async Task<List<InterestModel>> GetInterests()
         {
             ApiManager apiManager = new ApiManager();
-            var interests = await apiManager.GetAllInterest(user.Id);
+            var interests = await apiManager.GetAllInterest();
+            return interests;
+        }
+
+        public async Task<List<InterestModel>> GetRegisterInterests(IdentityUser user)
+        {
+            ApiManager apiManager = new ApiManager();
+            var interests = await apiManager.GetRegisterInterest();
             return interests;
         }
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Net.Http.Json;
+using System.Text;
 
 namespace CodeAid.UI.Data
 {
@@ -40,11 +42,45 @@ namespace CodeAid.UI.Data
             }
             return null;
         }
-        public async Task<List<InterestModel>> GetAllInterest(string accessToken)
+
+        public async Task<List<InterestModel>> GetAllInterest()
         {
             using (var httpClient = new HttpClient())
             {
-                string url = string.Concat(baseUrl, "api/interest/list/", accessToken);
+                string url = string.Concat(baseUrl, "api/interest/list");
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<List<InterestModel>>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
+        //public async Task<List<InterestModel>> GetAllInterest(string accessToken)
+        //{
+        //    using (var httpClient = new HttpClient())
+        //    {
+        //        string url = string.Concat(baseUrl, "api/interest/list/", accessToken);
+        //        var response = await httpClient.GetAsync(url);
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            var strResponse = await response.Content.ReadAsStringAsync();
+        //            var data = JsonConvert.DeserializeObject<List<InterestModel>>(strResponse);
+        //            return data;
+        //        }
+        //    }
+        //    return null;
+        //}
+
+        public async Task<List<InterestModel>> GetRegisterInterest()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/interest/list");
                 var response = await httpClient.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)
@@ -155,5 +191,109 @@ namespace CodeAid.UI.Data
                 return false;
             }
         }
+
+        public async Task<bool> CreateThread(ThreadDto thread, string id)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, $"api/thread/CreateThread/{id}");
+
+                var response = await httpClient.PostAsJsonAsync(url, thread);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public async Task<bool> EditThread(ThreadModel thread, string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = String.Concat($"{baseUrl}api/Thread/{accessToken}");
+                var response = await httpClient.PutAsJsonAsync(url, thread);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        public async Task<List<ThreadModel>> GetAllThreads()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/thread/");
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<List<ThreadModel>>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
+
+        public async Task<List<ThreadModel>> GetAllQuestions()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/thread/");
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<List<ThreadModel>>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
+
+        public async Task<bool> DeleteThread(int id, string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = String.Concat($"{baseUrl}api/Thread/{id}/{accessToken}");
+                var response = await httpClient.DeleteAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
+            }
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        //public async Task<List<ThreadModel>> GetThread()
+        //{
+        //    using (var httpClient = new HttpClient())
+        //    {
+        //        string url = string.Concat(baseUrl, "api/thread/");
+        //        var response = await httpClient.GetAsync(url);
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            var strResponse = await response.Content.ReadAsStringAsync();
+        //            var data = JsonConvert.DeserializeObject<List<ThreadModel>>(strResponse);
+        //            return data;
+        //        }
+        //    }
+        //    return null;
+        //}
     }
 }

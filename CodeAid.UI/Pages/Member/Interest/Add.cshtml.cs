@@ -22,7 +22,7 @@ namespace CodeAid.UI.Pages.Member.Interest
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
             InterestManager manager = new();
-            AllInterests = await manager.GetInterests(user);
+            AllInterests = await manager.GetInterests();
             var userInterests = await manager.GetUserInterests(user.Id);
             if (AllInterests != null)
             {
