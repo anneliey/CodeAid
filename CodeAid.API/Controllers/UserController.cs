@@ -18,30 +18,32 @@ namespace CodeAid.API.Controllers
             _signInManager = signInManager;
             _context = context;
         }
-        //[HttpGet]
-        //[Route("{accessToken}")]
-        //public async Task<ActionResult<UserModel>> GetUser(string accessToken)
-        //{
-        //    AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
-        //    var isValid = accessTokenManager.HasValidAccessToken(accessToken);
-        //    if (isValid)
-        //    {
-        //        var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
+
+        [HttpGet]
+        [Route("{accessToken}")]
+        public async Task<ActionResult<UserModel>> GetUser(string accessToken)
+        {
+            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+            if (isValid)
+            {
+                var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
 
 
-        //    var dbUser = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
+                var dbUser = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
 
-        //    //var dbUser = _context.Users.Include(u => u.UserInterests).ThenInclude(u => u.Interest).Include(u => u.Messages).ThenInclude(m => m.Thread).Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
-        //    if (dbUser != null)
-        //    {
-        //        return dbUser;
-        //    }
-        //    return NotFound();
+                if (dbUser != null)
+                {
+                    return dbUser;
+                }
+                return NotFound();
 
-        //    }
-        //    return BadRequest();
+            }
+            return BadRequest();
 
-        //}
+        }
+
+
         [HttpGet]
         [Route("Interests/{accessToken}")]
         public ActionResult<List<InterestModel>> GetUserInterests(string accessToken)
