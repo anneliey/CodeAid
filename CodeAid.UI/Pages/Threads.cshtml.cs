@@ -17,7 +17,8 @@ namespace CodeAid.UI.Pages
         public List<ThreadModel> AllThreads { get; set; }
         public InterestModel Interest { get; set; }
         public int CurrentInterestId { get; set; }
-        public ThreadModel Thread { get; set; } 
+        public ThreadModel Thread { get; set; }
+        public string SearchTerm { get; set; }
         public async Task<IActionResult> OnGet(int id)
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
@@ -40,10 +41,15 @@ namespace CodeAid.UI.Pages
                 }
 
             }
-             
 
             return Page();
         }
+
+        public void OnGetSearchTerm()
+        {
+            
+
+        } 
 
         public async Task<IActionResult> OnPost(ThreadModel thread)
         {
@@ -57,15 +63,6 @@ namespace CodeAid.UI.Pages
             return RedirectToPage("/Threads");
         }
 
-        public async Task<IActionResult> OnPostEditThread()
-        {
-            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
-            if (user != null)
-            {
-                ThreadManager threadManager = new();
-                await threadManager.EditThread(Thread, user);
-            }
-            return RedirectToPage("/Member/Interest/Index");
-        }
+        
     }
 }

@@ -212,7 +212,7 @@ namespace CodeAid.UI.Data
         {
             using (var httpClient = new HttpClient())
             {
-                string url = String.Concat($"{baseUrl}api/Thread/{accessToken}");
+                string url = String.Concat($"{baseUrl}api/thread/Edit/{accessToken}");
                 var response = await httpClient.PutAsJsonAsync(url, thread);
 
                 if (response.IsSuccessStatusCode)
@@ -272,21 +272,21 @@ namespace CodeAid.UI.Data
             }
         }
 
-        //public async Task<List<ThreadModel>> GetThread()
-        //{
-        //    using (var httpClient = new HttpClient())
-        //    {
-        //        string url = string.Concat(baseUrl, "api/thread/");
-        //        var response = await httpClient.GetAsync(url);
+        public async Task<ThreadModel> GetThread(int id, string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat($"{baseUrl}api/thread/{id}/{accessToken}");
+                var response = await httpClient.GetAsync(url);
 
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            var strResponse = await response.Content.ReadAsStringAsync();
-        //            var data = JsonConvert.DeserializeObject<List<ThreadModel>>(strResponse);
-        //            return data;
-        //        }
-        //    }
-        //    return null;
-        //}
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<ThreadModel>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
     }
 }

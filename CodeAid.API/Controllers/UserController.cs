@@ -18,6 +18,8 @@ namespace CodeAid.API.Controllers
             _signInManager = signInManager;
             _context = context;
         }
+
+
         //[HttpGet]
         //[Route("{accessToken}")]
         //public async Task<ActionResult<UserModel>> GetUser(string accessToken)
@@ -29,19 +31,21 @@ namespace CodeAid.API.Controllers
         //        var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
 
 
-        //    var dbUser = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
+        //        var dbUser = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
 
-        //    //var dbUser = _context.Users.Include(u => u.UserInterests).ThenInclude(u => u.Interest).Include(u => u.Messages).ThenInclude(m => m.Thread).Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
-        //    if (dbUser != null)
-        //    {
-        //        return dbUser;
-        //    }
-        //    return NotFound();
+        //        //var dbUser = _context.Users.Include(u => u.UserInterests).ThenInclude(u => u.Interest).Include(u => u.Messages).ThenInclude(m => m.Thread).Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
+        //        if (dbUser != null)
+        //        {
+        //            return dbUser;
+        //        }
+        //        return NotFound();
 
         //    }
         //    return BadRequest();
 
         //}
+
+
         [HttpGet]
         [Route("Interests/{accessToken}")]
         public ActionResult<List<InterestModel>> GetUserInterests(string accessToken)

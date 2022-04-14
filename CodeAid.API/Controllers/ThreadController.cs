@@ -134,29 +134,34 @@ namespace CodeAid.API.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<List<ThreadModel>>> UpdateThread(ThreadModel threadToUpdate, string id)
+        [Route("Edit/{accessToken}")]
+        public async Task<IActionResult> EditThread([FromBody] ThreadModel threadToUpdate, string accessToken)
         {
-            var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(id)).FirstOrDefault();
-
-            if (identityUser != null)
+            AccessTokenManager accessTokenManager = new(_signInManager);
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+            if (isValid)
             {
-                var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                // change for your method
-                var dbThread = await _context.Threads.FindAsync(threadToUpdate.Id);
-                if (dbThread == null)
-                {
-                    return BadRequest("Thread not found");
-                }
+                var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
+                var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
+                
+                //id = interestToUpdate.Id;
 
-                dbThread.QuestionTitle = threadToUpdate.QuestionTitle;
-                dbThread.Question = threadToUpdate.Question;
+                //if (exists)
+                //{
+                    var thread = _context.Threads.Where(x => x.Id == threadToUpdate.Id).FirstOrDefault();
+                    if (thread != null)
+                    {
+                        thread.QuestionTitle = threadToUpdate.QuestionTitle;
+                        thread.Question = threadToUpdate.Question;
 
-                await _context.SaveChangesAsync();
-                return Ok(await _context.Threads.ToListAsync());
+                        _context.Threads.Update(thread);
+                        await _context.SaveChangesAsync();
+                        return Ok();
+                    }
+                //}
             }
-
             return BadRequest();
-            }
+        }
 
 
         [HttpDelete]
@@ -185,24 +190,28 @@ namespace CodeAid.API.Controllers
             return null;
         }
 
-        //[HttpDelete("{id}")]
-        //public async Task<ActionResult<List<ThreadModel>>> DeleteThread(string accessToken, int id)
-        //{
 
-        //    var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
-
-        //    if (identityUser != null)
-        //    {
-        //        var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
-        //        var dbTread = await _context.Threads.FindAsync(id);
-
-        //        _context.Threads.Remove(dbTread);
-        //        await _context.SaveChangesAsync();
-
-        //        return Ok(await _context.Threads.ToListAsync());
-        //    }
-        //    return BadRequest();
-
-        //}
+        [HttpGet]
+        [Route("{id}/{accessToken}")]
+        public ActionResult<ThreadModel> GetThread([FromRoute] int id, string accessToken)
+        {
+            AccessTokenManager accessTokenManager = new(_signInManager);
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+            if (isValid)
+            {
+                var thread = _context.Threads.Include(t => t.Messages).Where(t => t.Id == id).FirstOrDefault();
+                if (thread != null)
+                {
+                    foreach (var m in thread.Messages)
+                    {
+                        m.Thread = null;
+                    }
+                    return Ok(thread);
+                }
+                return null;
+    
+            }
+            return BadRequest();
+        }
     }
 }
