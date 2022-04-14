@@ -288,5 +288,106 @@ namespace CodeAid.UI.Data
             }
             return null;
         }
+        
+        
+        public async Task<List<MessageModel>> GetAllMessages()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/Message/GetAll/");
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<List<MessageModel>>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
+        
+        
+        public async Task<List<MessageModel>> GetUserMessages(string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/Message/My-Messages/", accessToken);
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<List<MessageModel>>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
+        
+        
+        public async Task<bool> PostMessages(MessageDto message, string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, $"api/Message/Create/{accessToken}");
+                var response = await httpClient.PostAsJsonAsync<MessageDto>(url, message);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+
+        public async Task<bool> UpdateMessage(MessageModel message, string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/Message/Edit", accessToken);
+                var response = await httpClient.PostAsJsonAsync<MessageModel>(url, message);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+        
+        
+        public async Task<bool> DeleteMessage(MessageModel message, string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/Message/Delete", accessToken);
+                var response = await httpClient.PostAsJsonAsync<MessageModel>(url, message);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+        
+        
+        public async Task<List<MessageModel>> GetThreadMessages(string accessToken, int id)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = string.Concat(baseUrl, "api/Message/thread ", accessToken);
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<List<MessageModel>>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
     }
 }
