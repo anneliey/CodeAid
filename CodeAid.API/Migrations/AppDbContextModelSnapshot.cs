@@ -56,9 +56,6 @@ namespace CodeAid.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("PostDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<int>("ThreadId")
                         .HasColumnType("int");
 
@@ -85,16 +82,9 @@ namespace CodeAid.API.Migrations
                     b.Property<int>("InterestId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Question")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("QuestionTitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ThreadDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
@@ -120,7 +110,7 @@ namespace CodeAid.API.Migrations
 
                     b.HasIndex("InterestId");
 
-                    b.ToTable("UserInterests");
+                    b.ToTable("UserInterests", (string)null);
                 });
 
             modelBuilder.Entity("CodeAid.Shared.UserModel", b =>

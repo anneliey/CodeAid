@@ -16,7 +16,6 @@ namespace CodeAid.Shared
         [ForeignKey(nameof(Thread))]
         public int ThreadId { get; set; }
         public ThreadModel Thread { get; set; }
-        public DateTime PostDate { get; set; }
 
         [ForeignKey(nameof(User))]
         public int? UserId { get; set; }

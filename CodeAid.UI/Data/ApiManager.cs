@@ -270,13 +270,6 @@ namespace CodeAid.UI.Data
                 }
                 return false;
             }
-
-                if (response.IsSuccessStatusCode)
-                {
-                    return true;
-                }
-                return false;
-            }
         }
 
         //public async Task<List<ThreadModel>> GetThread()
