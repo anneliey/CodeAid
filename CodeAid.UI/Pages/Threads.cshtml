@@ -35,7 +35,6 @@
 
         @if(Model.AllThreads != null && Model.AllThreads.Count > 0)
         {
-        <form method="post">
             @foreach (var thread in Model.AllThreads)
             {
                 <div class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0">
@@ -49,14 +48,15 @@
                         </div>
                         <div class="col-md-4 op-7">
                             <div class="row text-center op-7">
-                                <input class="btn btn-danger" type="submit" value="Delete Thread" />
+                                <form method="post">
+                                    <button class="btn" type="submit" asp-route-id="@thread.Id">Delete</button>
+                                </form>
                                 <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> Replys</span> </div>
                             </div>
                         </div>
                     </div>
                 </div>
             }
-            </form>
         }
         else
         {
@@ -75,7 +75,9 @@
                         </div>
                         <div class="col-md-4 op-7">
                             <div class="row text-center op-7">
-                                <input class="btn btn-danger" type="submit" value="Delete Thread" />
+                                <form method="post">
+                                    <button class="btn" type="submit" asp-route-id="@thread.Id">Delete</button>
+                                </form>
                                 <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> Replys</span> </div>
                             </div>
                         </div>
@@ -83,6 +85,7 @@
                 </div>
                     @*@thread.QuestionTitle*@
                     @*<a asp-page="/question" asp-route-id="@thread.Id"><h1>@thread.QuestionTitle</h1></a>*@
+                    @*<a asp-page="/member/deletethread" asp-route-id="@thread.Id" class="btn btn-danger">Delete thread</a>*@
                 }
             }
         }

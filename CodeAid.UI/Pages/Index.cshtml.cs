@@ -16,18 +16,14 @@ namespace CodeAid.UI.Pages
             _signInManager = signInManager;
         }
 
-        public List<InterestModel> AllInterests { get; set; }
+        public List<InterestModel> AllInterests { get; set; } = new();
 
-        public async Task <IActionResult> OnGet(string interest)
+        public async Task <IActionResult> OnGet()
         {
-            
-            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
-            if (user != null)
-            {
-                InterestManager interestManager = new();
+            InterestManager interestManager = new();
 
-                AllInterests = await interestManager.GetInterests(user);
-            }
+            AllInterests = await interestManager.GetInterests();
+
             return Page();
                 
         }

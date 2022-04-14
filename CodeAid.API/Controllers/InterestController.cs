@@ -49,23 +49,19 @@ namespace CodeAid.API.Controllers
         }
 
         [HttpGet]
-        [Route("List/{accessToken}")]
-        public ActionResult<List<InterestModel>> GetAllInterests(string accessToken)
+        [Route("List")]
+        public ActionResult<List<InterestModel>> GetAllInterests()
         {
-            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
-            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
-            if (isValid)
-            {
-                var result = _context.Interests;
-                if (result.Any())
-                {
-                    var resultList = result.ToList();
+            var result = _context.Interests;
 
-                    return Ok(resultList);
-                }
-                return BadRequest();
+            if (result.Any())
+            {
+                var resultList = result.ToList();
+
+                return Ok(resultList);
             }
-            return null;
+
+            return BadRequest();
         }
 
         //[HttpGet]

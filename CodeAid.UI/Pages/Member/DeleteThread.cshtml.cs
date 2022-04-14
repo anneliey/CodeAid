@@ -13,9 +13,11 @@ namespace CodeAid.UI.Pages.Member
         {
             _signInManager = signInManager;
         }
-        public void OnGet()
+        public void OnGet(int id)
         {
+            // Delete thread with id
         }
+
         public async Task<IActionResult> OnPost(ThreadModel thread)
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);

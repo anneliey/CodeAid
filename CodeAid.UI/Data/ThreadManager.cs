@@ -1,4 +1,6 @@
-﻿namespace CodeAid.UI.Data
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace CodeAid.UI.Data
 {
     public class ThreadManager
     {
@@ -35,5 +37,17 @@
             var questions = await apiManager.GetAllQuestions();
             return questions;
         }
+
+        public async Task<bool> EditThread(ThreadModel thread, IdentityUser user)
+        {
+            ApiManager apiManager = new ApiManager();
+            var result = await apiManager.EditThread(thread, user.Id);
+            if (result)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }

@@ -17,6 +17,7 @@ namespace CodeAid.UI.Pages
         public List<ThreadModel> AllThreads { get; set; }
         public InterestModel Interest { get; set; }
         public int CurrentInterestId { get; set; }
+        public ThreadModel Thread { get; set; } 
         public async Task<IActionResult> OnGet(int id)
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
@@ -44,11 +45,27 @@ namespace CodeAid.UI.Pages
             return Page();
         }
 
-        //public async Task<IActionResult> OnPost(ThreadModel thread)
-        //{
-        //    ThreadManager threadManager = new();
-        //    AllThreads = await threadManager.GetThread(thread.Id);
-        //    return RedirectToPage("/question/");
-        //}
+        public async Task<IActionResult> OnPost(ThreadModel thread)
+        {
+            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            if (user != null)
+            {
+                ApiManager apiManager = new();
+
+                await apiManager.DeleteThread(thread.Id, user.Id);
+            }
+            return RedirectToPage("/Threads");
+        }
+
+        public async Task<IActionResult> OnPostEditThread()
+        {
+            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            if (user != null)
+            {
+                ThreadManager threadManager = new();
+                await threadManager.EditThread(Thread, user);
+            }
+            return RedirectToPage("/Member/Interest/Index");
+        }
     }
 }
