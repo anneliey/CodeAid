@@ -82,25 +82,18 @@ namespace CodeAid.API.Controllers
                     .Include(u => u.UserInterests)
                     .Include(u => u.Interests)
                     .FirstOrDefault(x => x.Username == identityUser.UserName);
-                var interestName = _context.Interests.Where(i => i.Id == interestToAdd.Id).Select(i => i.Name).FirstOrDefault();
-                var exists = dbUser.UserInterests.Any(ui => ui.Interest.Name == interestName);
+                var interest = _context.Interests.Where(i => i.Id == interestToAdd.Id).FirstOrDefault();
+                var exists = dbUser.UserInterests.Any(ui => ui.Interest.Name == interest.Name);
 
                 if (!exists)
                 {
-                    if (interestName != null && dbUser != null)
+                    if (interest != null && dbUser != null)
                     {
-                        InterestModel interest = new InterestModel
+                        _context.UserInterests.Add(new UserInterestModel
                         {
-                            Name = interestName,
                             User = dbUser,
-                        };
-                        dbUser.UserInterests.Add(new UserInterestModel
-                        {
-                            Interest = interest,
-                            User = dbUser
+                            Interest = interest
                         });
-
-                        _context.Users.Update(dbUser);
                         await _context.SaveChangesAsync();
                         return Ok();
                     }
