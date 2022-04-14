@@ -212,7 +212,7 @@ namespace CodeAid.UI.Data
         {
             using (var httpClient = new HttpClient())
             {
-                string url = String.Concat(baseUrl, "api/thread/edit/", accessToken);
+                string url = String.Concat($"{baseUrl}api/thread/Edit/{accessToken}");
                 var response = await httpClient.PutAsJsonAsync(url, thread);
 
                 if (response.IsSuccessStatusCode)

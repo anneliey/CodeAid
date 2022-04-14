@@ -23,14 +23,16 @@ namespace CodeAid.UI.Pages.Member
             {
                 ThreadManager threadManager = new();
                 Thread = await threadManager.GetThread(id, user);
+                //Thread.Id = id;
             }
             return Page();
         }
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(int id)
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
+                Thread.Id = id;
                 ThreadManager threadManager = new();
                 await threadManager.EditThread(Thread, user);
             }

@@ -143,11 +143,11 @@ namespace CodeAid.API.Controllers
             {
                 var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
                 var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                var exists = _context.Threads.Any(x => x.UserId == dbUser.Id);
+                
                 //id = interestToUpdate.Id;
 
-                if (exists)
-                {
+                //if (exists)
+                //{
                     var thread = _context.Threads.Where(x => x.Id == threadToUpdate.Id).FirstOrDefault();
                     if (thread != null)
                     {
@@ -158,7 +158,7 @@ namespace CodeAid.API.Controllers
                         await _context.SaveChangesAsync();
                         return Ok();
                     }
-                }
+                //}
             }
             return BadRequest();
         }
@@ -199,24 +199,17 @@ namespace CodeAid.API.Controllers
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
             if (isValid)
             {
-                var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
-                var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                //var interest = _context.Interests.Where(i => i.UserInterests.Any(ui => ui.UserId == dbUser.Id)).ToList();
-                
-
-                return _context.Threads.Include(i => i.Messages).Select(i => new ThreadModel()
+                var thread = _context.Threads.Include(t => t.Messages).Where(t => t.Id == id).FirstOrDefault();
+                if (thread != null)
                 {
-                    Id = i.Id,
-                    Question = i.Question,
-                    QuestionTitle = i.QuestionTitle,
-                    Messages = i.Messages.Select(t => new MessageModel()
+                    foreach (var m in thread.Messages)
                     {
-                        Id = t.Id,
-                        Message = t.Message,
-                    }).ToList()
-                }).FirstOrDefault(x => x.Id == id);
-
-                return NotFound();
+                        m.Thread = null;
+                    }
+                    return Ok(thread);
+                }
+                return null;
+    
             }
             return BadRequest();
         }
