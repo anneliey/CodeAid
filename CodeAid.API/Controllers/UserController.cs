@@ -140,5 +140,67 @@ namespace CodeAid.API.Controllers
             }
             return BadRequest();
         }
+
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> DeleteAccount(string id)
+        {
+            var user = _signInManager.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
+
+            if (user != null)
+            {
+                var accessToken = user.Id;
+                await _signInManager.UserManager.DeleteAsync(user);
+                _context.Remove(user);
+                await _context.SaveChangesAsync();
+                return Ok(user);
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPut]
+        [Route("deactivate/{id}")]
+        public async Task<IActionResult> DeactivateAccount(string id)
+        {
+            var user = _signInManager.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
+
+            if (user != null)
+            {
+                UserModel userModel = new UserModel()
+                {
+                    Username = user.UserName,
+                    Deleted = true
+                };
+                //_context.Users.Add(userModel);
+                _context.Update(userModel);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            return BadRequest();
+        }
+
+        [HttpPut]
+        [Route("activate/{id}")]
+        public IActionResult ActivateAccount(string id)
+        {
+            var identityUser = _signInManager.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
+
+            if (identityUser != null)
+            {
+                var userDb = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
+
+                if (userDb != null)
+                {
+                    userDb.Deleted = false;
+                    _context.Update(userDb);
+                    _context.SaveChanges();
+                    return Ok();
+                }
+
+            }
+            return BadRequest();
+        }
     }
 }

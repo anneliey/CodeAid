@@ -21,7 +21,7 @@ namespace CodeAid.UI.Data
             return false;
         }
 
-        public async Task DeleteUser(IdentityUser userDto)
+        public async Task DeleteAccount(IdentityUser userDto)
         {
             var id = userDto.Id;
 
@@ -29,13 +29,13 @@ namespace CodeAid.UI.Data
             await apiManager.DeleteAccount(id);
         }
 
-        public async Task DeactiveUser(string id)
+        public async Task DeactiveAccount(string id)
         {
             ApiManager apiManager = new();
             await apiManager.DeactivateAccount(id);
         }
 
-        public async Task<bool> ActivateUser(string id)
+        public async Task<bool> ActivateAccount(string id)
         {
             ApiManager apiManager = new();
             var result = await apiManager.ActivateAccount(id);
