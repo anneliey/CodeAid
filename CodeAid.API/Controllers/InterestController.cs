@@ -40,8 +40,16 @@ namespace CodeAid.API.Controllers
                         Id = t.Id,
                         Question = t.Question,
                         QuestionTitle = t.QuestionTitle,
+                        ThreadDate = t.ThreadDate,
+                        //User = t.,
+                        Messages = t.Messages.Select(m => new MessageModel()
+                        {
+                            PostDate = m.PostDate,
+                            Message = m.Message,
+                            //MessageEdit = m.MessageEdit,
+                        }).ToList(),
                     }).ToList()
-                }).FirstOrDefault(x => x.Id == id);
+                }).FirstOrDefault(i => i.Id == id);
 
                 return NotFound();
             }

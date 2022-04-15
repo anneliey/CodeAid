@@ -18,7 +18,7 @@ namespace CodeAid.UI.Pages
         public InterestModel Interest { get; set; }
         public int CurrentInterestId { get; set; }
         public ThreadModel Thread { get; set; }
-        public string SearchTerm { get; set; }
+        public string SearchString { get; set; }
         public async Task<IActionResult> OnGet(int id)
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
@@ -45,11 +45,10 @@ namespace CodeAid.UI.Pages
             return Page();
         }
 
-        public void OnGetSearchTerm()
-        {
+        //public async Task OnGetAsync()
+        //{
             
-
-        } 
+        //}
 
         public async Task<IActionResult> OnPost(ThreadModel thread)
         {

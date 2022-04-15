@@ -1,4 +1,4 @@
-﻿@page
+﻿@page 
 @model CodeAid.UI.Pages.ThreadsModel
 @{
 }
@@ -10,40 +10,23 @@
             <div class="row text-left mb-5">
                 <div class="col-lg-6 mb-3 mb-sm-0">
                     <form method="get">
-                <div class="input-group">
-                    <input class="form-control" asp-for="SearchTerm" />
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Search</button>
-                    </div>
-                </div>
-            </form>
-                    @* <div class="dropdown bootstrap-select form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" style="width: 100%;">
-                        <select class="form-control form-control-lg bg-white bg-op-9 text-sm w-lg-50" data-toggle="select" tabindex="-98">
-                        <option> Categories </option>
-                        <option> Learn </option>
-                        <option> Share </option>
-                        <option> Build </option>
-                        </select>*@
+                        <div class="input-group">
+                            <input class="form-control" asp-for="SearchString" />
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="col-lg-6 text-lg-right">
-                @*<div class="dropdown bootstrap-select form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50" style="width: 100%;">
-                    <select class="form-control form-control-lg bg-white bg-op-9 ml-auto text-sm w-lg-50" data-toggle="select" tabindex="-98">
-                    <option> Filter by </option>
-                    <option> Votes </option>
-                    <option> Replys </option>
-                    <option> Views </option>
-                    </select>
-                    </div>*@
-
                 <a asp-page="/Member/CreateThread" asp-route-id="@Model.CurrentInterestId" class="btn btn-lg btn-block btn-success rounded-0 py-4 mb-3 bg-op-6 roboto-bold">Ask Question</a>
             </div>
         </div>
         <!-- End of post 1 -->
-         
-        @if(Model.AllThreads != null && Model.AllThreads.Count > 0)
+        @if (Model.AllThreads != null && Model.AllThreads.Count > 0)
         {
-           
+
             @foreach (var thread in Model.AllThreads)
             {
                 <div class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0">
@@ -52,18 +35,18 @@
                             <h5>
                                 <a asp-page="/Question" asp-route-id="@thread.Id" class="text-primary">@thread.QuestionTitle</a>
                             </h5>
-                            <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">@thread.ThreadDate</a> <span class="op-6">ago by</span> <a class="text-black">@*@thread.User.Username*@</a></p>
+                            <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">@thread.ThreadDate.ToLongDateString()</a> <span class="op-6">ago by</span> <a class="text-black">@thread.User</a></p>
                             <div class="text-sm op-5"> <a class="text-black mr-2" href="#">#@thread.Interest</a></div>
                         </div>
                         <div class="col-md-4 op-7">
                             <div class="row text-center op-7">
                                 <button type="button" class="btn">
-                                        <a class="Btn" asp-page="/Member/EditThread" asp-route-id="@thread.Id">Edit Thread</a>
-                                    </button>
+                                    <a class="Btn" asp-page="/Member/EditThread" asp-route-id="@thread.Id">Edit Thread</a>
+                                </button>
                                 <form method="post">
                                     <button class="btn" type="submit" asp-route-id="@thread.Id">Delete</button>
                                 </form>
-                                <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> Replys</span> </div>
+                                <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">@thread.Messages.Count* Replys</span> </div>
                             </div>
                         </div>
                     </div>
@@ -72,70 +55,34 @@
         }
         else
         {
-            @if(Model.Interest != null)
+            @if (Model.Interest != null)
             {
-                @foreach(var thread in Model.Interest.Threads)
+                @foreach (var thread in Model.Interest.Threads)
                 {
                     <div class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0">
-                    <div class="row align-items-center">
-                        <div class="col-md-8 mb-3 mb-sm-0">
-                            <h5>
-                                <a asp-page="/question" asp-route-id="@thread.Id"><h1>@thread.QuestionTitle</h1></a>
-                            </h5>
-                            <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">@thread.ThreadDate</a> <span class="op-6">ago by</span> <a class="text-black">@thread.UserId</a></p>
-                            <div class="text-sm op-5"> <a class="text-black mr-2" href="#">#@thread.Interest</a></div>
-                        </div>
-                        <div class="col-md-4 op-7">
-                            <div class="row text-center op-7">
-                                <button type="button" class="btn">
-                                       <a class="Btn" asp-page="/Member/EditThread" asp-route-id="@thread.Id">Edit Thread</a>
+                        <div class="row align-items-center">
+                            <div class="col-md-8 mb-3 mb-sm-0">
+                                <h5>
+                                    <a asp-page="/question" asp-route-id="@thread.Id"><h1>@thread.QuestionTitle</h1></a>
+                                </h5>
+                                <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">@thread.ThreadDate.ToLongDateString()</a> <span class="op-6">ago by</span> <a class="text-black">@thread.User</a></p>
+                                <div class="text-sm op-5"> <a class="text-black mr-2" href="#">#@thread.Interest</a></div>
+                            </div>
+                            <div class="col-md-4 op-7">
+                                <div class="row text-center op-7">
+                                    <button type="button" class="btn">
+                                        <a class="Btn" asp-page="/Member/EditThread" asp-route-id="@thread.Id">Edit Thread</a>
                                     </button>
-                                <form method="post">
-                                    <button class="btn" type="submit" asp-route-id="@thread.Id">Delete</button>
-                                </form>
-                                <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> Replys</span> </div>
+                                    <form method="post">
+                                        <button class="btn" type="submit" asp-route-id="@thread.Id">Delete</button>
+                                    </form>
+                                        <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">@thread.Messages.Count Replys</span> </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                    @*@thread.QuestionTitle*@
-                    @*<a asp-page="/question" asp-route-id="@thread.Id"><h1>@thread.QuestionTitle</h1></a>*@
-                    @*<a asp-page="/member/deletethread" asp-route-id="@thread.Id" class="btn btn-danger">Delete thread</a>*@
                 }
             }
         }
-        <!-- /End of post 1 -->
     </div>
-    <!-- Sidebar content -->
-    @* <div class="col-lg-3 mb-4 mb-lg-0 px-lg-0 mt-lg-0">
-        <div style="visibility: hidden; display: none; width: 285px; height: 801px; margin: 0px; float: none; position: static; inset: 85px auto auto;"></div><div data-settings="{&quot;parent&quot;:&quot;#content&quot;,&quot;mind&quot;:&quot;#header&quot;,&quot;top&quot;:10,&quot;breakpoint&quot;:992}" data-toggle="sticky" class="sticky" style="top: 85px;"><div class="sticky-inner">
-        @*<a asp-page="/Member/CreateThread" class="btn btn-lg btn-block btn-success rounded-0 py-4 mb-3 bg-op-6 roboto-bold">Ask Question</a>*@
-    @* <div class="bg-white mb-3">
-        <h4 class="px-3 py-4 op-5 m-0">
-        Active Topics
-        </h4>
-        <hr class="m-0">
-        <div class="pos-relative px-3 py-3">
-        <h6 class="text-primary text-sm">
-        <a href="#" class="text-primary">Why Bootstrap 4 is so awesome? </a>
-        </h6>
-        <p class="mb-0 text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">39 minutes</a> <span class="op-6">ago by</span> <a class="text-black" href="#">AppStrapMaster</a></p>
-        </div>
-        <div class="bg-white text-sm">
-        <h4 class="px-3 py-4 op-5 m-0 roboto-bold">
-        Stats
-        </h4>
-        <hr class="my-0">
-        <div class="row text-center d-flex flex-row op-7 mx-0">
-        <div class="col-sm-6 flex-ew text-center py-3 border-bottom border-right"> <a class="d-block lead font-weight-bold" href="#">58</a> Topics </div>
-        <div class="col-sm-6 col flex-ew text-center py-3 border-bottom mx-0"> <a class="d-block lead font-weight-bold" href="#">1.856</a> Posts </div>
-        </div>
-        <div class="row d-flex flex-row op-7">
-        <div class="col-sm-6 flex-ew text-center py-3 border-right mx-0"> <a class="d-block lead font-weight-bold" href="#">300</a> Members </div>
-        <div class="col-sm-6 flex-ew text-center py-3 mx-0"> <a class="d-block lead font-weight-bold" href="#">DanielD</a> Newest Member </div>
-        </div>
-        </div>
-        </div></div>
-        </div>
-        </div>*@
 </div>
