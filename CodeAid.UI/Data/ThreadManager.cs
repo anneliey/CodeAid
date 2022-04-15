@@ -21,16 +21,7 @@ namespace CodeAid.UI.Data
             var threads = await apiManager.GetAllThreads();
             return threads;
         }
-
-        public async Task<ThreadModel> GetThread(int id)
-        {
-            ApiManager apiManager = new ApiManager();
-            var allThreads = await apiManager.GetAllThreads();
-            var pickedThread = allThreads.FirstOrDefault(x => x.Id == id);
-
-            return pickedThread;
-        }
-
+        
         public async Task<List<ThreadModel>> GetQuestions()
         {
             ApiManager apiManager = new ApiManager();

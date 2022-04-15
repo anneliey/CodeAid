@@ -26,7 +26,8 @@ namespace CodeAid.API.Controllers
         [HttpGet]
         public ActionResult<List<ThreadModel>> GetAllThreads()
         {
-            var result = _context.Threads.ToList();
+            var result = _context.Threads.OrderByDescending(t => t.ThreadDate).ToList();
+            //var thread = _context.Threads.Include(t => t.Messages.OrderByDescending(t => t.PostDate)).Where(t => t.Id == id).FirstOrDefault();
 
             if (result.Any())
             {
@@ -199,7 +200,11 @@ namespace CodeAid.API.Controllers
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
             if (isValid)
             {
-                var thread = _context.Threads.Include(t => t.Messages).Where(t => t.Id == id).FirstOrDefault();
+                
+                var thread = _context.Threads.Include(t => t.Messages.OrderByDescending(t => t.PostDate)).Where(t => t.Id == id).OrderByDescending(t => t.ThreadDate).FirstOrDefault();
+
+
+
                 if (thread != null)
                 {
                     foreach (var m in thread.Messages)

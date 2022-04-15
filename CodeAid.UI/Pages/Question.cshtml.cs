@@ -15,11 +15,55 @@ namespace CodeAid.UI.Pages
             _signInManager = signInManager;
         }
         public ThreadModel Question { get; set; }
+        public List<MessageModel> AllMessages { get; set; }
+        public MessageModel Message { get; set; }
+
         public async Task<IActionResult> OnGet(int id)
         {
-            ThreadManager manager = new();
-            Question = await manager.GetThread(id);
+            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            
+            if (user != null)
+            {
+                ThreadManager manager = new();
+                Question = await manager.GetThread(id, user);
+            }
             return Page();
         }
+        
+        public async Task<IActionResult> OnPost()
+        {
+            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            if (user != null)
+            {
+                MessageManager messageManager = new();
+                var result = await messageManager.CreateMessage(new MessageDto
+                {
+                    Message = Message.Message,
+                    ThreadId = Question.Id
+
+                }, user.Id);
+            }
+            return RedirectToAction($"/Question/{Question.Id}");
+
+
+        }
+
+        public async Task<IActionResult> OnPostDelete(MessageModel message)
+        {
+            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            if (user != null)
+            {
+                ApiManager apiManager = new();
+
+                await apiManager.DeleteThread(message.Id, user.Id);
+            }
+            return  Page();
+        }
+
+
     }
+
+
+
 }
+
