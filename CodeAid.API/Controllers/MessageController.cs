@@ -18,20 +18,19 @@ namespace CodeAid.API.Controllers
             _context = context;
             _signInManager = signInManager;
         }
-        
-        
+
+
         [HttpGet]
         [Route("GetAll")]
         public ActionResult<List<MessageModel>> GetAllMessages()
         {
-                var result = _context.Messages;
-                if (result.Any())
-                {
-                    var resultList = result.ToList();
+            var result = _context.Messages;
+            if (result.Any())
+            {
+                var resultList = result.ToList();
 
-                    return Ok(resultList);
-                }
-            
+                return Ok(resultList);
+            }
             return BadRequest();
         }
 
@@ -153,33 +152,31 @@ namespace CodeAid.API.Controllers
 
 
         [HttpDelete]
-        [Route("Delete/{accessToken}")]
-        public async Task<ActionResult> DeleteMessage(string accessToken, MessageModel message)
+        [Route("{id}/{accessToken}")]
+        public async Task<ActionResult> DeleteMessage([FromRoute] int id, string accessToken)
         {
-            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
+            AccessTokenManager accessTokenManager = new(_signInManager);
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
             if (isValid)
             {
-                var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
-
-                if (identityUser != null)
+                var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
+                var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
+                var result = _context.Messages.Any(x => x.UserId == dbUser.Id);
+                if (result)
                 {
-                    var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                    var dbMessage = await _context.Messages.FindAsync(message);
-
-                    _context.Messages.Remove(dbMessage);
-                    await _context.SaveChangesAsync();
-
-                    return Ok();
+                    var message = _context.Messages.Where(x => x.Id == id).FirstOrDefault();
+                    if (message != null)
+                    {
+                        _context.Messages.Remove(message);
+                        await _context.SaveChangesAsync();
+                        return Ok();
+                    }
+                    return NotFound();
                 }
             }
-            return BadRequest();
+            return null;
         }
     }
-
-
-
-
 
 }
 

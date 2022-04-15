@@ -26,11 +26,11 @@ namespace CodeAid.UI.Pages
             {
                 ThreadManager manager = new();
                 Question = await manager.GetThread(id, user);
-
             }
             return Page();
         }
-        public async Task<IActionResult> OnPostCreateMessage()
+        
+        public async Task<IActionResult> OnPost()
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
             if (user != null)
@@ -47,6 +47,20 @@ namespace CodeAid.UI.Pages
 
 
         }
+
+        public async Task<IActionResult> OnPostDelete(MessageModel message)
+        {
+            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            if (user != null)
+            {
+                ApiManager apiManager = new();
+
+                await apiManager.DeleteThread(message.Id, user.Id);
+            }
+            return  Page();
+        }
+
+
     }
 
 

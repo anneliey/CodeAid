@@ -357,20 +357,20 @@ namespace CodeAid.UI.Data
         }
         
         
-        public async Task<bool> DeleteMessage(MessageModel message, string accessToken)
-        {
-            using (var httpClient = new HttpClient())
-            {
-                string url = string.Concat(baseUrl, "api/Message/Delete", accessToken);
-                var response = await httpClient.PostAsJsonAsync<MessageModel>(url, message);
+        //public async Task<bool> DeleteMessage(MessageModel message, string accessToken)
+        //{
+        //    using (var httpClient = new HttpClient())
+        //    {
+        //        string url = string.Concat(baseUrl, "api/Message/Delete", accessToken);
+        //        var response = await httpClient.PostAsJsonAsync<MessageModel>(url, message);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            return true;
+        //        }
+        //        return false;
+        //    }
+        //}
         
         
         public async Task<List<MessageModel>> GetThreadMessages(string accessToken, int id)
@@ -389,5 +389,22 @@ namespace CodeAid.UI.Data
             }
             return null;
         }
+
+        public async Task<bool> DeleteMessage(int id, string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = String.Concat($"{baseUrl}api/Message/{id}/{accessToken}");
+                var response = await httpClient.DeleteAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+      
     }
 }

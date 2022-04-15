@@ -49,17 +49,17 @@
 
         }
 
-        public async Task<bool> DeleteMessage(MessageModel message, string id)
-        {
-            ApiManager apiManager = new ApiManager();
-            var result = await apiManager.DeleteMessage(message, id);
-            if (result)
-            {
-                return true;
-            }
-            return false;
+        //public async Task<bool> DeleteMessage(MessageModel message, string id)
+        //{
+        //    ApiManager apiManager = new ApiManager();
+        //    var result = await apiManager.DeleteMessage(message, id);
+        //    if (result)
+        //    {
+        //        return true;
+        //    }
+        //    return false;
 
-        }
+        //}
     }
 
 }
