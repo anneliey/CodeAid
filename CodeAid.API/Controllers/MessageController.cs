@@ -18,8 +18,8 @@ namespace CodeAid.API.Controllers
             _context = context;
             _signInManager = signInManager;
         }
-
-
+        
+        
         [HttpGet]
         [Route("GetAll")]
         public ActionResult<List<MessageModel>> GetAllMessages()

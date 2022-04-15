@@ -1,4 +1,4 @@
-﻿@page
+﻿@page "{id}"
 @model CodeAid.UI.Pages.QuestionModel
 @{
 }
@@ -135,6 +135,36 @@
                 </form>
             </div>
         </div>*@
+
     
 </div>
 </div>
+
+
+
+
+<form method="post" asp-page-handler="CreateMessage">
+    <input asp-for="@Model.Question.Id" hidden />
+	<input asp-for="@Model.Message.Message"/>
+	<button type="submit">Post</button>
+</form>
+
+@foreach (var q in Model.Question.Messages)
+{
+    <div class="card-body">
+        
+            <div class="alert alert-primary" role="alert">
+               
+                <p>@q.Message---- @q.PostDate--</p>
+                @*<h1>@message.PostDate</h1>*@
+            </div>
+        
+    </div>
+}
+
+
+
+
+
+
+
