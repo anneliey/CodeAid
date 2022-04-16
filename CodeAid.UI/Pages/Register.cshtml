@@ -2,38 +2,36 @@
 @model CodeAid.UI.Pages.RegisterModel
 @{
 }
-<div class="title">
-    <h4 class="display-6 mb-4">Sign up</h4>
-</div>
-<form method="post">
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Username</span>
-        </div>
-        <input asp-for="@Model.Username" type="text" class="form-control" placeholder="Enter username">
-        <span class="text-warning" asp-validation-for="@Model.Username"></span>
-    </div>
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Email</span>
-        </div>
-        <input asp-for="@Model.Email" type="email" class="form-control" placeholder="Enter email">
-        <span class="text-warning" asp-validation-for="@Model.Email"></span>
+<div class="container mt-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-sm-12 col-md-12 col-lg-4 p-4" style="background-color: #FFD28C">
+            <h1 class="mb-3">Sign up</h1>
+            <form method="post">
+                <div class="mb-3">
+                    <label class="form-label" asp-for=@Model.Username>Username</label>
+                    <input asp-for="@Model.Username" type="text" class="form-control" placeholder="Enter username">
+                    <span class="text-warning" asp-validation-for="@Model.Username"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" asp-for=@Model.Email>Email</label>
+                    <input asp-for="@Model.Email" type="email" class="form-control" placeholder="Enter email">
+                    <span class="text-warning" asp-validation-for="@Model.Email"></span>
 
-    </div>
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Password</span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" asp-for=@Model.Password>Password</label>
+                    <input asp-for="@Model.Password" type="password" class="form-control" placeholder="Enter password">
+                    <span class="text-warning" asp-validation-for="@Model.Password"></span>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" asp-for=@Model.VerifiedPassword>Verify password</label>
+                    <input asp-for="@Model.VerifiedPassword" type="password" class="form-control"
+                        placeholder="Verify password">
+                    <span class="text-warning" asp-validation-for="@Model.VerifiedPassword"></span>
+                </div>
+                <button type="submit" class="btn btn-dark" value="Sign up!">Sign up</button>
+            </form>
         </div>
-        <input asp-for="@Model.Password" type="password" class="form-control" placeholder="Enter password">
-        <span class="text-warning" asp-validation-for="@Model.Password"></span>
-    </div>
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-            <span class="input-group-text">Verify password</span>
-        </div>
-        <input asp-for="@Model.VerifiedPassword" type="password" class="form-control" placeholder="Verify password">
-        <span class="text-warning" asp-validation-for="@Model.VerifiedPassword"></span>
     </div>
 
     <div class="form-check-inline">
@@ -46,4 +44,5 @@
         }
     </div>
     <button type="submit" class="btn btn-dark" value="Sign up!">Sign up</button>
-</form>
+    </form>
+</div>

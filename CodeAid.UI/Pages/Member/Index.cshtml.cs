@@ -24,7 +24,9 @@ namespace CodeAid.UI.Pages.Member
                 CurrentUser.Username = identityUser.UserName;
 
                 ApiManager apiManager = new ApiManager();
-                var userDb = apiManager.GetUser(identityUser.UserName);
+                var dbUser = await apiManager.GetUser(identityUser.Id);
+                DateRegistered = dbUser.DateRegistered.ToShortDateString();
+
             }
 
         }

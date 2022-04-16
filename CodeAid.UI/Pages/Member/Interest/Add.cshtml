@@ -2,55 +2,60 @@
 @model CodeAid.UI.Pages.Member.Interest.AddModel
 @{
 }
-<h1>Add interests</h1>
-<form method="post" asp-page-handler="CreateInterest">
-    <div class="input-group mb-3">
-        <input class="form-control" type="text" asp-for="@Model.Interest.Name" />
-        <span class="text-warning" asp-validation-for="@Model.Interest.Name">@Model.ErrorMessage</span>
-    </div>
-    <button type="submit" class="btn btn-outline-dark">Create interest</button>
-</form>
+<div class="container">
+    <h1 class="mt-5">Browse interests</h1>
+    <form method="post" asp-page-handler="CreateInterest">
+        <div class="row my-4">
+            <div class="col-6">
+                    <input class="form-control" type="text" asp-for="@Model.Interest.Name" />
+                    <span class="text-warning" asp-validation-for="@Model.Interest.Name">@Model.ErrorMessage</span>
+            </div>
+            <div class="col-3">
+                <button type="submit" class="btn btn-primary">Create interest</button>
+            </div>
+        </div>
+    </form>
 
-@if (Model.VisibleInterests != null)
-{
-    <table class="table table-light">
-        <thead>
-            <tr class="fw-bolder">
-                <th>
-                    <h5>All interests</h5>
-                </th>
-
-            </tr>
-        </thead>
-        <tbody>
-
+    @if (Model.VisibleInterests != null)
+    {
+        <div class="row" style="gap: 32px">
             @foreach (var interest in Model.VisibleInterests)
             {
-
-                <tr>
-                    <td>
-                        @interest.Name
-                    </td>
-                    <td>
-                        <div class="btn-group btn-outline-light">
-                            <form method="post">
-                                <button class="btn" type="submit" asp-route-id="@interest.Id">Add</button>
-                            </form>
+                <div class="col-2">
+                    <div class="card text-center mt-3" style="width: 14rem;">
+                        <div class="card-body p-2" style="background-color: #CACAEA">
+                            <h2 class="card-title">@interest.Name</h2>
+                            @if (@interest.Threads?.Count >= 1)
+                            {
+                                <p class="card-text m-0">@interest.Threads.Count questions</p>
+                            }
+                            @if (@interest.Threads == null)
+                            {
+                                <p class="card-text my-2">0 questions</p>
+                            }
+                            <div class="btn-group btn-outline-light">
+                                <form method="post">
+                                    <button class="btn btn-add" type="submit" asp-route-id="@interest.Id">
+                                        <h3>+</h3>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </td>
-                </tr>
+                    </div>
+                </div>
             }
-        </tbody>
-    </table>
-}
-@if (Model.VisibleInterests.Count == 0)
-{
-    <div class="text-center mt-5">
-        <h1>Oops!</h1>
-        <h2>No data found</h2>
-    </div>
-    <div class="text-center">
-        <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
-    </div>
-}
+        </div>
+    }
+    @if (Model.VisibleInterests.Count == 0)
+    {
+        <div class="text-center mt-5">
+            <h1>Oops!</h1>
+            <h2>No data found</h2>
+        </div>
+        <div class="text-center">
+            <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
+        </div>
+    }
+</div>
+
 

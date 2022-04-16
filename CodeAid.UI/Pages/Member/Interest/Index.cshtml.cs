@@ -15,6 +15,7 @@ namespace CodeAid.UI.Pages.Member.Interest
             _signInManager = signInManager;
         }
         public List<InterestModel> UserInterests { get; set; }
+        public bool EmptyList { get; set; } = false;
 
         public async Task<IActionResult> OnGet()
         {
@@ -23,6 +24,10 @@ namespace CodeAid.UI.Pages.Member.Interest
             {
                 InterestManager manager = new();
                 UserInterests = await manager.GetUserInterests(user.Id);
+                if (UserInterests == null || UserInterests.Count == 0)
+                {
+                    EmptyList = true;
+                }
             }
             return Page();
         }
