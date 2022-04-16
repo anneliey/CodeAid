@@ -2,11 +2,11 @@
 @model CodeAid.UI.Pages.RegisterModel
 @{
 }
-<div class="container mt-5">
-    <div class="row justify-content-center align-items-center">
-        <div class="col-sm-12 col-md-12 col-lg-4 p-4" style="background-color: #FFD28C">
-            <h1 class="mb-3">Sign up</h1>
-            <form method="post">
+<form method="post">
+    <div class="container mt-5">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-sm-12 col-md-12 col-lg-4 p-4" style="background-color: #FFD28C">
+                <h1 class="mb-3">Sign up</h1>
                 <div class="mb-3">
                     <label class="form-label" asp-for=@Model.Username>Username</label>
                     <input asp-for="@Model.Username" type="text" class="form-control" placeholder="Enter username">
@@ -26,23 +26,25 @@
                 <div class="mb-3">
                     <label class="form-label" asp-for=@Model.VerifiedPassword>Verify password</label>
                     <input asp-for="@Model.VerifiedPassword" type="password" class="form-control"
-                        placeholder="Verify password">
+                           placeholder="Verify password">
                     <span class="text-warning" asp-validation-for="@Model.VerifiedPassword"></span>
                 </div>
-                <button type="submit" class="btn btn-dark" value="Sign up!">Sign up</button>
-            </form>
+                <h5>Select interests</h5>
+                <div class="form-check-inline mb-3">
+                    @foreach (var interest in Model.Interests)
+                    {
+                        <div class="form-check p-0">
+                            <input type="radio" value="@interest.Id" name="SelectedInterests" />
+                            <label>
+                                <strong>@interest.Name</strong>
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div class="d-flex justify-content-center mb-3">
+                    <button type="submit" class="btn btn-primary" value="Sign up!">Sign up</button>
+                </div>
+            </div>
         </div>
     </div>
-
-    <div class="form-check-inline">
-        @foreach (var interest in Model.Interests)
-        {
-            <div class="form-check">
-                <input type="checkbox" value="@interest.Id" name="SelectedInterests" />
-                <label>@interest.Name</label>
-            </div>
-        }
-    </div>
-    <button type="submit" class="btn btn-dark" value="Sign up!">Sign up</button>
-    </form>
-</div>
+</form>
