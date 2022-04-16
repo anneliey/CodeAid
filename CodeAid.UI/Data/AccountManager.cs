@@ -2,12 +2,6 @@
 {
     public class AccountManager
     {
-        //public void GetUser(string id)
-        //{
-        //    ApiManager apiManager = new ApiManager();
-        //    apiManager.GetUser(id);
-        //}
-
         public async Task<bool> AddInterestToUser(InterestModel interest, string userId)
         {
             ApiManager apiManager = new ApiManager();
