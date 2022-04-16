@@ -12,5 +12,6 @@ namespace CodeAid.Shared
         public string Email { get; set; } = String.Empty;
         public string Password { get; set; } = String.Empty;
         public DateTime DateRegistered { get; set; }
+        public List<int>? UserInterests { get; set; }
     }
 }

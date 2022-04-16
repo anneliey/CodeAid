@@ -24,6 +24,15 @@ namespace CodeAid.UI.Pages
         [Required(ErrorMessage = "Verify password is required!")]
         [Compare(nameof(Password), ErrorMessage = "Passwords do not match!")]
         public string VerifiedPassword { get; set; }
+        public List<InterestModel> Interests { get; set; }
+        public List<int>? SelectedInterests { get; set; }
+
+        public async Task<IActionResult> OnGet()
+        {
+            InterestManager interestManager = new();
+            Interests = await interestManager.GetInterests();
+            return Page();
+        }
 
         public async Task<IActionResult> OnPost()
         {
@@ -35,7 +44,7 @@ namespace CodeAid.UI.Pages
                     Username = Username,
                     Email = Email,
                     Password = Password,
-
+                    UserInterests = SelectedInterests
                 };
                 var result = await apiManager.RegisterUser(identityUserDto);
 
@@ -44,7 +53,7 @@ namespace CodeAid.UI.Pages
                     return RedirectToPage("/Login");
                 }
             }
-            return Page();
+            return RedirectToPage("/Register", OnGet);
         }
     }
 }

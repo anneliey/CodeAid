@@ -35,5 +35,15 @@
         <input asp-for="@Model.VerifiedPassword" type="password" class="form-control" placeholder="Verify password">
         <span class="text-warning" asp-validation-for="@Model.VerifiedPassword"></span>
     </div>
+
+    <div class="form-check-inline">
+        @foreach (var interest in Model.Interests)
+        {
+            <div class="form-check">
+                <input type="checkbox" value="@interest.Id" name="SelectedInterests" />
+                <label>@interest.Name</label>
+            </div>
+        }
+    </div>
     <button type="submit" class="btn btn-dark" value="Sign up!">Sign up</button>
 </form>

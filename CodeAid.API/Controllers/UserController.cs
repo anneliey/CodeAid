@@ -125,13 +125,34 @@ namespace CodeAid.API.Controllers
 
             if (createUserResult.Succeeded)
             {
+                //var userInterestToAdd = userToSignUp.UserInterests.ForEach(ui => ).ToList();
+                //var userInterestToAdd = _context.Interests.Where(i => i.Id == userToSignUp.UserInterests.FirstOrDefault()).ToList();
                 UserModel user = new();
                 user.Username = newUser.UserName;
                 user.DateRegistered = DateTime.Now;
-                // Add the 5 chosen interests
-                //user.Interests =
+
                 _context.Users.Add(user);
-                _context.SaveChanges();
+                if (userToSignUp.UserInterests != null && userToSignUp.UserInterests.Count > 0)
+                {
+                    var list = new List<InterestModel>();
+                    foreach (var interest in userToSignUp.UserInterests)
+                    {
+                        var i = _context.Interests.Where(i => i.Id == interest).FirstOrDefault();
+                        list.Add(i);
+                    }
+                    if (list != null && list.Count > 0)
+                    {
+                        foreach (var i in list)
+                        {
+                            _context.UserInterests.Add(new UserInterestModel
+                            {
+                                User = user,
+                                Interest = i
+                            });
+                        }
+                    }
+                }
+                await _context.SaveChangesAsync();
                 return Ok();
             }
             return BadRequest();
