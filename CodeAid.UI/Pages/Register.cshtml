@@ -29,18 +29,21 @@
                            placeholder="Verify password">
                     <span class="text-warning" asp-validation-for="@Model.VerifiedPassword"></span>
                 </div>
-                <h5>Select interests</h5>
-                <div class="form-check-inline mb-3">
-                    @foreach (var interest in Model.Interests)
-                    {
-                        <div class="form-check p-0">
-                            <input type="radio" value="@interest.Id" name="SelectedInterests" />
-                            <label>
-                                <strong>@interest.Name</strong>
-                            </label>
-                        </div>
-                    }
-                </div>
+                @if (@Model.Interests != null && @Model.Interests.Count > 0)
+                {
+                    <h5>Select interests</h5>
+                    <div class="form-check-inline mb-3">
+                        @foreach (var interest in Model.Interests)
+                        {
+                            <div class="form-check p-0">
+                                <input type="radio" value="@interest.Id" name="SelectedInterests" />
+                                <label>
+                                    <strong>@interest.Name</strong>
+                                </label>
+                            </div>
+                        }
+                    </div>
+                }
                 <div class="d-flex justify-content-center m-2">
                     <button type="submit" class="btn btn-primary" value="Sign up!">Sign up</button>
                 </div>
