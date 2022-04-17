@@ -19,6 +19,31 @@ namespace CodeAid.API.Controllers
             _signInManager = signInManager;
         }
 
+        [HttpGet]
+        [Route("{id}")]
+        public ActionResult<MessageModel> GetMessage([FromRoute] int id)
+        {
+            var message = _context.Messages.Where(m => m.Id == id).Include(m => m.User).Select(m => new MessageModel
+            {
+                Id = m.Id,
+                Message = m.Message,
+                PostDate = m.PostDate,
+                ThreadId = m.ThreadId,
+                User = new UserModel()
+                {
+                    Id = m.User.Id,
+                    Username = m.User.Username,
+                    Banned = m.User.Banned,
+                    Deleted = m.User.Deleted,
+                }
+
+            }).FirstOrDefault();
+            if (message != null)
+            {
+                return Ok(message);
+            }
+            return BadRequest();
+        }
 
         [HttpGet]
         [Route("GetAll")]
@@ -30,30 +55,6 @@ namespace CodeAid.API.Controllers
                 var resultList = result.ToList();
 
                 return Ok(resultList);
-            }
-            return BadRequest();
-        }
-
-
-        [HttpGet]
-        [Route("My-Messages/{accessToken}")]
-        public ActionResult<List<MessageModel>> GetUserMessages(string accessToken)
-        {
-            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
-            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
-            if (isValid)
-            {
-                var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
-
-                if (identityUser != null)
-                {
-                    var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                    // change for your method
-                    var list = _context.Messages
-                    .Where(u => u.UserId.Equals(userDb.Id)).ToList();
-
-                    return list;
-                }
             }
             return BadRequest();
         }
@@ -126,33 +127,30 @@ namespace CodeAid.API.Controllers
 
         [HttpPut]
         [Route("Edit/{accessToken}")]
-        public async Task<ActionResult<MessageModel>> updatedMessage(MessageModel updatedMessage, string accessToken)
+        public async Task<IActionResult> EditMessage([FromBody] MessageDto updatedMessage, string accessToken)
         {
             AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
             if (isValid)
             {
                 var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
+                var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
+                var messageToUpdate = _context.Messages.Where(t => t.Id == updatedMessage.MessageId).FirstOrDefault();
 
-                if (identityUser != null)
+                if (messageToUpdate != null)
                 {
-                    var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                    var messageToUpdate = _context.Messages.Where(t => t.ThreadId == updatedMessage.ThreadId).FirstOrDefault();
-
-                    if (messageToUpdate != null)
-                    {
-                        messageToUpdate.Message = updatedMessage.Message;
-                        _context.Messages.Update(messageToUpdate);
-                        await _context.SaveChangesAsync();
-                    }
+                    messageToUpdate.Message = updatedMessage.Message;
+                    _context.Messages.Update(messageToUpdate);
+                    await _context.SaveChangesAsync();
+                    return Ok();
                 }
             }
             return BadRequest();
         }
 
 
-        [HttpDelete]
-        [Route("{id}/{accessToken}")]
+        [HttpDelete("{id}/{accessToken}")]
+        //[Route("{id}/{accessToken}")]
         public async Task<ActionResult> DeleteMessage([FromRoute] int id, string accessToken)
         {
             AccessTokenManager accessTokenManager = new(_signInManager);

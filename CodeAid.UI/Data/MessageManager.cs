@@ -9,7 +9,7 @@
             return Messages;
         }
 
-        public async Task<List<MessageModel>> GetMessagesFomUser(string id)
+        public async Task<List<MessageModel>> GetUserMessages(string id)
         {
             ApiManager apiManager = new ApiManager();
             var Messages = await apiManager.GetUserMessages(id);
@@ -37,10 +37,11 @@
 
         }
 
-        public async Task<bool> EditMessage(MessageModel message, string id)
+        public async Task<bool> EditMessage(MessageDto message, string userId)
         {
             ApiManager apiManager = new ApiManager();
-            var result = await apiManager.UpdateMessage(message, id);
+
+            var result = await apiManager.EditMessage(message, userId);
             if (result)
             {
                 return true;

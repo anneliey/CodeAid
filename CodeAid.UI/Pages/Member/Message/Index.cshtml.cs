@@ -3,49 +3,39 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace CodeAid.UI.Pages
+namespace CodeAid.UI.Pages.Member.Message
 {
-    public class QuestionModel : PageModel
+    [BindProperties]
+    public class IndexModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
 
-        public QuestionModel(SignInManager<IdentityUser> signInManager)
+        public IndexModel(SignInManager<IdentityUser> signInManager)
         {
             _signInManager = signInManager;
         }
-        [BindProperty]
-        public ThreadModel Question { get; set; }
-        [BindProperty]
-        public MessageModel Message { get; set; }
+        public List<MessageModel> UserMessages { get; set; }
 
-        public async Task<IActionResult> OnGet(int id)
+        public async Task<IActionResult> OnGet()
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
-
             if (user != null)
             {
-                ThreadManager manager = new();
-                Question = await manager.GetThread(id, user);
+                MessageManager manager = new();
+                UserMessages = await manager.GetUserMessages(user.Id);
             }
             return Page();
         }
-
         public async Task<IActionResult> OnPost(int id)
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
-                MessageManager messageManager = new();
-                await messageManager.CreateMessage(new MessageDto
-                {
-                    Message = Message.Message,
-                    ThreadId = id
+                ApiManager apiManager = new();
 
-                }, user.Id);
-
+                await apiManager.DeleteMessage(id, user.Id);
             }
             return RedirectToPage("/member/message/index");
         }
     }
 }
-
