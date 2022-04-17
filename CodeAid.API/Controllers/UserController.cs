@@ -62,6 +62,7 @@ namespace CodeAid.API.Controllers
                     Message = t.Message,
                     PostDate = t.PostDate,
                     ThreadId = t.ThreadId,
+                    MessageEdit = t.MessageEdit,
                     User = new UserModel() // Project the user into a user with the data we want (without circular references)
                     {
                         Id = t.User.Id,
