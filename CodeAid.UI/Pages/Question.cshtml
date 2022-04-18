@@ -25,7 +25,7 @@
                             <div class="media forum-item">
                                 <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User" /></a>
                                 <div class="media-body">
-                                    <h6><a href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">@Model.Question.User</a></h6>
+                                    <h5 href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">@Model.Question.User.Username</h5>
                                     <h3>
                                         @Model.Question.QuestionTitle
                                     </h3>
@@ -38,14 +38,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="my-2">
+                        <form method="post">
+                            <input asp-for="@Model.Question.Id" hidden />
+                            <input asp-for="@Model.Message.Message" />
+                            <button class="btn btn-primary" type="submit">Post</button>
+                        </form>
+                    </div>
                 </div>
             </div>
 
-            <form method="post">
-                <input asp-for="@Model.Question.Id" hidden />
-                <input asp-for="@Model.Message.Message" />
-                <button type="submit">Post</button>
-            </form>
 
             @if (@Model.Question.Messages != null && @Model.Question.Messages.Count > 0)
             {
@@ -56,8 +58,8 @@
                     {
                         <div class="card-body">
                             <div class="alert alert-primary" style="color:black; background-color: #DBE7FF;" role="alert">
-                                <p>@qm.Message---- @qm.PostDate--</p>
-                                <p>anwsered by @qm.User.Username</p>
+                                <p>anwsered by @qm.User.Username @qm.PostDate.ToLongDateString()</p>
+                                <p>@qm.Message</p>
                                 <a class="btn btn-primary" asp-page="/member/message/index">Modify</a>
                             </div>
                         </div>
@@ -66,8 +68,8 @@
                     {
                         <div class="card-body">
                             <div class="alert alert-primary" style="background-color: white" role="alert">
-                                <p>@qm.Message---- @qm.PostDate--</p>
-                                <p>anwsered by @qm.User.Username</p>
+                                <p>anwsered by @qm.User.Username @qm.PostDate.ToLongDateString()</p>
+                                <p>@qm.Message</p>
                                 <a class="btn btn-primary" asp-page="/member/message/index">Modify</a>
                             </div>
                         </div>

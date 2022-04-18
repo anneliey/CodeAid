@@ -36,7 +36,7 @@
                         @foreach (var interest in Model.Interests)
                         {
                             <div class="form-check p-0">
-                                <input type="radio" value="@interest.Id" name="SelectedInterests" />
+                                <input type="checkbox" value="@interest.Id" name="SelectedInterests" />
                                 <label>
                                     <strong>@interest.Name</strong>
                                 </label>
