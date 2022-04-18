@@ -20,7 +20,7 @@ namespace CodeAid.UI.Pages
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
         public List<ThreadModel> Result { get; set; }
-        public List<UserModel> getUser { get; set; }
+        public IdentityUser CurrentUser { get; set; }
 
 
         public async Task<IActionResult> OnGet(int id, string accessToken)
@@ -35,10 +35,7 @@ namespace CodeAid.UI.Pages
                     AllThreads = await threadManager.Search(SearchTerm);
                     Result = AllThreads.OrderBy(prod => prod.ThreadDate).ToList();
                     ApiManager apiManager = new();
-                    var getUser = apiManager.GetUser(accessToken);
-
-
-
+       
                 }
                 else
                 {

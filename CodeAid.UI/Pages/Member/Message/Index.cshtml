@@ -3,6 +3,8 @@
 @{
 }
 
+<partial name ="_Notification"/>
+
 @if (Model.UserMessages != null)
 {
     <table class="table table-light my-5">
@@ -15,35 +17,36 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var m in Model.UserMessages)
-            {
-                <tr>
-                    @if (!@m.MessageEdit)
-                    {
-                        <td style="vertical-align:middle">
-                            <p class="m-0" style="font-weight:500">@m.Message</p>
-                        </td>
-                    }
-                    else
-                    {
-                        <td style="vertical-align:middle">
-                            <div class="d-flex">
-                                <p class="m-0" style="font-weight:500">@m.Message</p>
-                                <p class="m-0 mx-3" style="font-weight:400; color:grey;">edited</p>
-                            </div>
-                        </td>
-                    }
-                    <td>
-                        <div class="btn-group btn-outline-light">
-                            <a class="btn" asp-page="/Member/Message/Edit" asp-route-id="@m.Id">Edit</a>
-                            <form method="post">
-                                <button class="btn" type="submit" asp-route-id="@m.Id">Delete</button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
+			@foreach (var m in Model.UserMessages)
+			{
+				<tr>
 
-            }
+					@if (!@m.MessageEdit)
+					{
+						<td style="vertical-align:middle">
+							<p class="m-0" style="font-weight:500">@m.Message</p>
+						</td>
+					}
+					else
+					{
+						<td style="vertical-align:middle">
+							<div class="d-flex">
+								<p class="m-0" style="font-weight:500">@m.Message</p>
+								<p class="m-0 mx-3" style="font-weight:400; color:grey;">edited</p>
+							</div>
+						</td>
+					}
+					<td>
+						<div class="btn-group btn-outline-light">
+							<a class="btn" asp-page="/Member/Message/Edit" asp-route-id="@m.Id">Edit</a>
+							<form method="post">
+								<div asp-validation-summary="All"></div>
+								<button class="btn" type="submit" asp-route-id="@m.Id">Delete</button>
+							</form>
+						</div>
+					</td>
+				</tr>
+			}
         </tbody>
     </table>
 }
@@ -57,4 +60,10 @@
     <div class="text-center">
         <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
     </div>
+}
+
+@section Scripts{
+	@{
+		<partial name="_ValidationScriptsPartial" />
+	}
 }

@@ -15,6 +15,7 @@ namespace CodeAid.UI.Pages.Member.Message
             _signInManager = signInManager;
         }
         public List<MessageModel> UserMessages { get; set; }
+        public bool MessageRemoved { get; set; }
 
         public async Task<IActionResult> OnGet()
         {
@@ -31,11 +32,13 @@ namespace CodeAid.UI.Pages.Member.Message
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
-                ApiManager apiManager = new();
+                MessageManager messageManager = new();
 
-                await apiManager.DeleteMessage(id, user.Id);
+                var result =await messageManager.DeleteMessage(id, user.Id);
+                TempData["success"] = "Messages removed successfully";
+                
             }
-            return RedirectToPage("/member/message/index");
+            return RedirectToPage("/member/message/index", MessageRemoved);
         }
     }
 }
