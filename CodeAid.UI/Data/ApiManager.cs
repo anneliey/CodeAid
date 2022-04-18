@@ -117,6 +117,7 @@ namespace CodeAid.UI.Data
             return null;
         }
 
+
         public async Task<bool> AddInterestToUser(InterestModel interest, string accessToken)
         {
             using (var httpClient = new HttpClient())
@@ -131,6 +132,7 @@ namespace CodeAid.UI.Data
                 return false;
             }
         }
+
 
         public async Task<bool> CreateInterest(InterestDto interest, string accessToken)
         {
@@ -162,6 +164,8 @@ namespace CodeAid.UI.Data
             }
             return false;
         }
+
+
         public async Task<bool> DeleteInterest(int id, string accessToken)
         {
             using (var httpClient = new HttpClient())
@@ -177,6 +181,7 @@ namespace CodeAid.UI.Data
             }
         }
 
+
         public async Task<bool> EditInterest(InterestModel interest, string accessToken)
         {
             using (var httpClient = new HttpClient())
@@ -191,6 +196,7 @@ namespace CodeAid.UI.Data
                 return false;
             }
         }
+
 
         public async Task<bool> CreateThread(ThreadDto thread, string id)
         {
@@ -208,7 +214,8 @@ namespace CodeAid.UI.Data
             }
         }
 
-        public async Task<bool> EditThread(ThreadModel thread, string accessToken)
+
+        public async Task<bool> EditThread(ThreadDto thread, string accessToken)
         {
             using (var httpClient = new HttpClient())
             {
@@ -222,6 +229,7 @@ namespace CodeAid.UI.Data
                 return false;
             }
         }
+
 
         public async Task<List<ThreadModel>> GetAllThreads()
         {
@@ -240,6 +248,7 @@ namespace CodeAid.UI.Data
             return null;
         }
 
+
         public async Task<List<ThreadModel>> GetAllQuestions()
         {
             using (var httpClient = new HttpClient())
@@ -256,6 +265,7 @@ namespace CodeAid.UI.Data
             }
             return null;
         }
+
 
         public async Task<bool> DeleteThread(int id, string accessToken)
         {
@@ -288,8 +298,8 @@ namespace CodeAid.UI.Data
             }
             return null;
         }
-        
-        
+
+
         public async Task<List<MessageModel>> GetAllMessages()
         {
             using (var httpClient = new HttpClient())
@@ -306,48 +316,14 @@ namespace CodeAid.UI.Data
             }
             return null;
         }
-        
-        
-        public async Task<List<MessageModel>> GetUserMessages(string accessToken)
-        {
-            using (var httpClient = new HttpClient())
-            {
-                string url = string.Concat(baseUrl, "api/Message/My-Messages/", accessToken);
-                var response = await httpClient.GetAsync(url);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var strResponse = await response.Content.ReadAsStringAsync();
-                    var data = JsonConvert.DeserializeObject<List<MessageModel>>(strResponse);
-                    return data;
-                }
-            }
-            return null;
-        }
-        
-        
+
         public async Task<bool> PostMessages(MessageDto message, string accessToken)
         {
             using (var httpClient = new HttpClient())
             {
                 string url = string.Concat(baseUrl, $"api/Message/Create/{accessToken}");
-                var response = await httpClient.PostAsJsonAsync<MessageDto>(url, message);
-                if (!response.IsSuccessStatusCode)
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
-
-
-        public async Task<bool> UpdateMessage(MessageModel message, string accessToken)
-        {
-            using (var httpClient = new HttpClient())
-            {
-                string url = string.Concat(baseUrl, "api/Message/Edit", accessToken);
-                var response = await httpClient.PostAsJsonAsync<MessageModel>(url, message);
-
+                var response = await httpClient.PostAsJsonAsync(url, message);
                 if (response.IsSuccessStatusCode)
                 {
                     return true;
@@ -355,24 +331,8 @@ namespace CodeAid.UI.Data
                 return false;
             }
         }
-        
-        
-        //public async Task<bool> DeleteMessage(MessageModel message, string accessToken)
-        //{
-        //    using (var httpClient = new HttpClient())
-        //    {
-        //        string url = string.Concat(baseUrl, "api/Message/Delete", accessToken);
-        //        var response = await httpClient.PostAsJsonAsync<MessageModel>(url, message);
 
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            return true;
-        //        }
-        //        return false;
-        //    }
-        //}
-        
-        
+
         public async Task<List<MessageModel>> GetThreadMessages(string accessToken, int id)
         {
             using (var httpClient = new HttpClient())
@@ -390,51 +350,6 @@ namespace CodeAid.UI.Data
             return null;
         }
 
-        public async Task<IdentityUser> DeleteAccount(string id)
-        {
-
-            string url = String.Concat(baseUrl, "api/user/", id);
-
-            HttpClient httpClient = new();
-
-            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Delete, url)
-            {
-                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
-            };
-            HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
-
-            return null;
-        }
-
-        public async Task<IdentityUser> DeactivateAccount(string id)
-        {
-            string url = String.Concat(baseUrl, "api/user/deactivate/", id);
-
-            HttpClient httpClient = new();
-
-            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Put, url)
-            {
-                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
-            };
-            HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
-
-            return null;
-        }
-
-        public async Task<IActionResult> ActivateAccount(string id)
-        {
-            string url = String.Concat(baseUrl, "api/user/activate/", id);
-
-            HttpClient httpClient = new();
-
-            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Put, url)
-            {
-                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
-            };
-            HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
-
-            return null;
-        }
 
         public async Task<bool> DeleteMessage(int id, string accessToken)
         {
@@ -451,6 +366,106 @@ namespace CodeAid.UI.Data
             }
         }
 
-      
+
+        public async Task<List<MessageModel>> GetUserMessages(string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = String.Concat($"{baseUrl}api/User/Messages/{accessToken}");
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<List<MessageModel>>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
+
+
+        public async Task<MessageModel> GetMessage(int id)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = String.Concat($"{baseUrl}api/Message/{id}");
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var strResponse = await response.Content.ReadAsStringAsync();
+                    var data = JsonConvert.DeserializeObject<MessageModel>(strResponse);
+                    return data;
+                }
+            }
+            return null;
+        }
+
+
+        public async Task<IdentityUser> DeleteAccount(string id)
+        {
+            string url = String.Concat(baseUrl, "api/user/", id);
+
+            HttpClient httpClient = new();
+
+            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Delete, url)
+            {
+                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
+            };
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
+
+            return null;
+        }
+
+
+        public async Task<IdentityUser> DeactivateAccount(string id)
+        {
+            string url = String.Concat(baseUrl, "api/user/deactivate/", id);
+
+            HttpClient httpClient = new();
+
+            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Put, url)
+            {
+                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
+            };
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
+
+            return null;
+        }
+
+
+        public async Task<IActionResult> ActivateAccount(string id)
+        {
+            string url = String.Concat(baseUrl, "api/user/activate/", id);
+
+            HttpClient httpClient = new();
+
+            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Put, url)
+            {
+                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
+            };
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
+
+            return null;
+        }
+
+
+
+        public async Task<bool> EditMessage(MessageDto message, string accessToken)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                string url = String.Concat($"{baseUrl}api/Message/Edit/{accessToken}");
+                var response = await httpClient.PutAsJsonAsync(url, message);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
     }
 }

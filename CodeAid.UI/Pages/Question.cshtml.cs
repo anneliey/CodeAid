@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CodeAid.UI.Pages
 {
-    [BindProperties]
     public class QuestionModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -14,56 +13,44 @@ namespace CodeAid.UI.Pages
         {
             _signInManager = signInManager;
         }
+        [BindProperty]
         public ThreadModel Question { get; set; }
-        public List<MessageModel> AllMessages { get; set; }
+        [BindProperty]
         public MessageModel Message { get; set; }
+        [BindProperty]
+        public IdentityUser CurrentUser { get; set; }
 
         public async Task<IActionResult> OnGet(int id)
         {
-            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
-            
-            if (user != null)
+            CurrentUser = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+
+            if (CurrentUser != null)
             {
                 ThreadManager manager = new();
-                Question = await manager.GetThread(id, user);
+                Question = await manager.GetThread(id, CurrentUser);
+                //MessageManager messageManager = new MessageManager();
+                //var messageId = 17;
+                //Message = await messageManager.GetMessage(messageId);
             }
             return Page();
         }
-        
-        public async Task<IActionResult> OnPost()
+
+        public async Task<IActionResult> OnPost(int id)
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
                 MessageManager messageManager = new();
-                var result = await messageManager.CreateMessage(new MessageDto
+                await messageManager.CreateMessage(new MessageDto
                 {
                     Message = Message.Message,
-                    ThreadId = Question.Id
+                    ThreadId = id
 
                 }, user.Id);
+
             }
-            return RedirectToAction($"/Question/{Question.Id}");
-
-
+            return RedirectToPage("/member/message/index");
         }
-
-        public async Task<IActionResult> OnPostDelete(MessageModel message)
-        {
-            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
-            if (user != null)
-            {
-                ApiManager apiManager = new();
-
-                await apiManager.DeleteThread(message.Id, user.Id);
-            }
-            return  Page();
-        }
-
-
     }
-
-
-
 }
 

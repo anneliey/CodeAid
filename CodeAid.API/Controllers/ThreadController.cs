@@ -26,30 +26,21 @@ namespace CodeAid.API.Controllers
         [HttpGet]
         public ActionResult<List<ThreadModel>> GetAllThreads()
         {
-            var result = _context.Threads.OrderByDescending(t => t.ThreadDate).ToList();
+            var result = _context.Threads.Include(t => t.User).OrderByDescending(t => t.ThreadDate).ToList();
             //var thread = _context.Threads.Include(t => t.Messages.OrderByDescending(t => t.PostDate)).Where(t => t.Id == id).FirstOrDefault();
 
             if (result.Any())
             {
+                foreach (var t in result)
+                {
+                    t.User.Threads = null;
+                }
                 return Ok(result);
             }
 
             return BadRequest();
         }
 
-        //[HttpGet]
-        //public ActionResult<List<ThreadModel>> GetThread()
-        //{
-        //    var result = _context.Threads;
-        //    if (result.Any())
-        //    {
-        //        var resultList = result.ToList();
-
-        //        return Ok(resultList);
-        //    }
-
-        //    return BadRequest();
-        //}
 
         [HttpGet]
         [Route("{accessToken}")]
@@ -76,7 +67,6 @@ namespace CodeAid.API.Controllers
             if (identityUser != null)
             {
                 var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                // change for your method
                 var list = _context.Threads
                     .Where(u => u.UserId.Equals(userDb.Id)).ToList();
 
@@ -121,7 +111,6 @@ namespace CodeAid.API.Controllers
                         ThreadDate = DateTime.Now,
                         Interest = threadInterest
                     };
-                    
 
                     _context.Threads.Add(threadQuestion);
                     await _context.SaveChangesAsync();
@@ -131,12 +120,12 @@ namespace CodeAid.API.Controllers
             }
 
             return BadRequest();
-
         }
+
 
         [HttpPut]
         [Route("Edit/{accessToken}")]
-        public async Task<IActionResult> EditThread([FromBody] ThreadModel threadToUpdate, string accessToken)
+        public async Task<IActionResult> EditThread([FromBody] ThreadDto threadDto, string accessToken)
         {
             AccessTokenManager accessTokenManager = new(_signInManager);
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
@@ -144,22 +133,21 @@ namespace CodeAid.API.Controllers
             {
                 var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
                 var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                
-                //id = interestToUpdate.Id;
+                var threadToUpdate = _context.Threads.Where(x => x.Id == threadDto.ThreadId).FirstOrDefault();
 
-                //if (exists)
-                //{
-                    var thread = _context.Threads.Where(x => x.Id == threadToUpdate.Id).FirstOrDefault();
-                    if (thread != null)
+                if (threadToUpdate != null && threadToUpdate.Messages == null)
+                {
+                    if (threadToUpdate.User.Id == dbUser.Id)
                     {
-                        thread.QuestionTitle = threadToUpdate.QuestionTitle;
-                        thread.Question = threadToUpdate.Question;
+                        threadToUpdate.QuestionTitle = threadDto.QuestionTitle;
+                        threadToUpdate.Question = threadDto.Question;
 
-                        _context.Threads.Update(thread);
+                        _context.Threads.Update(threadToUpdate);
                         await _context.SaveChangesAsync();
                         return Ok();
                     }
-                //}
+                }
+
             }
             return BadRequest();
         }
@@ -181,9 +169,12 @@ namespace CodeAid.API.Controllers
                     var thread = _context.Threads.Where(x => x.Id == id).FirstOrDefault();
                     if (thread != null)
                     {
-                        _context.Threads.Remove(thread);
-                        await _context.SaveChangesAsync();
-                        return Ok();
+                        if (thread.User.Id == dbUser.Id)
+                        {
+                            _context.Threads.Remove(thread);
+                            await _context.SaveChangesAsync();
+                            return Ok();
+                        }
                     }
                     return NotFound();
                 }
@@ -200,10 +191,28 @@ namespace CodeAid.API.Controllers
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
             if (isValid)
             {
-                
-                var thread = _context.Threads.Include(t => t.Messages.OrderByDescending(t => t.PostDate)).Where(t => t.Id == id).OrderByDescending(t => t.ThreadDate).FirstOrDefault();
-
-
+                var thread = _context.Threads
+                    .Include(t => t.User)
+                    .Include(t => t.Messages)
+                    .ThenInclude(m => m.User).Select(t => new ThreadModel
+                    {
+                        Id = t.Id,
+                        Question = t.Question,
+                        QuestionTitle = t.QuestionTitle,
+                        ThreadDate = t.ThreadDate,
+                        User = t.User,
+                        UserId = t.UserId,
+                        Messages = t.Messages.Select(m => new MessageModel
+                        {
+                            Id = m.Id,
+                            Message = m.Message,
+                            PostDate = m.PostDate,
+                            MessageEdit = m.MessageEdit,
+                            UserId = m.UserId,
+                            ThreadId = m.ThreadId,
+                            User = m.User,
+                        }).OrderByDescending(x => x.PostDate).ToList()
+                    }).FirstOrDefault(t => t.Id == id);
 
                 if (thread != null)
                 {
@@ -214,7 +223,6 @@ namespace CodeAid.API.Controllers
                     return Ok(thread);
                 }
                 return null;
-    
             }
             return BadRequest();
         }

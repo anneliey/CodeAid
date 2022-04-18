@@ -29,7 +29,6 @@ namespace CodeAid.API.Controllers
                 var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
                 var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
                 var interest = _context.Interests.Where(i => i.UserInterests.Any(ui => ui.UserId == dbUser.Id)).ToList();
-                //var interest = _context.Interests.Include(i => i.Threads).Where(x => x.Id.Equals(id)).FirstOrDefault();
 
                 return _context.Interests.Include(i => i.Threads).Select(i => new InterestModel()
                 {
@@ -49,9 +48,7 @@ namespace CodeAid.API.Controllers
                             //MessageEdit = m.MessageEdit,
                         }).ToList(),
                     }).ToList()
-                }).FirstOrDefault(i => i.Id == id);
-
-                return NotFound();
+                }).FirstOrDefault(x => x.Id == id);
             }
             return BadRequest();
         }
@@ -68,29 +65,9 @@ namespace CodeAid.API.Controllers
 
                 return Ok(resultList);
             }
-
             return BadRequest();
         }
 
-        //[HttpGet]
-        //[Route("List")]
-        //public ActionResult<List<InterestModel>> GetRegisterInterests(string accessToken)
-        //{
-        //    AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
-        //    var isValid = accessTokenManager.HasValidAccessToken(accessToken);
-        //    if (isValid)
-        //    {
-        //        var result = _context.Interests;
-        //        if (result.Any())
-        //        {
-        //            var resultList = result.ToList();
-
-        //            return Ok(resultList);
-        //        }
-        //        return BadRequest();
-        //    }
-        //    return null;
-        //}
 
         [HttpPost]
         [Route("Create/{accessToken}")]
@@ -129,6 +106,7 @@ namespace CodeAid.API.Controllers
             return BadRequest();
         }
 
+
         [HttpDelete]
         [Route("{id}/{accessToken}")]
         public async Task<ActionResult> DeleteInterest(string accessToken, [FromRoute] int id)
@@ -145,9 +123,12 @@ namespace CodeAid.API.Controllers
                     var interest = _context.Interests.Where(x => x.Id == id).FirstOrDefault();
                     if (interest != null)
                     {
-                        _context.Interests.Remove(interest);
-                        await _context.SaveChangesAsync();
-                        return Ok();
+                        if (interest.User.Username == dbUser.Username)
+                        {
+                            _context.Interests.Remove(interest);
+                            await _context.SaveChangesAsync();
+                            return Ok();
+                        }
                     }
                     return NotFound();
                 }
@@ -166,18 +147,20 @@ namespace CodeAid.API.Controllers
                 var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
                 var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
                 var exists = _context.Interests.Any(x => x.UserId == dbUser.Id);
-                //id = interestToUpdate.Id;
 
                 if (exists)
                 {
                     var interest = _context.Interests.Where(x => x.Id == interestToUpdate.Id).FirstOrDefault();
                     if (interest != null && interest.Threads == null)
                     {
-                        interest.Name = interestToUpdate.Name;
+                        if (interest.User.Username == dbUser.Username)
+                        {
+                            interest.Name = interestToUpdate.Name;
 
-                        _context.Interests.Update(interest);
-                        await _context.SaveChangesAsync();
-                        return Ok();
+                            _context.Interests.Update(interest);
+                            await _context.SaveChangesAsync();
+                            return Ok();
+                        }
                     }
                 }
             }
