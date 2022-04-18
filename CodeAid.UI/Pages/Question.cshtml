@@ -52,17 +52,41 @@
 				<button type="submit">Post</button>
 			</form>
 
-			@foreach (var qm in Model.Question.Messages)
-			{
-				<div class="card-body">
-					<div class="alert alert-primary" role="alert">
-						<p>@qm.Message---- @qm.PostDate--</p>
-						<form method="post" asp-page-handler="delete">
-							<button class="btn" type="submit" asp-route-id="@qm.Id">Delete</button>
-						</form>
-					</div>
-				</div>
-			}
+				@foreach (var qm in Model.Question.Messages)
+				{
+					@*@if (qm.User.Username == @Model.CurrentUser.UserName)
+					{
+						<div class="card-body" style="color: blue">
+							<div class="alert alert-primary" role="alert">
+								<p>@qm.Message---- @qm.PostDate--</p>
+								<form method="post" asp-page-handler="delete">
+									<button class="btn" type="submit" asp-route-id="@qm.Id">Delete</button>
+								</form>
+							</div>
+						</div>
+					}
+					else
+					{
+						<div class="card-body">
+							<div class="alert alert-primary" role="alert">
+								<p>@qm.Message---- @qm.PostDate--</p>
+								<form method="post" asp-page-handler="delete">
+									<button class="btn" type="submit" asp-route-id="@qm.Id">Delete</button>
+								</form>
+							</div>
+						</div>
+					}*@
+
+					<div class="card-body" style="color: blue">
+							<div class="alert alert-primary" role="alert">
+								<p>@qm.Message---- @qm.PostDate--</p>
+								<form method="post" asp-page-handler="delete">
+									<button class="btn" type="submit" asp-route-id="@qm.Id">Delete</button>
+								</form>
+							</div>
+						</div>
+				}
+				
 		</div>
 	</div>
 </div>

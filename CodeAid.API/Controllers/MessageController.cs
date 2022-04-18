@@ -151,32 +151,63 @@ namespace CodeAid.API.Controllers
         }
 
 
-        [HttpDelete]
-        [Route("{id}/{accessToken}")]
-        public async Task<ActionResult> DeleteMessage([FromRoute] int id, string accessToken)
+        //[HttpDelete]
+        //[Route("{id}/{accessToken}")]
+        //public async Task<ActionResult> DeleteMessage([FromRoute] int id, string accessToken)
+        //{
+        //    AccessTokenManager accessTokenManager = new(_signInManager);
+        //    var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+        //    if (isValid)
+        //    {
+        //        var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
+        //        var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
+        //        var result = _context.Messages.Any(x => x.UserId == dbUser.Id);
+        //        if (result)
+        //        {
+        //            var message = _context.Messages.Where(x => x.Id == id).FirstOrDefault();
+        //            if (message != null)
+        //            {
+        //                _context.Messages.Remove(message);
+        //                await _context.SaveChangesAsync();
+        //                return Ok();
+        //            }
+        //            return NotFound();
+        //        }
+        //    }
+        //    return null;
+        //}
+
+
+        // DELETE api/<MessagesController>/5
+        [HttpDelete("{id}/{accessToken}")]
+        public async Task<ActionResult> DeleteMessage([FromRoute] int id, [FromQuery] string accessToken)
         {
+            // Todo: Set the message bool property "Deleted" to True
             AccessTokenManager accessTokenManager = new(_signInManager);
-            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
-            if (isValid)
-            {
-                var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
-                var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                var result = _context.Messages.Any(x => x.UserId == dbUser.Id);
-                if (result)
-                {
-                    var message = _context.Messages.Where(x => x.Id == id).FirstOrDefault();
-                    if (message != null)
-                    {
-                        _context.Messages.Remove(message);
-                        await _context.SaveChangesAsync();
-                        return Ok();
-                    }
-                    return NotFound();
-                }
-            }
-            return null;
-        }
-    }
+			var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+			if (isValid)
+			{
+				var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
+				var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
+				var result = _context.Interests.Any(x => x.UserId == dbUser.Id);
+				if (result)
+				{
+					var message = _context.Messages.Where(x => x.Id == id).FirstOrDefault();
+					if (message != null)
+					{
+						_context.Messages.Remove(message);
+						await _context.SaveChangesAsync();
+						return Ok();
+					}
+					return NotFound();
+				}
+			}
+			return null;
+
+
+		}
+	}
 
 }
+
 

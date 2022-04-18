@@ -47,5 +47,28 @@ namespace CodeAid.UI.Data
             return thread;
         }
 
+        /// <summary>
+        /// Method for searching the productlist for users specific searchterm.
+        /// </summary>
+        /// <param name="searchTerm"></param>
+        /// <returns></returns>
+        /// ThreadManager threadManager = new();
+        public async Task<List<ThreadModel>> Search(string searchTerm)
+        {
+            ThreadManager threadManager = new();
+
+            List<ThreadModel> AllThreads = await threadManager.GetAllThreads();
+
+            if (string.IsNullOrEmpty(searchTerm))
+            {
+                return AllThreads;
+            }
+            return AllThreads.Where(product => product.QuestionTitle.ToLower().Contains(searchTerm.ToLower())).ToList();
+            //return AllThreads.Where(product => product.Name.ToLower().Contains(searchTerm.ToLower())).ToList();
+        }
+
+
+
+
     }
 }

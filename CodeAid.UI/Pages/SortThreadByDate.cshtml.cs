@@ -5,12 +5,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CodeAid.UI.Pages
 {
-    [BindProperties]
-    public class ThreadsModel : PageModel
+    public class SortThreadByDateModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
-        
-        public ThreadsModel(SignInManager<IdentityUser> signInManager)
+
+        public SortThreadByDateModel(SignInManager<IdentityUser> signInManager)
         {
             _signInManager = signInManager;
         }
@@ -21,9 +20,10 @@ namespace CodeAid.UI.Pages
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
         public List<ThreadModel> Result { get; set; }
-        
+        public List<UserModel> getUser { get; set; }
 
-        public async Task<IActionResult> OnGet(int id)
+
+        public async Task<IActionResult> OnGet(int id, string accessToken)
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
             if (user != null)
@@ -31,10 +31,12 @@ namespace CodeAid.UI.Pages
                 if (id == 0)
                 {
                     ThreadManager threadManager = new();
-                    
-                        AllThreads = await threadManager.Search(SearchTerm);
-                        Result = AllThreads.OrderBy(prod => prod.QuestionTitle).ToList();
-                    
+
+                    AllThreads = await threadManager.Search(SearchTerm);
+                    Result = AllThreads.OrderBy(prod => prod.ThreadDate).ToList();
+                    ApiManager apiManager = new();
+                    var getUser = apiManager.GetUser(accessToken);
+
 
 
                 }
@@ -52,7 +54,7 @@ namespace CodeAid.UI.Pages
 
             return Page();
         }
-       
+
 
         public async Task<IActionResult> OnPost(ThreadModel thread)
         {
@@ -65,7 +67,5 @@ namespace CodeAid.UI.Pages
             }
             return RedirectToPage("/Threads");
         }
-
-        
     }
 }

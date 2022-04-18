@@ -394,7 +394,7 @@ namespace CodeAid.UI.Data
         {
             using (var httpClient = new HttpClient())
             {
-                string url = String.Concat($"{baseUrl}api/Message/{id}/{accessToken}");
+                string url = String.Concat(baseUrl, "api/Message/", id, accessToken);
                 var response = await httpClient.DeleteAsync(url);
 
                 if (response.IsSuccessStatusCode)
