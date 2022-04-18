@@ -140,6 +140,7 @@ namespace CodeAid.API.Controllers
                 if (messageToUpdate != null)
                 {
                     messageToUpdate.Message = updatedMessage.Message;
+                    messageToUpdate.MessageEdit = true;
                     _context.Messages.Update(messageToUpdate);
                     await _context.SaveChangesAsync();
                     return Ok();
