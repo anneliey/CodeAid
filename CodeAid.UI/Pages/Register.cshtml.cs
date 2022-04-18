@@ -9,6 +9,13 @@ namespace CodeAid.UI.Pages
     [BindProperties]
     public class RegisterModel : PageModel
     {
+        private readonly SignInManager<IdentityUser> _signInManager;
+
+        public RegisterModel(SignInManager<IdentityUser> signInManager)
+        {
+            _signInManager = signInManager;
+        }
+
         [Required(ErrorMessage = "Username is required!")]
         [MaxLength(20, ErrorMessage = "Username is too long!")]
         [MinLength(3, ErrorMessage = "Username is too short!")]
@@ -34,7 +41,7 @@ namespace CodeAid.UI.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPost()
+        public async Task<IActionResult> OnPost(InterestModel interest)
         {
             if (ModelState.IsValid)
             {

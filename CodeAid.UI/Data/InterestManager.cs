@@ -18,6 +18,13 @@ namespace CodeAid.UI.Data
             return interests;
         }
 
+        public async Task<List<InterestModel>> GetRegisterInterests(IdentityUser user)
+        {
+            ApiManager apiManager = new ApiManager();
+            var interests = await apiManager.GetRegisterInterest();
+            return interests;
+        }
+
         public async Task<List<InterestModel>> GetUserInterests(string id)
         {
             ApiManager apiManager = new ApiManager();

@@ -1,0 +1,12 @@
+﻿@page
+@model CodeAid.UI.Pages.Member.Message.EditModel
+@{
+}
+<form method="post">
+    <div class="input-group mb-3">
+        <input asp-for="@Model.Message.Id" hidden />
+        <input class="form-control" type="text" asp-for="@Model.Message.Message" />
+        <span class="text-warning" asp-validation-for="@Model.Message.Message"></span>
+    </div>
+    <button type="submit" class="btn btn-outline-dark">Save changes</button>
+</form>

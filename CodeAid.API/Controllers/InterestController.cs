@@ -17,17 +17,28 @@ namespace CodeAid.API.Controllers
             _signInManager = signInManager;
             _context = context;
         }
+
         [HttpGet]
         [Route("{id}")]
-        public ActionResult<InterestModel> GetInterest([FromRoute] int id)
+        public ActionResult<InterestModel> GetInterest([FromRoute] int id, string accessToken)
         {
             if (id != null || id != 0)
             {
-                var interest = _context.Interests.Where(x => x.Id.Equals(id)).FirstOrDefault();
-                if (interest != null)
+                var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
+                var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
+                var interest = _context.Interests.Where(i => i.UserInterests.Any(ui => ui.UserId == dbUser.Id)).ToList();
+
+                return _context.Interests.Include(i => i.Threads).Select(i => new InterestModel()
                 {
-                    return interest;
-                }
+                    Id = i.Id,
+                    Name = i.Name,
+                    Threads = i.Threads.Select(t => new ThreadModel()
+                    {
+                        Id = t.Id,
+                        Question = t.Question,
+                        QuestionTitle = t.QuestionTitle,
+                    }).ToList()
+                }).FirstOrDefault(x => x.Id == id);
             }
             return BadRequest();
         }
@@ -45,6 +56,7 @@ namespace CodeAid.API.Controllers
             }
             return BadRequest();
         }
+
 
         [HttpPost]
         [Route("Create/{accessToken}")]
@@ -83,6 +95,7 @@ namespace CodeAid.API.Controllers
             return BadRequest();
         }
 
+
         [HttpDelete]
         [Route("{id}/{accessToken}")]
         public async Task<ActionResult> DeleteInterest(string accessToken, [FromRoute] int id)
@@ -99,9 +112,12 @@ namespace CodeAid.API.Controllers
                     var interest = _context.Interests.Where(x => x.Id == id).FirstOrDefault();
                     if (interest != null)
                     {
-                        _context.Interests.Remove(interest);
-                        await _context.SaveChangesAsync();
-                        return Ok();
+                        if (interest.User.Username == dbUser.Username)
+                        {
+                            _context.Interests.Remove(interest);
+                            await _context.SaveChangesAsync();
+                            return Ok();
+                        }
                     }
                     return NotFound();
                 }
@@ -120,18 +136,20 @@ namespace CodeAid.API.Controllers
                 var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
                 var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
                 var exists = _context.Interests.Any(x => x.UserId == dbUser.Id);
-                //id = interestToUpdate.Id;
 
                 if (exists)
                 {
                     var interest = _context.Interests.Where(x => x.Id == interestToUpdate.Id).FirstOrDefault();
                     if (interest != null && interest.Threads == null)
                     {
-                        interest.Name = interestToUpdate.Name;
+                        if (interest.User.Username == dbUser.Username)
+                        {
+                            interest.Name = interestToUpdate.Name;
 
-                        _context.Interests.Update(interest);
-                        await _context.SaveChangesAsync();
-                        return Ok();
+                            _context.Interests.Update(interest);
+                            await _context.SaveChangesAsync();
+                            return Ok();
+                        }
                     }
                 }
             }

@@ -19,28 +19,61 @@ namespace CodeAid.API.Controllers
             _context = context;
         }
 
+
+        //[HttpGet]
+        //[Route("{accessToken}")]
+        //public async Task<ActionResult<UserModel>> GetUser(string accessToken)
+        //{
+        //    AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
+        //    var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+        //    if (isValid)
+        //    {
+        //        var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
+
+
+        //        var dbUser = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
+
+        //        //var dbUser = _context.Users.Include(u => u.UserInterests).ThenInclude(u => u.Interest).Include(u => u.Messages).ThenInclude(m => m.Thread).Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
+        //        if (dbUser != null)
+        //        {
+        //            return dbUser;
+        //        }
+        //        return NotFound();
+
+        //    }
+        //    return BadRequest();
+
+        //}
+
         [HttpGet]
-        [Route("{accessToken}")]
-        public async Task<ActionResult<UserModel>> GetUser(string accessToken)
+        [Route("Messages/{accessToken}")]
+        public ActionResult<List<MessageModel>> GetUserMessages(string accessToken)
         {
-            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
+            AccessTokenManager accessTokenManager = new(_signInManager);
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
             if (isValid)
             {
-                var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
+                var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
+                var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
 
-
-                var dbUser = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
-
-                if (dbUser != null)
+                var messages = _context.Messages.Include(m => m.User).Where(m => m.UserId == dbUser.Id).Select(t => new MessageModel
                 {
-                    return dbUser;
-                }
-                return NotFound();
-
+                    Id = t.Id,
+                    Message = t.Message,
+                    PostDate = t.PostDate,
+                    ThreadId = t.ThreadId,
+                    MessageEdit = t.MessageEdit,
+                    User = new UserModel() // Project the user into a user with the data we want (without circular references)
+                    {
+                        Id = t.User.Id,
+                        Username = t.User.Username,
+                        Banned = t.User.Banned,
+                        Deleted = t.User.Deleted
+                    }
+                }).ToList();
+                return messages;
             }
-            return BadRequest();
-
+            return null;
         }
 
 

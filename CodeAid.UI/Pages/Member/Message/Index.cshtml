@@ -1,0 +1,60 @@
+﻿@page
+@model CodeAid.UI.Pages.Member.Message.IndexModel
+@{
+}
+
+@if (Model.UserMessages != null)
+{
+    <table class="table table-light my-5">
+        <thead>
+            <tr class="fw-bolder">
+                <th>
+                    <h5>Manage your posted messages</h5>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var m in Model.UserMessages)
+            {
+                <tr>
+                    @if (!@m.MessageEdit)
+                    {
+                        <td style="vertical-align:middle">
+                            <p class="m-0" style="font-weight:500">@m.Message</p>
+                        </td>
+                    }
+                    else
+                    {
+                        <td style="vertical-align:middle">
+                            <div class="d-flex">
+                                <p class="m-0" style="font-weight:500">@m.Message</p>
+                                <p class="m-0 mx-3" style="font-weight:400; color:grey;">edited</p>
+                            </div>
+                        </td>
+                    }
+                    <td>
+                        <div class="btn-group btn-outline-light">
+                            <a class="btn" asp-page="/Member/Message/Edit" asp-route-id="@m.Id">Edit</a>
+                            <form method="post">
+                                <button class="btn" type="submit" asp-route-id="@m.Id">Delete</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+}
+
+@if (Model.UserMessages.Count == 0)
+{
+    <div class="text-center mt-5">
+        <h1>Oops!</h1>
+        <h2>No data found</h2>
+    </div>
+    <div class="text-center">
+        <img class="mx-auto d-block" style="max-width: 40%" src="/images/no-data.png" alt="no data image" />
+    </div>
+}
