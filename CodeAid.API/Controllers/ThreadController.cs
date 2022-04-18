@@ -37,19 +37,6 @@ namespace CodeAid.API.Controllers
             return BadRequest();
         }
 
-        //[HttpGet]
-        //public ActionResult<List<ThreadModel>> GetThread()
-        //{
-        //    var result = _context.Threads;
-        //    if (result.Any())
-        //    {
-        //        var resultList = result.ToList();
-
-        //        return Ok(resultList);
-        //    }
-
-        //    return BadRequest();
-        //}
 
         [HttpGet]
         [Route("{accessToken}")]
@@ -76,7 +63,6 @@ namespace CodeAid.API.Controllers
             if (identityUser != null)
             {
                 var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                // change for your method
                 var list = _context.Threads
                     .Where(u => u.UserId.Equals(userDb.Id)).ToList();
 
@@ -122,7 +108,6 @@ namespace CodeAid.API.Controllers
                         Interest = threadInterest
                     };
 
-
                     _context.Threads.Add(threadQuestion);
                     await _context.SaveChangesAsync();
 
@@ -131,8 +116,8 @@ namespace CodeAid.API.Controllers
             }
 
             return BadRequest();
-
         }
+
 
         [HttpPut]
         [Route("Edit/{accessToken}")]
@@ -224,17 +209,6 @@ namespace CodeAid.API.Controllers
                         }).OrderByDescending(x => x.PostDate).ToList()
                     }).FirstOrDefault(t => t.Id == id);
 
-                //new MessageModel
-                //{
-                //    Id = m.Id,
-                //    Message = m.Message,
-                //    PostDate = m.PostDate,
-                //    MessageEdit = m.MessageEdit,
-                //    User = m.User
-                //}).ToList().Where(t => t.Id == id).FirstOrDefault();
-
-
-
                 if (thread != null)
                 {
                     foreach (var m in thread.Messages)
@@ -244,7 +218,6 @@ namespace CodeAid.API.Controllers
                     return Ok(thread);
                 }
                 return null;
-
             }
             return BadRequest();
         }
