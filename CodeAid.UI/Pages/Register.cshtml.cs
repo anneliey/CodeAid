@@ -41,7 +41,7 @@ namespace CodeAid.UI.Pages
             return Page();
         }
 
-        public async Task<IActionResult> OnPost(InterestModel interest)
+        public async Task<IActionResult> OnPost()
         {
             if (ModelState.IsValid)
             {

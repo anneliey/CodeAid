@@ -18,16 +18,13 @@ namespace CodeAid.API.Controllers
             _context = context;
         }
 
+
         [HttpGet]
         [Route("{id}")]
-        public ActionResult<InterestModel> GetInterest([FromRoute] int id, string accessToken)
+        public ActionResult<InterestModel> GetInterest([FromRoute] int id)
         {
-            if (id != null || id != 0)
+            if (id != null && id != 0)
             {
-                var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
-                var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                var interest = _context.Interests.Where(i => i.UserInterests.Any(ui => ui.UserId == dbUser.Id)).ToList();
-
                 return _context.Interests.Include(i => i.Threads).Select(i => new InterestModel()
                 {
                     Id = i.Id,
