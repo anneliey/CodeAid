@@ -9,7 +9,7 @@ namespace CodeAid.UI.Pages
     public class ThreadsModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
-        
+
         public ThreadsModel(SignInManager<IdentityUser> signInManager)
         {
             _signInManager = signInManager;
@@ -47,6 +47,7 @@ namespace CodeAid.UI.Pages
                     Interest = await interestManager.GetInterest(id, user);
                     CurrentInterestId = Interest.Id;
                 }
+                //if(Interest.Threads.)
 
             }
 
@@ -66,6 +67,6 @@ namespace CodeAid.UI.Pages
             return RedirectToPage("/Threads");
         }
 
-        
+
     }
 }

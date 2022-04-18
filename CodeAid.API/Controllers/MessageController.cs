@@ -139,11 +139,14 @@ namespace CodeAid.API.Controllers
 
                 if (messageToUpdate != null)
                 {
-                    messageToUpdate.Message = updatedMessage.Message;
-                    messageToUpdate.MessageEdit = true;
-                    _context.Messages.Update(messageToUpdate);
-                    await _context.SaveChangesAsync();
-                    return Ok();
+                    if (messageToUpdate.User.Username == userDb.Username)
+                    {
+                        messageToUpdate.Message = updatedMessage.Message;
+                        messageToUpdate.MessageEdit = true;
+                        _context.Messages.Update(messageToUpdate);
+                        await _context.SaveChangesAsync();
+                        return Ok();
+                    }
                 }
             }
             return BadRequest();
@@ -156,29 +159,30 @@ namespace CodeAid.API.Controllers
         {
             // Todo: Set the message bool property "Deleted" to True
             AccessTokenManager accessTokenManager = new(_signInManager);
-			var isValid = accessTokenManager.HasValidAccessToken(accessToken);
-			if (isValid)
-			{
-				var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
-				var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
-				var result = _context.Interests.Any(x => x.UserId == dbUser.Id);
-				if (result)
-				{
-					var message = _context.Messages.Where(x => x.Id == id).FirstOrDefault();
-					if (message != null)
-					{
-						_context.Messages.Remove(message);
-						await _context.SaveChangesAsync();
-						return Ok();
-					}
-					return NotFound();
-				}
-			}
-			return null;
-
-
-		}
-	}
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+            if (isValid)
+            {
+                var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
+                var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
+                var result = _context.Messages.Any(x => x.UserId == dbUser.Id);
+                if (result)
+                {
+                    var message = _context.Messages.Where(x => x.Id == id).FirstOrDefault();
+                    if (message != null)
+                    {
+                        if (message.User.Username == dbUser.Username)
+                        {
+                            _context.Messages.Remove(message);
+                            await _context.SaveChangesAsync();
+                            return Ok();
+                        }
+                    }
+                    return NotFound();
+                }
+            }
+            return null;
+        }
+    }
 
 }
 

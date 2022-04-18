@@ -13,7 +13,6 @@ namespace CodeAid.UI.Pages.Member.Message
         public EditModel(SignInManager<IdentityUser> signInManager)
         {
             _signInManager = signInManager;
-            _signInManager = signInManager;
         }
         public async Task<IActionResult> OnGet(int id)
         {
