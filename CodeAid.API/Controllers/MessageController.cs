@@ -139,11 +139,14 @@ namespace CodeAid.API.Controllers
 
                 if (messageToUpdate != null)
                 {
-                    messageToUpdate.Message = updatedMessage.Message;
-                    messageToUpdate.MessageEdit = true;
-                    _context.Messages.Update(messageToUpdate);
-                    await _context.SaveChangesAsync();
-                    return Ok();
+                    if (messageToUpdate.User.Username == userDb.Username)
+                    {
+                        messageToUpdate.Message = updatedMessage.Message;
+                        messageToUpdate.MessageEdit = true;
+                        _context.Messages.Update(messageToUpdate);
+                        await _context.SaveChangesAsync();
+                        return Ok();
+                    }
                 }
             }
             return BadRequest();
@@ -166,9 +169,12 @@ namespace CodeAid.API.Controllers
                     var message = _context.Messages.Where(x => x.Id == id).FirstOrDefault();
                     if (message != null)
                     {
-                        _context.Messages.Remove(message);
-                        await _context.SaveChangesAsync();
-                        return Ok();
+                        if (message.User.Username == dbUser.Username)
+                        {
+                            _context.Messages.Remove(message);
+                            await _context.SaveChangesAsync();
+                            return Ok();
+                        }
                     }
                     return NotFound();
                 }

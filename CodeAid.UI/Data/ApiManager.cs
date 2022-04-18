@@ -215,7 +215,7 @@ namespace CodeAid.UI.Data
         }
 
 
-        public async Task<bool> EditThread(ThreadModel thread, string accessToken)
+        public async Task<bool> EditThread(ThreadDto thread, string accessToken)
         {
             using (var httpClient = new HttpClient())
             {

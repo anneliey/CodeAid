@@ -21,7 +21,7 @@ namespace CodeAid.UI.Data
             var threads = await apiManager.GetAllThreads();
             return threads;
         }
-        
+
         public async Task<List<ThreadModel>> GetQuestions()
         {
             ApiManager apiManager = new ApiManager();
@@ -29,7 +29,7 @@ namespace CodeAid.UI.Data
             return questions;
         }
 
-        public async Task<bool> EditThread(ThreadModel thread, IdentityUser user)
+        public async Task<bool> EditThread(ThreadDto thread, IdentityUser user)
         {
             ApiManager apiManager = new ApiManager();
             var result = await apiManager.EditThread(thread, user.Id);
