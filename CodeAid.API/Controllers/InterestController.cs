@@ -29,7 +29,6 @@ namespace CodeAid.API.Controllers
                 var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
                 var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
                 var interest = _context.Interests.Where(i => i.UserInterests.Any(ui => ui.UserId == dbUser.Id)).ToList();
-                //var interest = _context.Interests.Include(i => i.Threads).Where(x => x.Id.Equals(id)).FirstOrDefault();
 
                 return _context.Interests.Include(i => i.Threads).Select(i => new InterestModel()
                 {
@@ -158,7 +157,6 @@ namespace CodeAid.API.Controllers
                 var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
                 var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
                 var exists = _context.Interests.Any(x => x.UserId == dbUser.Id);
-                //id = interestToUpdate.Id;
 
                 if (exists)
                 {
