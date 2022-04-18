@@ -26,11 +26,11 @@ namespace CodeAid.UI.Data
             }
             return null;
         }
-        public async Task<InterestModel> GetInterest(int id)
+        public async Task<InterestModel> GetInterest(int id, string accessToken)
         {
             using (var httpClient = new HttpClient())
             {
-                string url = string.Concat($"{baseUrl}api/interest/{id}");
+                string url = string.Concat($"{baseUrl}api/interest/{id}/{accessToken}");
                 var response = await httpClient.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)

@@ -4,10 +4,10 @@ namespace CodeAid.UI.Data
 {
     public class InterestManager
     {
-        public async Task<InterestModel> GetInterest(int id)
+        public async Task<InterestModel> GetInterest(int id, IdentityUser user)
         {
             ApiManager apiManager = new ApiManager();
-            var interests = await apiManager.GetInterest(id);
+            var interests = await apiManager.GetInterest(id, user.Id);
             return interests;
         }
 

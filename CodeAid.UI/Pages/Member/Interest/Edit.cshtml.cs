@@ -22,7 +22,7 @@ namespace CodeAid.UI.Pages.Member.Interest
             if (user != null)
             {
                 InterestManager interestManager = new();
-                Interest = await interestManager.GetInterest(id);
+                Interest = await interestManager.GetInterest(id, user);
             }
             return Page();
         }
