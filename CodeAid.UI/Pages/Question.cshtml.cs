@@ -17,15 +17,20 @@ namespace CodeAid.UI.Pages
         public ThreadModel Question { get; set; }
         [BindProperty]
         public MessageModel Message { get; set; }
+        [BindProperty]
+        public IdentityUser CurrentUser { get; set; }
 
         public async Task<IActionResult> OnGet(int id)
         {
-            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            CurrentUser = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
 
-            if (user != null)
+            if (CurrentUser != null)
             {
                 ThreadManager manager = new();
-                Question = await manager.GetThread(id, user);
+                Question = await manager.GetThread(id, CurrentUser);
+                //MessageManager messageManager = new MessageManager();
+                //var messageId = 17;
+                //Message = await messageManager.GetMessage(messageId);
             }
             return Page();
         }

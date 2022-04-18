@@ -53,18 +53,33 @@
                     <input asp-for="@Model.Message.Message" />
                     <button type="submit">Post</button>
                 </form>
+
                 @if (@Model.Question.Messages != null && @Model.Question.Messages.Count > 0)
                 {
                     @foreach (var qm in Model.Question.Messages)
                     {
-                        <div class="card-body">
-                            <div class="alert alert-primary" role="alert">
-                                <p>@qm.Message---- @qm.PostDate--</p>
-                                <a class="btn" asp-page="/member/message/index">Modify</a>
-                            </div>
-                        </div>
-                    }
 
+                        @if (qm.User.Username == @Model.CurrentUser.UserName)
+                        {
+                            <div class="card-body">
+                                <div class="alert alert-primary" style="color:black; background-color: #DBE7FF;" role="alert">
+                                    <p>@qm.Message---- @qm.PostDate--</p>
+                                    <p>anwsered by @qm.User.Username</p>
+                                    <a class="btn btn-primary" asp-page="/member/message/index">Modify</a>
+                                </div>
+                            </div>
+                        }
+                        else if (qm.User.Username != @Model.CurrentUser.UserName)
+                        {
+                            <div class="card-body">
+                                <div class="alert alert-primary" style="background-color: white"role="alert">
+                                    <p>@qm.Message---- @qm.PostDate--</p>
+                                    <p>anwsered by @qm.User.Username</p>
+                                    <a class="btn btn-primary" asp-page="/member/message/index">Modify</a>
+                                </div>
+                            </div>
+                        }
+                    }
                 }
             </div>
         </div>

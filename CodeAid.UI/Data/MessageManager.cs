@@ -2,6 +2,12 @@
 {
     public class MessageManager
     {
+        public async Task<MessageModel> GetMessage(int id)
+        {
+            ApiManager apiManager = new ApiManager();
+            var message = await apiManager.GetMessage(id);
+            return message;
+        }
         public async Task<List<MessageModel>> GetMessages()
         {
             ApiManager apiManager = new ApiManager();
