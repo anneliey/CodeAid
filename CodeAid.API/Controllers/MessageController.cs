@@ -157,6 +157,7 @@ namespace CodeAid.API.Controllers
         //[Route("{id}/{accessToken}")]
         public async Task<ActionResult> DeleteMessage([FromRoute] int id, string accessToken)
         {
+            // Todo: Set the message bool property "Deleted" to True
             AccessTokenManager accessTokenManager = new(_signInManager);
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
             if (isValid)
@@ -184,4 +185,5 @@ namespace CodeAid.API.Controllers
     }
 
 }
+
 

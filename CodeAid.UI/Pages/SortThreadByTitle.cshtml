@@ -1,0 +1,77 @@
+﻿@page
+@model CodeAid.UI.Pages.SortThreadByTitleModel
+@{
+}
+
+<form method="get">
+    <div class="input-group">
+        <input class="form-check form-control" asp-for="SearchTerm" />
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary">Sök</button>
+        </div>
+    </div>
+</form>
+
+         
+        @if(Model.Result != null && Model.Result.Count > 0)
+        {
+           
+            @foreach (var thread in Model.Result)
+            {
+                <div class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0">
+                    <div class="row align-items-center">
+                        <div class="col-md-8 mb-3 mb-sm-0">
+                            <h5>
+                                <a asp-page="/Question" asp-route-id="@thread.Id" class="text-primary">@thread.QuestionTitle</a>
+                            </h5>
+                            <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">@thread.ThreadDate.ToLongDateString()</a> <span class="op-6">ago by</span> <a class="text-black">@*@thread.User.Username*@</a></p>
+                            <div class="text-sm op-5"> <a class="text-black mr-2" href="#">#@thread.Interest</a></div>
+                        </div>
+                        <div class="col-md-4 op-7">
+                            <div class="row text-center op-7">
+                                <button type="button" class="btn">
+                                        <a class="Btn" asp-page="/Member/EditThread" asp-route-id="@thread.Id">Edit Thread</a>
+                                    </button>
+                                <form method="post">
+                                    <button class="btn" type="submit" asp-route-id="@thread.Id">Delete</button>
+                                </form>
+                                <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> Replys</span> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            @if(Model.Interest != null)
+            {
+                @foreach(var thread in Model.Interest.Threads)
+                {
+                    <div class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0">
+                    <div class="row align-items-center">
+                        <div class="col-md-8 mb-3 mb-sm-0">
+                            <h5>
+                                <a asp-page="/question" asp-route-id="@thread.Id"><h1>@thread.QuestionTitle</h1></a>
+                            </h5>
+                            <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">@thread.ThreadDate.ToLongDateString()</a> <span class="op-6">ago by</span> <a class="text-black">@thread.UserId</a></p>
+                            <div class="text-sm op-5"> <a class="text-black mr-2" href="#">#@thread.Interest</a></div>
+                        </div>
+                        <div class="col-md-4 op-7">
+                            <div class="row text-center op-7">
+                                <button type="button" class="btn">
+                                       <a class="Btn" asp-page="/Member/EditThread" asp-route-id="@thread.Id">Edit Thread</a>
+                                    </button>
+                                <form method="post">
+                                    <button class="btn" type="submit" asp-route-id="@thread.Id">Delete</button>
+                                </form>
+                                <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> Replys</span> </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+                }
+            }
+        }
+

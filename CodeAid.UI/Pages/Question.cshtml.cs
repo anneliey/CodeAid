@@ -50,6 +50,7 @@ namespace CodeAid.UI.Pages
 
             }
             return RedirectToPage("/member/message/index");
+           
         }
     }
 }

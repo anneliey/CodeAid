@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CodeAid.UI.Pages
 {
     [BindProperties]
-    public class ThreadsModel : PageModel
+    public class SortThreadByTitleModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
 
-        public ThreadsModel(SignInManager<IdentityUser> signInManager)
+        public SortThreadByTitleModel(SignInManager<IdentityUser> signInManager)
         {
             _signInManager = signInManager;
         }
@@ -21,7 +21,7 @@ namespace CodeAid.UI.Pages
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
         public List<ThreadModel> Result { get; set; }
-        
+
 
         public async Task<IActionResult> OnGet(int id)
         {
@@ -31,10 +31,10 @@ namespace CodeAid.UI.Pages
                 if (id == 0)
                 {
                     ThreadManager threadManager = new();
-                    
-                        AllThreads = await threadManager.Search(SearchTerm);
-                        Result = AllThreads.OrderBy(prod => prod.QuestionTitle).ToList();
-                    
+
+                    AllThreads = await threadManager.Search(SearchTerm);
+                    Result = AllThreads.OrderBy(prod => prod.QuestionTitle).ToList();
+
 
 
                 }
@@ -44,16 +44,15 @@ namespace CodeAid.UI.Pages
                     // Get specific thread with the id
                     InterestManager interestManager = new();
 
-                    Interest = await interestManager.GetInterest(id);
+                    Interest = await interestManager.GetInterest(id, user);
                     CurrentInterestId = Interest.Id;
                 }
-                //if(Interest.Threads.)
 
             }
 
             return Page();
         }
-       
+
 
         public async Task<IActionResult> OnPost(ThreadModel thread)
         {
