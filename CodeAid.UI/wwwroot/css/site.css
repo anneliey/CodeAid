@@ -49,12 +49,15 @@ body {
     color: white;
 }
 .editBtn {
-    background-color: none;
+    background-color: transparent;
     font-weight: 400;
     color: #1C1259;
 }
+.btn-group:hover {
+    background-color: transparent;
+}
+
 .box{
-    position: absolute;
     transform: translateY(-50%);
     font-size: 3em;
     font-family: sans-serif;

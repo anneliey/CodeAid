@@ -13,7 +13,7 @@
     </div>
 </div>
 <div class="container-fluid p-5 bg-dark text-white">
-    <h1 style="color: #FF9B00">Every</h1>
+    <h1 class="pb-5" style="color: #FF9B00">Every</h1>
     <div class="box">
         <div class="word">
             <span>developer</span>
@@ -31,26 +31,20 @@
 
             @if (Model.AllInterests != null)
             {
-                <h4>🠗 Browse interests 🠗</h4>
+                <h2 class="my-3">🠗 Browse interests 🠗</h2>
                 <div class="row" style="gap: 32px">
                     @foreach (var item in Model.AllInterests)
                     {
                         <div class="col-2">
                             <div class="card text-center mt-3" style="width: 14rem;">
-                                <div class="card-body p-2" style="background-color: #CACAEA">
+                                <div class="card-body p-4 m-3" style="background-color: #CACAEA">
                                     <h2 class="card-title">@item.Name</h2>
                                     <div class="btn-group btn-outline-light">
-                                        <form method="post">
-                                            <a class="btn btn-primary" asp-page="/Threads" asp-route-id="@item.Id">@item.Name</a>
-                                        </form>
+                                        <a class="btn btn-primary" asp-page="/Threads" asp-route-id="@item.Id">See more</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        @*<a class="btn btn-primary" asp-page="/Threads" asp-route-id="@item.Id">@item.Name</a>*@
-                        @*<td>
-                            <a asp-page="/Threads" asp-route-id="@item.Id">@item.Name</a>
-                            </td>*@
                     }
                 </div>
             }
@@ -72,84 +66,3 @@
         </div>
     </div>
 </div>
-
-@*<div class="row">*@
-@*<div class="text-center">
-    <h1>Every developer has a tab open to CodeAid </h1>
-    </div>*@
-@*<div class="col-sm-6">
-    <div class="card">
-    <div class="card-body">
-    <h5 class="card-title"></h5>
-    <p class="card-text">Find the best answer to your technical question, help others answer theirs</p>
-    <a href="#" class="btn btn-primary">Join the community</a>
-    </div>
-    </div>
-    </div>
-    <div class="col-sm-6">
-    <div class="card">
-    <div class="card-body">
-    <h5 class="card-title"></h5>
-    <p class="card-text">Browse all threads on the website and find the answer to your question</p>
-    <a asp-page="/Threads" class="btn btn-primary">Browse threads</a>
-    </div>
-    </div>
-    </div>*@
-@*</div>
-    <div class="container">
-    <div class="row">
-    <div class="col">
-    <h5>
-    100+ million
-    monthly visitors to CodeAid
-    </h5>
-    </div>
-    <div class="col">
-    <h5>
-    45.1+ billion
-    Times a developer got help since 2008
-    </h5>
-    </div>
-
-    @if (Model.AllInterests != null)
-    {<h4>🠗 Browse interests 🠗</h4>
-    <div class="row" style="gap: 32px">
-    @foreach (var item in Model.AllInterests)
-    {
-    <div class="col-2">
-    <div class="card text-center mt-3" style="width: 14rem;">
-    <div class="card-body p-2" style="background-color: #CACAEA">
-    <h2 class="card-title">@item.Name</h2>
-    <div class="btn-group btn-outline-light">
-    <form method="post">
-    <a class="btn btn-primary" asp-page="/Threads" asp-route-id="@item.Id">@item.Name</a>
-    </form>
-    </div>
-    </div>
-    </div>
-    </div>*@
-@*<a class="btn btn-primary" asp-page="/Threads" asp-route-id="@item.Id">@item.Name</a>*@
-@*<td>
-    <a asp-page="/Threads" asp-route-id="@item.Id">@item.Name</a>
-    </td>*@
-
-@* </div>*@
-@*        }
-    else
-    {
-    <div class="my-3">
-    @if (signInManager.IsSignedIn(User))
-    {
-    <h5 style="color: darkred">No interest found</h5>
-    <a class="btn btn-primary" asp-page="/member/interest/add">Add interest</a>
-    }
-    else
-    {
-    <h5 style="color: darkred">No interest found</h5>
-    }
-    </div>
-
-    }
-    </div>
-    </div>*@
-
