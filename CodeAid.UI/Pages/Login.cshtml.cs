@@ -1,3 +1,4 @@
+using CodeAid.UI.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,7 +9,7 @@ namespace CodeAid.UI.Pages
     [BindProperties]
     public class LoginModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> signInManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
 
         [Required]
         public string Username { get; set; }
@@ -24,7 +25,7 @@ namespace CodeAid.UI.Pages
 
         public LoginModel(SignInManager<IdentityUser> signInManager)
         {
-            this.signInManager = signInManager;
+            _signInManager = signInManager;
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -33,19 +34,25 @@ namespace CodeAid.UI.Pages
 
             if (ModelState.IsValid)
             {
-                var identityResult = await signInManager.PasswordSignInAsync(Username, Password, false, false);
+
+                var identityResult = await _signInManager.PasswordSignInAsync(Username, Password, false, false);
                 if (identityResult.Succeeded)
                 {
 
+                    var user = _signInManager.UserManager.FindByNameAsync(Username);
+                    AccountManager accountManager = new();
+                    var reactivateUser = await accountManager.ActivateAccount(user.Result.Id);
+                    if (reactivateUser)
+                    {
+                        return RedirectToPage("/Member/ActivateAccount");
+                    }
                     return RedirectToPage("/Index");
                 }
                 else
                 {
-
                     ErrorMessage = "Invalid username or password";
                 }
             }
-
             return Page();
         }
     }
