@@ -34,11 +34,14 @@ namespace CodeAid.UI.Pages.Member.Message
             {
                 MessageManager messageManager = new();
 
-                var result =await messageManager.DeleteMessage(id, user.Id);
-                TempData["success"] = "Messages removed successfully";
-                
+                var result = await messageManager.DeleteMessage(id, user.Id);
+                if (result)
+                {
+                    TempData["success"] = "Messages removed successfully";
+                    return RedirectToPage("/member/message/index", MessageRemoved);
+                }
             }
-            return RedirectToPage("/member/message/index", MessageRemoved);
+            return Page();
         }
     }
 }
