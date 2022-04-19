@@ -17,8 +17,8 @@
     Filter by:
   </button>
   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-    <li><a class="dropdown-item" href="/SortThreadByTitle">Thread Title a-z</a></li>
-    <li><a class="dropdown-item" href="/SortThreadByDate">Oldest to newest</a></li>
+    <li><a class="dropdown-item" asp-page = "/SortThreadByTitle" asp-route-id="@Model.CurrentInterestId">Thread Title a-z</a></li>
+    <li><a class="dropdown-item" asp-page="/SortThreadByDate"asp-route-id="@Model.CurrentInterestId">Oldest to newest</a></li>
   </ul>
 </div>
 
