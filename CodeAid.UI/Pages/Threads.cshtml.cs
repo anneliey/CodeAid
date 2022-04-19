@@ -17,24 +17,25 @@ namespace CodeAid.UI.Pages
         public List<ThreadModel> AllThreads { get; set; }
         public InterestModel Interest { get; set; }
         public int CurrentInterestId { get; set; }
+        public IdentityUser CurrentUser { get; set; }
         public ThreadModel Thread { get; set; }
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
         public List<ThreadModel> Result { get; set; }
-        
+
 
         public async Task<IActionResult> OnGet(int id)
         {
-            var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
-            if (user != null)
+            CurrentUser = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
+            if (CurrentUser != null)
             {
                 if (id == 0)
                 {
                     ThreadManager threadManager = new();
-                    
-                        AllThreads = await threadManager.Search(SearchTerm);
-                        Result = AllThreads.OrderBy(prod => prod.QuestionTitle).ToList();
-                    
+
+                    AllThreads = await threadManager.Search(SearchTerm);
+                    Result = AllThreads.OrderBy(prod => prod.QuestionTitle).ToList();
+
 
 
                 }
@@ -53,7 +54,7 @@ namespace CodeAid.UI.Pages
 
             return Page();
         }
-       
+
 
         public async Task<IActionResult> OnPost(ThreadModel thread)
         {
