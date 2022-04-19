@@ -27,9 +27,9 @@
                             <h2 class="card-title">@interest.Name</h2>
                             @if (@interest.Threads.Count > 0)
                             {
-                                <p class="card-text m-0">@interest.Threads.Count questions</p>
+                                <p class="card-text my-2">@interest.Threads.Count questions</p>
                             }
-                            @if (@interest.Threads == null)
+                            else
                             {
                                 <p class="card-text my-2">0 questions</p>
                             }

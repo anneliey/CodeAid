@@ -26,7 +26,7 @@ namespace CodeAid.API.Controllers
         [HttpGet]
         public ActionResult<List<ThreadModel>> GetAllThreads()
         {
-            var result = _context.Threads.Include(t => t.User).OrderByDescending(t => t.ThreadDate).ToList();
+            var result = _context.Threads.Include(t => t.User).Include(t => t.Messages).OrderByDescending(t => t.ThreadDate).ToList();
             //var thread = _context.Threads.Include(t => t.Messages.OrderByDescending(t => t.PostDate)).Where(t => t.Id == id).FirstOrDefault();
 
             if (result.Any())
@@ -34,6 +34,12 @@ namespace CodeAid.API.Controllers
                 foreach (var t in result)
                 {
                     t.User.Threads = null;
+                    foreach (var ut in t.Messages)
+                    {
+                        ut.Thread = null;
+                        ut.Message = null;
+                        ut.User = null;
+                    }
                 }
                 return Ok(result);
             }
