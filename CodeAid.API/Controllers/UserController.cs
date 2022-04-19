@@ -83,7 +83,6 @@ namespace CodeAid.API.Controllers
         {
             AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
-
             if (isValid)
             {
                 var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
@@ -116,7 +115,6 @@ namespace CodeAid.API.Controllers
         {
             AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
-
             if (isValid)
             {
                 var identityUser = _signInManager.UserManager.Users.Where(x => x.Id.Equals(accessToken)).FirstOrDefault();
@@ -144,6 +142,7 @@ namespace CodeAid.API.Controllers
             return BadRequest();
         }
 
+
         [HttpPost]
         [Route("SignUp")]
         public async Task<IActionResult> RegisterUser([FromBody] IdentityUserDto userToSignUp)
@@ -160,8 +159,6 @@ namespace CodeAid.API.Controllers
 
             if (createUserResult.Succeeded)
             {
-                //var userInterestToAdd = userToSignUp.UserInterests.ForEach(ui => ).ToList();
-                //var userInterestToAdd = _context.Interests.Where(i => i.Id == userToSignUp.UserInterests.FirstOrDefault()).ToList();
                 UserModel user = new();
                 user.Username = newUser.UserName;
                 user.DateRegistered = DateTime.Now;
@@ -193,54 +190,57 @@ namespace CodeAid.API.Controllers
             return BadRequest();
         }
 
-        //Added Delete to Route
+
         [HttpDelete]
-        [Route("{id}")]
-        public async Task<IActionResult> DeleteAccount(string id)
+        [Route("Delete/{accessToken}")]
+        public async Task<IActionResult> DeleteAccount(string accessToken)
         {
-            var user = _signInManager.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
-
-            if (user != null)
+            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+            if (isValid)
             {
-                var accessToken = user.Id;
-                await _signInManager.UserManager.DeleteAsync(user);
-                _context.Remove(user);
-                await _context.SaveChangesAsync();
-                return Ok(user);
-            }
-
-            return BadRequest();
-        }
-
-        [HttpPut]
-        [Route("deactivate/{id}")]
-        public async Task<IActionResult> DeactivateAccount(string id)
-        {
-            var identityUser = _signInManager.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
-
-            if (identityUser != null)
-            {
-                var userDb = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
-                //UserModel userModel = new UserModel()
-                //{
-                //    Username = user.UserName,
-                //    Deleted = true
-                //};
-
-                userDb.Deleted = true;
-                //_context.Users.Add(userModel);
-                _context.Update(userDb);
-                await _context.SaveChangesAsync();
-                return Ok();
+                var user = _signInManager.UserManager.Users.Where(x => x.Id == accessToken).FirstOrDefault();
+                if (user != null)
+                {
+                    await _signInManager.UserManager.DeleteAsync(user);
+                    _context.Remove(user);
+                    await _context.SaveChangesAsync();
+                    return Ok(user);
+                }
             }
             return BadRequest();
         }
 
+
         [HttpPut]
-        [Route("activate/{id}")]
-        public IActionResult ActivateAccount(string id)
+        [Route("Deactivate/{accessToken}")]
+        public async Task<IActionResult> DeactivateAccount(string accessToken)
         {
-            var identityUser = _signInManager.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
+            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
+            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
+
+            if (isValid)
+            {
+                var identityUser = _signInManager.UserManager.Users.Where(x => x.Id == accessToken).FirstOrDefault();
+                if (identityUser != null)
+                {
+                    var userDb = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
+                    userDb.Deleted = true;
+
+                    _context.Update(userDb);
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+            }
+            return BadRequest();
+        }
+
+
+        [HttpPut]
+        [Route("Activate/{accessToken}")]
+        public IActionResult ActivateAccount(string accessToken)
+        {
+            var identityUser = _signInManager.UserManager.Users.Where(x => x.Id == accessToken).FirstOrDefault();
 
             if (identityUser != null)
             {

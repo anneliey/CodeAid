@@ -384,9 +384,9 @@ namespace CodeAid.UI.Data
         }
 
 
-        public async Task<IdentityUser> DeleteAccount(string id)
+        public async Task<IdentityUser> DeleteAccount(string accessToken)
         {
-            string url = String.Concat(baseUrl, "api/user/", id);
+            string url = String.Concat(baseUrl, "api/user/delete/", accessToken);
 
             HttpClient httpClient = new();
 
@@ -400,9 +400,9 @@ namespace CodeAid.UI.Data
         }
 
 
-        public async Task<IdentityUser> DeactivateAccount(string id)
+        public async Task<IdentityUser> DeactivateAccount(string accessToken)
         {
-            string url = String.Concat(baseUrl, "api/user/deactivate/", id);
+            string url = String.Concat(baseUrl, "api/user/deactivate/", accessToken);
 
             HttpClient httpClient = new();
 
@@ -416,9 +416,9 @@ namespace CodeAid.UI.Data
         }
 
 
-        public async Task<IActionResult> ActivateAccount(string id)
+        public async Task<IActionResult> ActivateAccount(string accessToken)
         {
-            string url = String.Concat(baseUrl, "api/user/activate/", id);
+            string url = String.Concat(baseUrl, "api/user/activate/", accessToken);
 
             HttpClient httpClient = new();
 
