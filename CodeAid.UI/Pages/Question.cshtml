@@ -86,12 +86,11 @@
                     else
                     {
                         <div class="card-body">
-                                <div class="alert alert-primary" style="background-color: #e6ad9a" role="alert">
-                                    <p>anwsered by [Deleted user] @qm.PostDate.ToLongDateString()</p>
-                                    <p>@qm.Message</p>
-                                    <a class="btn btn-primary" asp-page="/member/message/index">Modify</a>
-                                </div>
+                            <div class="alert alert-primary" style="background-color: white" role="alert">
+                                <p>anwsered by @qm.User.Username @qm.PostDate.ToLongDateString()</p>
+                                <p>@qm.Message</p>
                             </div>
+                        </div>
                     }
 
                 }

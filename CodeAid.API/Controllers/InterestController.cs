@@ -25,25 +25,28 @@ namespace CodeAid.API.Controllers
         {
             if (id != null && id != 0)
             {
-                return _context.Interests.Include(i => i.Threads).Select(i => new InterestModel()
-                {
-                    Id = i.Id,
-                    Name = i.Name,
-                    Threads = i.Threads.Select(t => new ThreadModel()
+                return _context.Interests
+                    .Include(i => i.User)
+                    .Include(i => i.Threads)
+                    .ThenInclude(t => t.User).Select(i => new InterestModel
                     {
-                        Id = t.Id,
-                        Question = t.Question,
-                        QuestionTitle = t.QuestionTitle,
-                        ThreadDate = t.ThreadDate,
-                        //User = t.,
-                        Messages = t.Messages.Select(m => new MessageModel()
+                        Id = i.Id,
+                        Name = i.Name,
+                        Threads = i.Threads.Select(t => new ThreadModel
                         {
-                            PostDate = m.PostDate,
-                            Message = m.Message,
-                            //MessageEdit = m.MessageEdit,
-                        }).ToList(),
-                    }).ToList()
-                }).FirstOrDefault(x => x.Id == id);
+                            Id = t.Id,
+                            Question = t.Question,
+                            QuestionTitle = t.QuestionTitle,
+                            ThreadDate = t.ThreadDate,
+                            User = t.User,
+                            Messages = t.Messages.Select(m => new MessageModel
+                            {
+                                PostDate = m.PostDate,
+                                Message = m.Message,
+                                MessageEdit = m.MessageEdit,
+                            }).ToList(),
+                        }).OrderByDescending(t => t.ThreadDate).ToList()
+                    }).FirstOrDefault(x => x.Id == id);
             }
             return BadRequest();
         }
@@ -52,12 +55,31 @@ namespace CodeAid.API.Controllers
         [Route("List")]
         public ActionResult<List<InterestModel>> GetAllInterests()
         {
-            var result = _context.Interests;
+            var result = _context.Interests
+                    .Include(i => i.User)
+                    .Include(i => i.Threads)
+                    .ThenInclude(t => t.User).Select(i => new InterestModel
+                    {
+                        Id = i.Id,
+                        Name = i.Name,
+                        Threads = i.Threads.Select(t => new ThreadModel
+                        {
+                            Id = t.Id,
+                            Question = t.Question,
+                            QuestionTitle = t.QuestionTitle,
+                            ThreadDate = t.ThreadDate,
+                            User = t.User,
+                            Messages = t.Messages.Select(m => new MessageModel
+                            {
+                                PostDate = m.PostDate,
+                                Message = m.Message,
+                                MessageEdit = m.MessageEdit,
+                            }).ToList(),
+                        }).OrderByDescending(t => t.ThreadDate).ToList()
+                    }).ToList();
             if (result.Any())
             {
-                var resultList = result.ToList();
-
-                return Ok(resultList);
+                return Ok(result);
             }
             return BadRequest();
         }
