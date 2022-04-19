@@ -188,7 +188,7 @@ namespace CodeAid.API.Controllers
 
         //Added Delete to Route
         [HttpDelete]
-        [Route("Delete/{id}")]
+        [Route("{id}")]
         public async Task<IActionResult> DeleteAccount(string id)
         {
             var user = _signInManager.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
