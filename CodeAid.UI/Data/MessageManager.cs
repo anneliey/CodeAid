@@ -22,10 +22,10 @@
             return Messages;
         }
 
-        public async Task<List<MessageModel>> GetThreadMessages(string accessToken, int id)
+        public async Task<List<MessageModel>> GetThreadMessages(int id)
         {
             ApiManager apiManager = new ApiManager();
-            var Messages = await apiManager.GetThreadMessages(accessToken, id);
+            var Messages = await apiManager.GetThreadMessages(id);
             return Messages;
         }
 

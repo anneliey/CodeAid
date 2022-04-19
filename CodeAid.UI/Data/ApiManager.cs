@@ -26,6 +26,8 @@ namespace CodeAid.UI.Data
             }
             return null;
         }
+
+
         public async Task<InterestModel> GetInterest(int id)
         {
             using (var httpClient = new HttpClient())
@@ -43,6 +45,7 @@ namespace CodeAid.UI.Data
             return null;
         }
 
+
         public async Task<List<InterestModel>> GetAllInterest()
         {
             using (var httpClient = new HttpClient())
@@ -59,22 +62,7 @@ namespace CodeAid.UI.Data
             }
             return null;
         }
-        //public async Task<List<InterestModel>> GetAllInterest(string accessToken)
-        //{
-        //    using (var httpClient = new HttpClient())
-        //    {
-        //        string url = string.Concat(baseUrl, "api/interest/list/", accessToken);
-        //        var response = await httpClient.GetAsync(url);
 
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            var strResponse = await response.Content.ReadAsStringAsync();
-        //            var data = JsonConvert.DeserializeObject<List<InterestModel>>(strResponse);
-        //            return data;
-        //        }
-        //    }
-        //    return null;
-        //}
 
         public async Task<List<InterestModel>> GetRegisterInterest()
         {
@@ -106,13 +94,6 @@ namespace CodeAid.UI.Data
                     var data = JsonConvert.DeserializeObject<List<InterestModel>>(strResponse);
                     return data;
                 }
-                //var response = await httpClient.GetFromJsonAsync<List<UserInterestModel>>(url);
-
-                //if (response != null)
-                //{
-                //    return response;
-                //}
-                //return null;
             }
             return null;
         }
@@ -198,11 +179,11 @@ namespace CodeAid.UI.Data
         }
 
 
-        public async Task<bool> CreateThread(ThreadDto thread, string id)
+        public async Task<bool> CreateThread(ThreadDto thread, string accessToken)
         {
             using (var httpClient = new HttpClient())
             {
-                string url = string.Concat(baseUrl, $"api/thread/CreateThread/{id}");
+                string url = string.Concat(baseUrl, $"api/thread/CreateThread/{accessToken}");
 
                 var response = await httpClient.PostAsJsonAsync(url, thread);
 
@@ -235,7 +216,7 @@ namespace CodeAid.UI.Data
         {
             using (var httpClient = new HttpClient())
             {
-                string url = string.Concat(baseUrl, "api/thread/");
+                string url = string.Concat(baseUrl, "api/thread/List");
                 var response = await httpClient.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)
@@ -304,7 +285,7 @@ namespace CodeAid.UI.Data
         {
             using (var httpClient = new HttpClient())
             {
-                string url = string.Concat(baseUrl, "api/Message/GetAll/");
+                string url = string.Concat(baseUrl, "api/Message/List/");
                 var response = await httpClient.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)
@@ -333,11 +314,11 @@ namespace CodeAid.UI.Data
         }
 
 
-        public async Task<List<MessageModel>> GetThreadMessages(string accessToken, int id)
+        public async Task<List<MessageModel>> GetThreadMessages(int id)
         {
             using (var httpClient = new HttpClient())
             {
-                string url = string.Concat(baseUrl, "api/Message/thread ", accessToken);
+                string url = string.Concat(baseUrl, "api/Message/ThreadMessages");
                 var response = await httpClient.GetAsync(url);
 
                 if (response.IsSuccessStatusCode)

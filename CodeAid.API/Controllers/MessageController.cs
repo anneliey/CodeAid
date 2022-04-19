@@ -46,7 +46,7 @@ namespace CodeAid.API.Controllers
         }
 
         [HttpGet]
-        [Route("GetAll")]
+        [Route("List")]
         public ActionResult<List<MessageModel>> GetAllMessages()
         {
             var result = _context.Messages;
@@ -61,17 +61,15 @@ namespace CodeAid.API.Controllers
 
 
         [HttpGet]
-        [Route("thread /{acessToken}")]
-        public ActionResult<List<MessageModel>> GetThreadMessages(string accessToken, int id)
+        [Route("ThreadMessages")]
+        public ActionResult<List<MessageModel>> GetThreadMessages(int id)
         {
-            AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
-            var isValid = accessTokenManager.HasValidAccessToken(accessToken);
-            if (isValid)
+           if(id != null)
             {
                 var messages = _context.Messages.Include(m => m.User).Where(m => m.ThreadId == id).Select(t => new MessageModel
                 {
                     Message = t.Message,
-                    User = new UserModel() // Project the user into a user with the data we want (without circular references)
+                    User = new UserModel()
                     {
                         Id = t.User.Id,
                         Username = t.User.Username,

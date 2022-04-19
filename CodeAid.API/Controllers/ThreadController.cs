@@ -9,11 +9,6 @@ namespace CodeAid.API.Controllers
     [ApiController]
     public class ThreadController : ControllerBase
     {
-        //public IEnumerable<ThreadModel> threadSearch { get; set; } = new List<ThreadModel>();
-
-        //[BindProperty]
-        //public string SearchTerm { get; set; }
-
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly AppDbContext _context;
 
@@ -24,10 +19,10 @@ namespace CodeAid.API.Controllers
         }
 
         [HttpGet]
+        [Route("List")]
         public ActionResult<List<ThreadModel>> GetAllThreads()
         {
             var result = _context.Threads.Include(t => t.User).Include(t => t.Messages).OrderByDescending(t => t.ThreadDate).ToList();
-            //var thread = _context.Threads.Include(t => t.Messages.OrderByDescending(t => t.PostDate)).Where(t => t.Id == id).FirstOrDefault();
 
             if (result.Any())
             {
@@ -43,47 +38,12 @@ namespace CodeAid.API.Controllers
                 }
                 return Ok(result);
             }
-
-            return BadRequest();
-        }
-
-
-        [HttpGet]
-        [Route("{accessToken}")]
-        public ActionResult<List<ThreadModel>> GetAllQuestions()
-        {
-            var result = _context.Threads;
-            if (result.Any())
-            {
-                var resultList = result.ToList();
-
-                return Ok(resultList);
-            }
-
-            return BadRequest();
-        }
-
-
-        [HttpGet]
-        [Route("my-threads/{accessToken}")]
-        public ActionResult<List<ThreadModel>> GetUserThread(string acessToken)
-        {
-            var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(acessToken)).FirstOrDefault();
-
-            if (identityUser != null)
-            {
-                var userDb = _context.Users.Where(u => u.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                var list = _context.Threads
-                    .Where(u => u.UserId.Equals(userDb.Id)).ToList();
-
-                return list;
-            }
             return BadRequest();
         }
 
 
         [HttpPost("[action]/{accessToken}")]
-        public async Task<IActionResult> CreateThread([FromBody] ThreadDto thread, [FromRoute] string accessToken, int interestId)
+        public async Task<IActionResult> CreateThread([FromBody] ThreadDto thread, [FromRoute] string accessToken)
         {
             AccessTokenManager accessTokenManager = new AccessTokenManager(_signInManager);
             var isValid = accessTokenManager.HasValidAccessToken(accessToken);
@@ -224,26 +184,23 @@ namespace CodeAid.API.Controllers
             return BadRequest();
         }
 
-        [HttpGet("{search}")]
+        [HttpGet("Search")]
         public async Task<ActionResult<List<ThreadModel>>> Search(string threadTitle)
         {
             try
             {
-
                 IQueryable<ThreadModel> thread = _context.Threads;
 
                 if (!string.IsNullOrEmpty(threadTitle))
                 {
                     thread = thread.Where(t => t.QuestionTitle.Contains(threadTitle));
                 }
-
                 var result = thread;
 
                 if (result.Any())
                 {
                     return Ok(result);
                 }
-
                 return NotFound();
             }
             catch (Exception)
