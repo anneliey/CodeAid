@@ -153,7 +153,8 @@ namespace CodeAid.API.Controllers
         }
 
 
-        [HttpDelete("{id}/{accessToken}")]
+        //Added delete to route
+        [HttpDelete("Delete/{id}/{accessToken}")]
         //[Route("{id}/{accessToken}")]
         public async Task<ActionResult> DeleteMessage([FromRoute] int id, string accessToken)
         {

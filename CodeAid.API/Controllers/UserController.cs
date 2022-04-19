@@ -186,9 +186,9 @@ namespace CodeAid.API.Controllers
             return BadRequest();
         }
 
-
+        //Added Delete to Route
         [HttpDelete]
-        [Route("{id}")]
+        [Route("Delete/{id}")]
         public async Task<IActionResult> DeleteAccount(string id)
         {
             var user = _signInManager.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
@@ -209,17 +209,20 @@ namespace CodeAid.API.Controllers
         [Route("deactivate/{id}")]
         public async Task<IActionResult> DeactivateAccount(string id)
         {
-            var user = _signInManager.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
+            var identityUser = _signInManager.UserManager.Users.Where(x => x.Id == id).FirstOrDefault();
 
-            if (user != null)
+            if (identityUser != null)
             {
-                UserModel userModel = new UserModel()
-                {
-                    Username = user.UserName,
-                    Deleted = true
-                };
+                var userDb = _context.Users.Where(x => x.Username == identityUser.UserName).FirstOrDefault();
+                //UserModel userModel = new UserModel()
+                //{
+                //    Username = user.UserName,
+                //    Deleted = true
+                //};
+
+                userDb.Deleted = true;
                 //_context.Users.Add(userModel);
-                _context.Update(userModel);
+                _context.Update(userDb);
                 await _context.SaveChangesAsync();
                 return Ok();
             }

@@ -25,7 +25,14 @@
                             <div class="media forum-item">
                                 <a href="#" data-toggle="collapse" data-target=".forum-content"><img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="mr-3 rounded-circle" width="50" alt="User" /></a>
                                 <div class="media-body">
-                                    <h5 href="#" data-toggle="collapse" data-target=".forum-content" class="text-body">@Model.Question.User.Username</h5>
+                                    @if (!@Model.Question.User.Deleted)
+                                    {
+                                    <h5 data-toggle="collapse" data-target=".forum-content" class="text-body">@Model.Question.User.Username</h5>
+                                    }
+                                    else
+                                    {
+                                    <h5 data-toggle="collapse" data-target=".forum-content" class="text-body">[Deleted user]</h5>
+                                    }
                                     <h3>
                                         @Model.Question.QuestionTitle
                                     </h3>
@@ -53,26 +60,39 @@
             {
                 @foreach (var qm in Model.Question.Messages)
                 {
-
-                    @if (qm.User.Username == @Model.CurrentUser.UserName)
+                    @if (!qm.User.Deleted)
                     {
-                        <div class="card-body">
-                            <div class="alert alert-primary" style="color:black; background-color: #DBE7FF;" role="alert">
-                                <p>anwsered by @qm.User.Username @qm.PostDate.ToLongDateString()</p>
-                                <p>@qm.Message</p>
-                                <a class="btn btn-primary" asp-page="/member/message/index">Modify</a>
+                        @if (qm.User.Username == @Model.CurrentUser.UserName)
+                        {
+                            <div class="card-body">
+                                <div class="alert alert-primary" style="color:black; background-color: #DBE7FF;" role="alert">
+                                    <p>anwsered by @qm.User.Username @qm.PostDate.ToLongDateString()</p>
+                                    <p>@qm.Message</p>
+                                    <a class="btn btn-primary" asp-page="/member/message/index">Modify</a>
+                                </div>
                             </div>
-                        </div>
+                        }
+                        else if (qm.User.Username != @Model.CurrentUser.UserName)
+                        {
+                            <div class="card-body">
+                                <div class="alert alert-primary" style="background-color: white" role="alert">
+                                    <p>anwsered by @qm.User.Username @qm.PostDate.ToLongDateString()</p>
+                                    <p>@qm.Message</p>
+                                    <a class="btn btn-primary" asp-page="/member/message/index">Modify</a>
+                                </div>
+                            </div>
+                        }
                     }
-                    else if (qm.User.Username != @Model.CurrentUser.UserName)
+                    else
                     {
                         <div class="card-body">
                             <div class="alert alert-primary" style="background-color: white" role="alert">
                                 <p>anwsered by @qm.User.Username @qm.PostDate.ToLongDateString()</p>
                                 <p>@qm.Message</p>
                             </div>
-                        </div>
+                            </div>
                     }
+
                 }
             }
         </div>

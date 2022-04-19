@@ -123,8 +123,9 @@ namespace CodeAid.API.Controllers
         }
 
 
+        //Added delete to route
         [HttpDelete]
-        [Route("{id}/{accessToken}")]
+        [Route("Delete/{id}/{accessToken}")]
         public async Task<ActionResult> DeleteInterest(string accessToken, [FromRoute] int id)
         {
             AccessTokenManager accessTokenManager = new(_signInManager);
@@ -152,8 +153,10 @@ namespace CodeAid.API.Controllers
             return null;
         }
 
+
+        //Added edit to route
         [HttpPut]
-        [Route("{accessToken}")]
+        [Route("Edit/{accessToken}")]
         public async Task<IActionResult> EditInterest([FromBody] InterestModel interestToUpdate, string accessToken)
         {
             AccessTokenManager accessTokenManager = new(_signInManager);
