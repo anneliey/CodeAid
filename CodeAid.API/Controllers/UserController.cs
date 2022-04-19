@@ -88,13 +88,19 @@ namespace CodeAid.API.Controllers
             {
                 var identityUser = _signInManager.UserManager.Users.Where(u => u.Id.Equals(accessToken)).FirstOrDefault();
                 var dbUser = _context.Users.Where(x => x.Username.Equals(identityUser.UserName)).FirstOrDefault();
-                var userInterests = _context.Interests.Where(i => i.UserInterests.Any(ui => ui.UserId == dbUser.Id)).ToList();
+                var userInterests = _context.Interests.Include(i => i.Threads).Where(i => i.UserInterests.Any(ui => ui.UserId == dbUser.Id)).ToList();
 
                 if (userInterests != null && userInterests.Count > 0)
                 {
                     foreach (var userInterest in userInterests)
                     {
                         userInterest.User = null;
+                        foreach (var t in userInterest.Threads)
+                        {
+                            t.Interest = null;
+                            t.User = null;
+                            t.Messages = null;
+                        }
                     }
                     return Ok(userInterests);
                 }
@@ -102,6 +108,7 @@ namespace CodeAid.API.Controllers
             }
             return BadRequest();
         }
+
 
         [HttpPost]
         [Route("Interest/Add/{id}/{accessToken}")]
