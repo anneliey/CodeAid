@@ -43,7 +43,7 @@ namespace CodeAid.UI.Pages
                     // Get specific thread with the id
                     InterestManager interestManager = new();
 
-                    Interest = await interestManager.GetInterest(id, user);
+                    Interest = await interestManager.GetInterest(id);
                     CurrentInterestId = Interest.Id;
                 }
 
