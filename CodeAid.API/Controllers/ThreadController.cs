@@ -143,8 +143,9 @@ namespace CodeAid.API.Controllers
         }
 
 
+        //Added delete to route
         [HttpDelete]
-        [Route("{id}/{accessToken}")]
+        [Route("Delete/{id}/{accessToken}")]
         public async Task<ActionResult> DeleteThread(string accessToken, [FromRoute] int id)
         {
             AccessTokenManager accessTokenManager = new(_signInManager);
