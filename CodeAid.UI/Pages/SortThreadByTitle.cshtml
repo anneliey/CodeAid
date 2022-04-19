@@ -2,20 +2,35 @@
 @model CodeAid.UI.Pages.SortThreadByTitleModel
 @{
 }
-
 <form method="get">
     <div class="input-group">
         <input class="form-check form-control" asp-for="SearchTerm" />
         <div class="input-group-append">
-            <button type="submit" class="btn btn-primary">Sök</button>
+            <button type="submit" class="btn btn-primary">Search</button>
         </div>
     </div>
 </form>
 
+
+<link href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet">
+<div class="container">
+    <div class="row">
+        <!-- Main content -->
+        @*<div class="col-lg-9 mb-3">
+            <div class="row text-left mb-5">
+                <div class="col-lg-6 mb-3 mb-sm-0">
+                </div>
+            </div>*@
+            <div class="col-lg-6 text-lg-right">
+                
+
+                <a asp-page="/Member/CreateThread" asp-route-id="@Model.CurrentInterestId" class="btn btn-lg btn-block btn-success rounded-0 py-4 mb-3 bg-op-6 roboto-bold">Ask Question</a>
+            </div>
+        </div>
+        
          
         @if(Model.Result != null && Model.Result.Count > 0)
         {
-           
             @foreach (var thread in Model.Result)
             {
                 <div class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0">
@@ -24,18 +39,30 @@
                             <h5>
                                 <a asp-page="/Question" asp-route-id="@thread.Id" class="text-primary">@thread.QuestionTitle</a>
                             </h5>
-                            <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">@thread.ThreadDate.ToLongDateString()</a> <span class="op-6">ago by</span> <a class="text-black">@*@thread.User.Username*@</a></p>
-                            <div class="text-sm op-5"> <a class="text-black mr-2" href="#">#@thread.Interest</a></div>
+                            <p class="text-sm">
+                                <span class="op-6">Posted</span> 
+                                <a class="text-black" href="#">@thread.ThreadDate.ToLongDateString()</a>
+                            </p>
+                            <div class="text-sm op-5"> 
+                                <a class="text-black mr-2" href="#">#@thread.Interest</a>
+                                </div>
                         </div>
                         <div class="col-md-4 op-7">
                             <div class="row text-center op-7">
                                 <button type="button" class="btn">
-                                        <a class="Btn" asp-page="/Member/EditThread" asp-route-id="@thread.Id">Edit Thread</a>
-                                    </button>
+                                    <a class="Btn" asp-page="/Member/EditThread" asp-route-id="@thread.Id">Edit Thread</a>
+                                </button>
                                 <form method="post">
                                     <button class="btn" type="submit" asp-route-id="@thread.Id">Delete</button>
                                 </form>
-                                <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> Replys</span> </div>
+                                @if (@thread.Messages != null && @thread.Messages.Count > 0)
+                                {
+                                    <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">@thread.Messages.Count Replys</span> </div>
+                                }
+                                else
+                                {
+                                    <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">0 Replys</span> </div>
+                                }
                             </div>
                         </div>
                     </div>
@@ -44,34 +71,41 @@
         }
         else
         {
-            @if(Model.Interest != null)
+            @if (Model.Interest != null)
             {
-                @foreach(var thread in Model.Interest.Threads)
+                @foreach (var thread in Model.Interest.Threads)
                 {
                     <div class="card row-hover pos-relative py-3 px-3 mb-3 border-warning border-top-0 border-right-0 border-bottom-0 rounded-0">
-                    <div class="row align-items-center">
-                        <div class="col-md-8 mb-3 mb-sm-0">
-                            <h5>
-                                <a asp-page="/question" asp-route-id="@thread.Id"><h1>@thread.QuestionTitle</h1></a>
-                            </h5>
-                            <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">@thread.ThreadDate.ToLongDateString()</a> <span class="op-6">ago by</span> <a class="text-black">@thread.UserId</a></p>
-                            <div class="text-sm op-5"> <a class="text-black mr-2" href="#">#@thread.Interest</a></div>
-                        </div>
-                        <div class="col-md-4 op-7">
-                            <div class="row text-center op-7">
-                                <button type="button" class="btn">
-                                       <a class="Btn" asp-page="/Member/EditThread" asp-route-id="@thread.Id">Edit Thread</a>
+                        <div class="row align-items-center">
+                            <div class="col-md-8 mb-3 mb-sm-0">
+                                <h5>
+                                    <a asp-page="/question" asp-route-id="@thread.Id"><h1>@thread.QuestionTitle</h1></a>
+                                </h5>
+                                <p class="text-sm"><span class="op-6">Posted</span> <a class="text-black" href="#">@thread.ThreadDate.ToLongDateString()</a> <span class="op-6">ago by</span> <a class="text-black">@thread.UserId</a></p>
+                                <div class="text-sm op-5"> <a class="text-black mr-2" href="#">#@thread.Interest</a></div>
+                            </div>
+                            <div class="col-md-4 op-7">
+                                <div class="row text-center op-7">
+                                    <button type="button" class="btn">
+                                        <a class="Btn" asp-page="/Member/EditThread" asp-route-id="@thread.Id">Edit Thread</a>
                                     </button>
-                                <form method="post">
-                                    <button class="btn" type="submit" asp-route-id="@thread.Id">Delete</button>
-                                </form>
-                                <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm"> Replys</span> </div>
+                                    <form method="post">
+                                        <button class="btn" type="submit" asp-route-id="@thread.Id">Delete</button>
+                                    </form>
+                                    @if (@thread.Messages != null)
+                                    {
+                                        <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">@thread.Messages.Count Replys</span> </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col px-1"> <i class="ion-ios-chatboxes-outline icon-1x"></i> <span class="d-block text-sm">0 Replys</span> </div>
+                                    }
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-               
                 }
             }
         }
-
+    </div>
+</div>

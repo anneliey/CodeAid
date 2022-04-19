@@ -403,6 +403,55 @@ namespace CodeAid.UI.Data
         }
 
 
+        public async Task<IdentityUser> DeleteAccount(string id)
+        {
+            string url = String.Concat(baseUrl, "api/user/", id);
+
+            HttpClient httpClient = new();
+
+            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Delete, url)
+            {
+                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
+            };
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
+
+            return null;
+        }
+
+
+        public async Task<IdentityUser> DeactivateAccount(string id)
+        {
+            string url = String.Concat(baseUrl, "api/user/deactivate/", id);
+
+            HttpClient httpClient = new();
+
+            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Put, url)
+            {
+                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
+            };
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
+
+            return null;
+        }
+
+
+        public async Task<IActionResult> ActivateAccount(string id)
+        {
+            string url = String.Concat(baseUrl, "api/user/activate/", id);
+
+            HttpClient httpClient = new();
+
+            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Put, url)
+            {
+                Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
+            };
+            HttpResponseMessage response = await httpClient.SendAsync(httpRequest);
+
+            return null;
+        }
+
+
+
         public async Task<bool> EditMessage(MessageDto message, string accessToken)
         {
             using (var httpClient = new HttpClient())

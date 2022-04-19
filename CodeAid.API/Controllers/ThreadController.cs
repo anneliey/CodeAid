@@ -226,5 +226,37 @@ namespace CodeAid.API.Controllers
             }
             return BadRequest();
         }
+
+        [HttpGet("{search}")]
+        public async Task<ActionResult<List<ThreadModel>>> Search(string threadTitle)
+        {
+            try
+            {
+
+                IQueryable<ThreadModel> thread = _context.Threads;
+
+                if (!string.IsNullOrEmpty(threadTitle))
+                {
+                    thread = thread.Where(t => t.QuestionTitle.Contains(threadTitle));
+                }
+
+                var result = thread;
+
+                if (result.Any())
+                {
+                    return Ok(result);
+                }
+
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error retrieving data from the database");
+            }
+        }
+
+
     }
 }
+
