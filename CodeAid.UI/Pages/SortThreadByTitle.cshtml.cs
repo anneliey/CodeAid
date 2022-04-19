@@ -21,8 +21,6 @@ namespace CodeAid.UI.Pages
         [BindProperty(SupportsGet = true)]
         public string SearchTerm { get; set; }
         public List<ThreadModel> Result { get; set; }
-
-
         public async Task<IActionResult> OnGet(int id)
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
@@ -34,22 +32,14 @@ namespace CodeAid.UI.Pages
 
                     AllThreads = await threadManager.Search(SearchTerm);
                     Result = AllThreads.OrderBy(prod => prod.QuestionTitle).ToList();
-
-
-
                 }
                 else
                 {
-                    // Id is not 0
-                    // Get specific thread with the id
                     InterestManager interestManager = new();
-
                     Interest = await interestManager.GetInterest(id);
                     CurrentInterestId = Interest.Id;
                 }
-
             }
-
             return Page();
         }
 
@@ -65,7 +55,5 @@ namespace CodeAid.UI.Pages
             }
             return RedirectToPage("/Threads");
         }
-
-
     }
 }

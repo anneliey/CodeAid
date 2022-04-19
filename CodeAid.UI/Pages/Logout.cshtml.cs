@@ -8,7 +8,7 @@ namespace CodeAid.UI.Pages
     {
         private readonly SignInManager<IdentityUser> signInManager;
 
-        public LogoutModel(SignInManager<IdentityUser>signInManager)
+        public LogoutModel(SignInManager<IdentityUser> signInManager)
         {
             this.signInManager = signInManager;
         }
@@ -21,11 +21,5 @@ namespace CodeAid.UI.Pages
             await signInManager.SignOutAsync();
             return RedirectToPage("Login");
         }
-
-        //public IActionResult OnPostDontLogoutAsync()
-        //{
-        //    return RedirectToPage("/Index");
-        //}
-
     }
 }
