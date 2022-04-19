@@ -14,8 +14,8 @@ namespace CodeAid.UI.Pages.Member.Interest
         {
             _signInManager = signInManager;
         }
-        public List<InterestModel> AllInterests { get; set; }
-        public List<InterestModel> VisibleInterests { get; set; } = new();
+        public List<InterestModel>? AllInterests { get; set; }
+        public List<InterestModel>? VisibleInterests { get; set; } = new();
         public InterestDto Interest { get; set; }
         public string ErrorMessage { get; set; } = string.Empty;
         public async Task<IActionResult> OnGet()
@@ -23,19 +23,28 @@ namespace CodeAid.UI.Pages.Member.Interest
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
             InterestManager manager = new();
             AllInterests = await manager.GetInterests();
+            // returns null if no interest has been selected
             var userInterests = await manager.GetUserInterests(user.Id);
             if (AllInterests != null)
             {
-                foreach (var interest in AllInterests)
+                if (userInterests != null && userInterests.Count > 0)
                 {
-                    if (!userInterests.Any(ui => ui.Name == interest.Name))
+                    foreach (var interest in AllInterests)
                     {
-                        VisibleInterests.Add(interest);
+                        if (!userInterests.Any(ui => ui.Name == interest.Name))
+                        {
+                            VisibleInterests.Add(interest);
+                        }
                     }
+                }
+                else
+                {
+                    VisibleInterests = AllInterests;
                 }
             }
             return Page();
         }
+
         public async Task<IActionResult> OnPost(InterestModel interest)
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);
@@ -46,6 +55,7 @@ namespace CodeAid.UI.Pages.Member.Interest
             }
             return RedirectToPage("/Member/Interest/Add");
         }
+
         public async Task<IActionResult> OnPostCreateInterest()
         {
             var user = await _signInManager.UserManager.GetUserAsync(HttpContext.User);

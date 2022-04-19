@@ -60,7 +60,7 @@ namespace CodeAid.UI.Pages
                     return RedirectToPage("/Login");
                 }
             }
-            return RedirectToPage("/Register", OnGet);
+            return Page();
         }
     }
 }
