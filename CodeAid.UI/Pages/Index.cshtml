@@ -1,5 +1,7 @@
 ﻿@page
+@using Microsoft.AspNetCore.Identity
 @model IndexModel
+@inject SignInManager<IdentityUser> signInManager
 @{
     ViewData["Title"] = "Home page";
 }
@@ -25,7 +27,7 @@
                 <a asp-page="/Threads" class="btn btn-primary">Browse threads</a>
 
             </div>
-           
+
             }
         </div>
     </div>
@@ -44,12 +46,30 @@
                 Times a developer got help since 2008
             </h5>
         </div>
-        @foreach (var item in Model.AllInterests)
+        @if (Model.AllInterests != null)
+        {
+            @foreach (var item in Model.AllInterests)
             {
                 <td>
                     <a asp-page="/Threads" asp-route-id="@item.Id">@item.Name</a>
                 </td>
-            } 
+            }
+        }
+        else
+        {
+            <div class="my-3">
+                @if (signInManager.IsSignedIn(User))
+                {
+                    <h5 style="color: darkred">No interest found</h5>
+                    <a class="btn btn-primary" asp-page="/member/interest/add">Add interest</a>
+                }
+                else
+                {
+                    <h5 style="color: darkred">No interest found</h5>
+                }
+            </div>
+
+        }
     </div>
 </div>
 
