@@ -42,7 +42,7 @@ namespace CodeAid.UI.Pages
                     var user = _signInManager.UserManager.FindByNameAsync(Username);
                     AccountManager accountManager = new();
                     var reactivateUser = await accountManager.ActivateAccount(user.Result.Id);
-                    if (!reactivateUser)
+                    if (reactivateUser)
                     {
                         return RedirectToPage("/Member/ActivateAccount");
                     }

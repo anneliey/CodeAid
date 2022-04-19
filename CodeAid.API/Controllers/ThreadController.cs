@@ -75,16 +75,6 @@ namespace CodeAid.API.Controllers
             return BadRequest();
         }
 
-        //[HttpGet]
-        //public ActionResult<List<ThreadModel>> SearchThread()
-        //{
-        //    var threadSearch = _context.Threads;
-        //    if (threadSearch.Any())
-        //    {
-        //        var searchResult = 
-        //    }
-        //}
-
 
         [HttpPost("[action]/{accessToken}")]
         public async Task<IActionResult> CreateThread([FromBody] ThreadDto thread, [FromRoute] string accessToken, int interestId)
